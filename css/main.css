@@ -92,25 +92,159 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
-#blog-masonry article {
-	width: 20%;
-	margin: 0;
-	border: 1px black solid;
-	float: left;
+.blue {
+    color: #1a51ac;
+}
+.green {
+    color: #1bac3a;
+}
+.yellow {
+    color: #e4aa21;
+}
+.red {
+	color: #b00000;
 }
 
+.back_blue {
+	background-color: #1a51ac;
+}
+.back_green{
+	background-color: #1bac3a;
+}
+.back_yellow {
+	background-color: #e4aa21;
+}
+.back_red {
+	background-color: #b00000;
+}
 
+.span1 {
+	width: 320px;
+}
+.span2 {
+	width: 660px;
+}
 
+body {
+	background: url('../img/pattern-stroke.png') repeat;
+}
 
+/* Header */
 
+header {
+	position: fixed;
+	width: 100%;
+	margin: 0 auto;
+	height: 150px;
+	z-index: 1000;
+	background: linear-gradient(to bottom, rgba(255, 255, 255,1) 0%,rgba(255, 255, 255, 0.6) 70%,rgba(255, 255, 255, 0) 100%); /* W3C */
+		background: -moz-linear-gradient(top, rgba(255, 255, 255,1) 0%, rgba(255, 255, 255, 0.6) 70%, rgba(255, 255, 255, 0) 100%); /* FF3.6+ */
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255, 255, 255,1)), color-stop(70%,rgba(255, 255, 255, 0.6)), color-stop(100%,rgba(255, 255, 255, 0))); /* Chrome,Safari4+ */
+				background: -webkit-linear-gradient(top, rgba(255, 255, 255,1) 0%,rgba(255, 255, 255, 0.6) 70%,rgba(255, 255, 255, 0) 100%); /* Chrome10+,Safari5.1+ */
+					background: -o-linear-gradient(top, rgba(255, 255, 255,1) 0%,rgba(255, 255, 255, 0.6) 70%,rgba(255, 255, 255, 0) 100%); /* Opera 11.10+ */
+						background: -ms-linear-gradient(top, rgba(255, 255, 255,1) 0%,rgba(255, 255, 255, 0.6) 70%,rgba(255, 255, 255, 0) 100%); /* IE10+ */
+							filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgba(255, 255, 255, 1)', endColorstr='rgba(255, 255, 255, 0)',GradientType=0 ); /* IE6-9 */
+}
 
+header h1
+{
+	position: relative;
+	top: -0.7em;
+	left: 0.5em;
+    font-family: 'BallparkWeiner', serif;
+    font-size: 5em;
+    font-weight: normal;
+	color: #71AFCE;
+}
 
+header h1 a, header h1 a:visited
+{
+	color: white;
+	text-shadow: 0px 0px 1px black;
+	text-decoration: none;
+		transition: color 0.5s ease;
+			-webkit-transition: color 0.5s ease;  
+				-moz-transition: color 0.5s ease;  
+					-o-transition: color 0.5s ease;  
+						-ms-transition: color 0.5s ease;  
+}
+header h1 a:hover
+{
+	color: #444;
+}
 
+/* Navigation */
 
+#top_menu
+{
+	width: 750px;
+	position: relative;
+	top: -14em;
+	margin: auto;
+}
 
+#top_menu ul
+{
+    list-style-type: none;
+}
 
+#top_menu li
+{
+    margin-right: -60px;
+	border: 1px solid white;
+    border-radius: 5px;
+	padding: 5px;
+	float: right;
+	transform:scale(0.9) rotateZ(-25deg);
+		-webkit-transform:scale(0.9) rotateZ(-25deg);
+			-moz-transform:scale(0.9) rotateZ(-25deg);
+				-ms-transform:scale(0.9) rotate(-25deg);
+					-o-transform:scale(0.9) rotate(-25deg);
+	transition:all .25s;
+		-webkit-transition:all .25s;
+			-moz-transition:all .25s;
+				-ms-transition:all .25s;
+					-o-transition:all .25s;
+	width: 200px;
+	text-align: left;
+}
 
+#top_menu a
+{
+    font-size: 1.5em;
+    padding-bottom: 3px;
+    text-decoration: none;
+	color: #fff;
+}
 
+#top_menu li:hover
+{
+	-webkit-transform:rotateZ(-25deg) scale(1);
+	-moz-transform:rotateZ(-25deg) scale(1);
+    -ms-transform:rotate(-25deg) scale(1);
+    -o-transform:rotate(-25deg) scale(1);
+    transform:rotateZ(-25deg) scale(1);
+}
+
+header + section {
+	position: relative;
+	top: 150px;
+}
+
+#blog-masonry {
+	width: 1000px;
+	margin: 0 auto;
+	border: 1px red solid;
+}
+   
+#blog-masonry article {
+	background: #fff;
+	margin: 0 auto;
+	border: 1px black solid;
+	float: left;
+	margin-bottom: 20px;
+	padding: 10px;
+}
 
 
 
