@@ -127,19 +127,12 @@ textarea {
 
 body {
 	background: url('../img/pattern-stroke.png') repeat;
-	background-image: url('../img/pattern-stroke.png') repeat, -webkit-gradient(radial, from(#444444), to(#999999)); /* Saf4+, Chrome */
-	background-image: url('../img/pattern-stroke.png') repeat, -webkit-radial-gradient(top, #444444, #999999); /* Chrome 10+, Saf5.1+ */
-	background-image: url('../img/pattern-stroke.png') repeat,    -moz-radial-gradient(top, #444444, #999999); /* FF3.6+ */
-	background-image: url('../img/pattern-stroke.png') repeat,     -ms-radial-gradient(top, #444444, #999999); /* IE10 */
-	background-image: url('../img/pattern-stroke.png') repeat,      -o-radial-gradient(top, #444444, #999999); /* Opera 11.10+ */
-	background-image: url('../img/pattern-stroke.png') repeat,         radial-gradient(top, #444444, #999999); /* W3C */
 }
 
 
 header, #blog-masonry {
 	width: 1006px;
 	margin: 0 auto;
-	border: 1px red solid;
 }
 
 /* Header */
@@ -263,6 +256,25 @@ article {
 	border-radius: 5px;
 	background: #fff;
 	text-align: justify;
+}
+article::after {
+	content: "";
+	position: absolute;
+	bottom: 5px;
+	left: 8%;
+	width: 90%;
+	height: 85%;
+	float: right;
+	max-width: 300px;
+	z-index: -9;
+	-webkit-box-shadow: 0 10px 10px rgba(0,0,0,0.7);
+	-moz-box-shadow: 0 10px 10px rgba(0,0,0,0.7);
+	box-shadow: 0 10px 10px rgba(0,0,0,0.7);
+	-webkit-transform: rotate(2deg);
+	-moz-transform: rotate(2deg);
+	-ms-transform: rotate(2deg);
+	-o-transform: rotate(2deg);
+	transform: rotate(2deg);
 }
 article > div {
 	padding: 15px;
