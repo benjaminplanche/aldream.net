@@ -119,10 +119,10 @@ textarea {
 }
 
 .span1 {
-	width: 320px;
+	width: 316px;
 }
 .span2 {
-	width: 660px;
+	width: 656px;
 }
 
 body {
@@ -135,7 +135,7 @@ header {
 	position: fixed;
 	width: 100%;
 	margin: 0 auto;
-	height: 110px;
+	height: 5em;
 	z-index: 1000;
 	background: linear-gradient(to bottom, rgba(34,34,34,1) 0%,rgba(34,34,34, 0.6) 70%,rgba(34,34,34, 0) 100%); /* W3C */
 		background: -moz-linear-gradient(top, rgba(34,34,34,1) 0%, rgba(34,34,34, 0.6) 70%, rgba(34,34,34, 0) 100%); /* FF3.6+ */
@@ -156,21 +156,30 @@ header h1
     font-weight: normal;
 	color: #71AFCE;
 }
-
 header h1 a, header h1 a:visited
 {
-	color: #000;
-	text-shadow: 0px 0px 2px white;
+	color: transparent;
+    text-shadow: 0 0 2px rgba(255,255,255,0.5);
 	text-decoration: none;
-		transition: color 0.5s ease;
-			-webkit-transition: color 0.5s ease;  
-				-moz-transition: color 0.5s ease;  
-					-o-transition: color 0.5s ease;  
-						-ms-transition: color 0.5s ease;  
+		transition: color 2s, text-shadow 2s;
+			-webkit-transition: color 2s, text-shadow 2s;  
+				-moz-transition: color 2s, text-shadow 2s;  
+					-o-transition: color 2s, text-shadow 2s;  
+						-ms-transition: color 2s, text-shadow 2s;  
 }
 header h1 a:hover
 {
-	color: #eee;
+    text-shadow: 0 0 1px #000, 0 0 4px rgba(0,0,0,0.5);
+}
+header h1 span:hover
+{
+    text-shadow: 0 0 1px #000, 0 0 4px rgba(0,0,0,0.5);
+	text-decoration: none;
+		transition: color 1s, text-shadow 1s;
+			-webkit-transition: color 1s, text-shadow 1s;  
+				-moz-transition: color 1s, text-shadow 1s;  
+					-o-transition: color 1s, text-shadow 1s;  
+						-ms-transition: color 1s, text-shadow 1s;  
 }
 
 /* Navigation */
@@ -195,6 +204,7 @@ header h1 a:hover
     border-radius: 5px;
 	padding: 5px;
 	float: right;
+    box-shadow: 10px 3px 10px #000;
 	transform:scale(0.9) rotateZ(-25deg);
 		-webkit-transform:scale(0.9) rotateZ(-25deg);
 			-moz-transform:scale(0.9) rotateZ(-25deg);
@@ -224,6 +234,7 @@ header h1 a:hover
     -ms-transform:rotate(-25deg) scale(1);
     -o-transform:rotate(-25deg) scale(1);
     transform:rotateZ(-25deg) scale(1);
+    box-shadow: 10px 6px 10px #000;
 }
 
 header + section {
@@ -237,18 +248,22 @@ header + section {
 	border: 1px red solid;
 }
    
-#blog-masonry article {
+article {
 	background: #fff;
 	margin: 0 auto;
-	border: 1px black solid;
+	border: 2px #1a51ac solid;
 	float: left;
 	margin-bottom: 20px;
 	border-radius: 5px;
 	background: #fff;
-	border: 1px solid #111;
+	font-size: 0.9em;
+	text-align: justify;
 }
-#blog-masonry article > div {
+article > div {
 	padding: 10px;
+}
+article h1, article p {
+	margin: 0px;
 }
 
 
