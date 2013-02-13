@@ -119,22 +119,35 @@ textarea {
 }
 
 .span1 {
-	width: 316px;
+	width: 318px;
 }
 .span2 {
-	width: 656px;
+	width: 660px;
 }
 
 body {
 	background: url('../img/pattern-stroke.png') repeat;
+	background-image: url('../img/pattern-stroke.png') repeat, -webkit-gradient(radial, from(#444444), to(#999999)); /* Saf4+, Chrome */
+	background-image: url('../img/pattern-stroke.png') repeat, -webkit-radial-gradient(top, #444444, #999999); /* Chrome 10+, Saf5.1+ */
+	background-image: url('../img/pattern-stroke.png') repeat,    -moz-radial-gradient(top, #444444, #999999); /* FF3.6+ */
+	background-image: url('../img/pattern-stroke.png') repeat,     -ms-radial-gradient(top, #444444, #999999); /* IE10 */
+	background-image: url('../img/pattern-stroke.png') repeat,      -o-radial-gradient(top, #444444, #999999); /* Opera 11.10+ */
+	background-image: url('../img/pattern-stroke.png') repeat,         radial-gradient(top, #444444, #999999); /* W3C */
+}
+
+
+header, #blog-masonry {
+	width: 1006px;
+	margin: 0 auto;
+	border: 1px red solid;
 }
 
 /* Header */
 
 header {
 	position: fixed;
-	width: 100%;
-	margin: 0 auto;
+	left: 50%;
+	margin-left: -503px;
 	height: 5em;
 	z-index: 1000;
 	background: linear-gradient(to bottom, rgba(34,34,34,1) 0%,rgba(34,34,34, 0.6) 70%,rgba(34,34,34, 0) 100%); /* W3C */
@@ -150,7 +163,6 @@ header h1
 {
 	position: relative;
 	top: -0.7em;
-	left: 0.5em;
     font-family: 'BallparkWeiner', serif;
     font-size: 5em;
     font-weight: normal;
@@ -169,11 +181,11 @@ header h1 a, header h1 a:visited
 }
 header h1 a:hover
 {
-    text-shadow: 0 0 1px #000, 0 0 4px rgba(0,0,0,0.5);
+    text-shadow: 0 0 1px #fff, 0 0 2px #000;
 }
 header h1 span:hover
 {
-    text-shadow: 0 0 1px #000, 0 0 4px rgba(0,0,0,0.5);
+    text-shadow: 0 0 1px #fff, 0 0 2px #000;
 	text-decoration: none;
 		transition: color 1s, text-shadow 1s;
 			-webkit-transition: color 1s, text-shadow 1s;  
@@ -188,8 +200,8 @@ header h1 span:hover
 {
 	width: 750px;
 	position: relative;
-	top: -14em;
-	margin: auto;
+	top: -15em;
+	float: right;
 }
 
 #top_menu ul
@@ -239,13 +251,7 @@ header h1 span:hover
 
 header + section {
 	position: relative;
-	top: 150px;
-}
-
-#blog-masonry {
-	width: 1006px;
-	margin: 0 auto;
-	border: 1px red solid;
+	top: 8em;
 }
    
 article {
@@ -256,14 +262,31 @@ article {
 	margin-bottom: 20px;
 	border-radius: 5px;
 	background: #fff;
-	font-size: 0.9em;
 	text-align: justify;
 }
 article > div {
-	padding: 10px;
+	padding: 15px;
 }
-article h1, article p {
+article p {
+	font-size: 0.85em;
+	margin: 20px 0;
+	line-height: 1.5em;
+	word-spacing: -0.1em;
+}
+article h1 {
+	font-size: 1.5em;
 	margin: 0px;
+	letter-spacing: .02em;
+	text-transform: uppercase;
+}
+article img {
+	display: inline-block;
+	border: 4px #aba solid;
+	margin: 20px 0 0 0;
+}
+article time {
+	font-size: 0.7em;
+	color: #aba;
 }
 
 
