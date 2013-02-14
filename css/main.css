@@ -93,36 +93,36 @@ textarea {
    Author's custom styles
    ========================================================================== */
 .blue {
-    color: #1a51ac;
+    color: hsl(217, 74%, 39%);
 }
 .green {
-    color: #1bac3a;
+    color: hsl(133, 74%, 39%);
 }
 .yellow {
-    color: #e4aa21;
+    color: hsl(42, 74%, 51%);
 }
 .red {
-	color: #b00000;
+    color: hsl(0, 74%, 39%);
 }
 
 .back_blue {
-	background-color: #1a51ac;
+	background-color: hsl(217, 74%, 39%);
 }
 .back_green{
-	background-color: #1bac3a;
+	background-color: hsl(133, 74%, 39%);
 }
 .back_yellow {
-	background-color: #e4aa21;
+	background-color: hsl(42, 74%, 51%);
 }
 .back_red {
-	background-color: #b00000;
+	background-color: hsl(0, 74%, 39%);
 }
 
 .span1 {
-	width: 318px;
+	width: 19.875em;
 }
 .span2 {
-	width: 660px;
+	width: 41.25em;
 }
 
 body {
@@ -131,7 +131,7 @@ body {
 
 
 header, #blog-masonry {
-	width: 1006px;
+	width: 62.875em;
 	margin: 0 auto;
 }
 
@@ -140,58 +140,85 @@ header, #blog-masonry {
 header {
 	position: fixed;
 	left: 50%;
-	margin-left: -503px;
+	margin-left: -31.4375em;
 	height: 5em;
-	z-index: 1000;
-	background: linear-gradient(to bottom, rgba(34,34,34,1) 0%,rgba(34,34,34, 0.6) 70%,rgba(34,34,34, 0) 100%); /* W3C */
-		background: -moz-linear-gradient(top, rgba(34,34,34,1) 0%, rgba(34,34,34, 0.6) 70%, rgba(34,34,34, 0) 100%); /* FF3.6+ */
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(34,34,34,1)), color-stop(70%,rgba(34,34,34, 0.6)), color-stop(100%,rgba(34,34,34, 0))); /* Chrome,Safari4+ */
-				background: -webkit-linear-gradient(top, rgba(34,34,34,1) 0%,rgba(34,34,34, 0.6) 70%,rgba(34,34,34, 0) 100%); /* Chrome10+,Safari5.1+ */
-					background: -o-linear-gradient(top, rgba(34,34,34,1) 0%,rgba(34,34,34, 0.6) 70%,rgba(34,34,34, 0) 100%); /* Opera 11.10+ */
-						background: -ms-linear-gradient(top, rgba(34,34,34,1) 0%,rgba(34,34,34, 0.6) 70%,rgba(34,34,34, 0) 100%); /* IE10+ */
-							filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgba(34,34,34, 1)', endColorstr='rgba(34,34,34, 0)',GradientType=0 ); /* IE6-9 */
+	z-index: 99;
 }
 
 header h1
 {
 	position: relative;
-	top: -0.7em;
+	top: -0.8em;
     font-family: 'BallparkWeiner', serif;
     font-size: 5em;
     font-weight: normal;
-	color: #71AFCE;
 }
 header h1 a, header h1 a:visited
 {
-	color: transparent;
-    text-shadow: 0 0 2px rgba(255,255,255,0.5);
+	display: inline-block;
+	color: #aaa;
+    text-shadow: 0 0 1px #000, 10px 3px 10px #000;
 	text-decoration: none;
-		transition: color 2s, text-shadow 2s;
-			-webkit-transition: color 2s, text-shadow 2s;  
-				-moz-transition: color 2s, text-shadow 2s;  
-					-o-transition: color 2s, text-shadow 2s;  
-						-ms-transition: color 2s, text-shadow 2s;  
+	transition: all .5s;
+		-webkit-transition: all .5s;  
+			-moz-transition: all .5s;  
+				-o-transition: all .5s;  
+					-ms-transition: all .5s; 
+	transform: rotateZ(-5deg);
+		-webkit-transform: rotateZ(-5deg);
+			-moz-transform: rotateZ(-5deg);
+				-ms-transform: rotate(-5deg);
+					-o-transform: rotate(-5deg);
 }
 header h1 a:hover
 {
-    text-shadow: 0 0 1px #fff, 0 0 2px #000;
+    transform: rotateZ(0deg);
+		-webkit-transform: rotateZ(0deg);
+			-moz-transform: rotateZ(0deg);
+				-ms-transform: rotate(0deg);
+					-o-transform: rotate(0deg);
 }
-header h1 span:hover
-{
-    text-shadow: 0 0 1px #fff, 0 0 2px #000;
-	text-decoration: none;
-		transition: color 1s, text-shadow 1s;
-			-webkit-transition: color 1s, text-shadow 1s;  
-				-moz-transition: color 1s, text-shadow 1s;  
-					-o-transition: color 1s, text-shadow 1s;  
-						-ms-transition: color 1s, text-shadow 1s;  
+header h1 a:before, header h1 a:after {
+	content: "";
+	display: inline-block;
+	position: relative;
+	left: 0.4em;
+	top: -0.6em;
+	height: 1em;
+	border-radius: 5px;
+	border-right: 2px solid #999;
+	border-bottom: 3px solid #000;
+	z-index: 1000;
+	transition: all .5s;
+		-webkit-transition: all .5s;  
+			-moz-transition: all .5s;  
+				-o-transition: all .5s;  
+					-ms-transition: all .5s; 
+	transform: rotateZ(5deg);
+		-webkit-transform: rotateZ(5deg);
+			-moz-transform: rotateZ(5deg);
+				-ms-transform: rotate(5deg);
+					-o-transform: rotate(5deg);
 }
-
+header h1 a:after {
+	left: -0.1em;
+	top: -0.4em;
+}
+header h1 a:hover:before, header h1 a:hover:after {
+	transform: rotateZ(0deg);
+		-webkit-transform: rotateZ(0deg);
+			-moz-transform: rotateZ(0deg);
+				-ms-transform: rotate(0deg);
+					-o-transform: rotate(0deg);
+	left: 0.37em;
+}
+header h1 a:hover:after {
+	left: -0.13em;
+}
 /* Navigation */
 
 #top_menu
 {
-	width: 750px;
 	position: relative;
 	top: -15em;
 	float: right;
@@ -204,7 +231,7 @@ header h1 span:hover
 
 #top_menu li
 {
-    margin-right: -60px;
+    margin-right: -2em;
 	border: 1px solid white;
     border-radius: 5px;
 	padding: 5px;
@@ -220,7 +247,7 @@ header h1 span:hover
 			-moz-transition:all .25s;
 				-ms-transition:all .25s;
 					-o-transition:all .25s;
-	width: 200px;
+	width: 8.5em;
 	text-align: left;
 }
 
@@ -239,7 +266,7 @@ header h1 span:hover
     -ms-transform:rotate(-25deg) scale(1);
     -o-transform:rotate(-25deg) scale(1);
     transform:rotateZ(-25deg) scale(1);
-    box-shadow: 10px 6px 10px #000;
+    box-shadow: 10px 6px 10px rgba(0,0,0,0.7);
 }
 
 header + section {
@@ -250,22 +277,21 @@ header + section {
 article {
 	background: #fff;
 	margin: 0 auto;
-	border: 2px #1a51ac solid;
+	border: 1px hsl(217, 74%, 39%) solid;
 	float: left;
 	margin-bottom: 20px;
-	border-radius: 5px;
+	border-radius: 5px 5px 0 5px;
 	background: #fff;
 	text-align: justify;
 }
 article::after {
 	content: "";
 	position: absolute;
-	bottom: 5px;
-	left: 8%;
-	width: 90%;
+	bottom: 10px;
+	left: 3%;
+	width: 95%;
 	height: 85%;
 	float: right;
-	max-width: 300px;
 	z-index: -9;
 	-webkit-box-shadow: 0 10px 10px rgba(0,0,0,0.7);
 	-moz-box-shadow: 0 10px 10px rgba(0,0,0,0.7);
@@ -293,12 +319,12 @@ article h1 {
 }
 article img {
 	display: inline-block;
-	border: 4px #aba solid;
+	border: 4px hsl(217, 50%, 70%) solid;
 	margin: 20px 0 0 0;
 }
 article time {
 	font-size: 0.7em;
-	color: #aba;
+	color: hsl(217, 50%, 70%);
 }
 
 
