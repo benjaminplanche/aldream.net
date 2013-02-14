@@ -156,8 +156,8 @@ header h1
 header h1 a, header h1 a:visited
 {
 	display: inline-block;
-	color: #aaa;
-    text-shadow: 0 0 1px #000, 10px 3px 10px #000;
+	color: #fff;
+    text-shadow: 0 0 3px #000, 5px 3px 10px #000;
 	text-decoration: none;
 	transition: all .5s;
 		-webkit-transition: all .5s;  
@@ -177,6 +177,7 @@ header h1 a:hover
 			-moz-transform: rotateZ(0deg);
 				-ms-transform: rotate(0deg);
 					-o-transform: rotate(0deg);
+    text-shadow: 0 0 2px #000, 7px 5px 10px #000;
 }
 header h1 a:before, header h1 a:after {
 	content: "";
@@ -186,7 +187,8 @@ header h1 a:before, header h1 a:after {
 	top: -0.6em;
 	height: 1em;
 	border-radius: 5px;
-	border-right: 2px solid #999;
+    text-shadow: 0 0 1px #000, 10px 3px 10px #000;
+	border-right: 2px solid #555;
 	border-bottom: 3px solid #000;
 	z-index: 1000;
 	transition: all .5s;
@@ -221,7 +223,7 @@ header h1 a:hover:after {
 {
 	position: relative;
 	top: -15em;
-	float: right;
+	left: 15em;
 }
 
 #top_menu ul
@@ -231,24 +233,26 @@ header h1 a:hover:after {
 
 #top_menu li
 {
-    margin-right: -2em;
+    margin-right: -74em;
 	border: 1px solid white;
     border-radius: 5px;
 	padding: 5px;
-	float: right;
+	float: left;
     box-shadow: 10px 3px 10px #000;
 	transform:scale(0.9) rotateZ(-25deg);
-		-webkit-transform:scale(0.9) rotateZ(-25deg);
-			-moz-transform:scale(0.9) rotateZ(-25deg);
-				-ms-transform:scale(0.9) rotate(-25deg);
-					-o-transform:scale(0.9) rotate(-25deg);
+		-webkit-transform:scale(0.97) rotateZ(-25deg);
+			-moz-transform:scale(0.97) rotateZ(-25deg);
+				-ms-transform:scale(0.97) rotate(-25deg);
+					-o-transform:scale(0.97) rotate(-25deg);
 	transition:all .25s;
 		-webkit-transition:all .25s;
 			-moz-transition:all .25s;
 				-ms-transition:all .25s;
 					-o-transition:all .25s;
-	width: 8.5em;
+	width: 80.5em;
 	text-align: left;
+	position: relative;
+	top: -14em;
 }
 
 #top_menu a
@@ -313,6 +317,7 @@ article p {
 }
 article h1 {
 	font-size: 1.5em;
+	color: #000;
 	margin: 0px;
 	letter-spacing: .02em;
 	text-transform: uppercase;
