@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+		<div id="board">
+			<section id="projects">
+				<!--[if lt IE 7]>
+					<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+				<![endif]-->
+
+				<header>
+					<h1><a href="/">Aldream</a></h1>
+					<nav id="top_menu">
+						<ul>
+							<a href="index.php"><li class="back_blue">Blog</li></a>
+							<a href="demo.html"><li class="back_green">Demo</li></a>
+							<a href="projects.html"><li class="back_yellow">Projects</li></a>
+							<a href="about.html"><li class="back_red">About</li></a>
+						</ul>
+					</nav>
+				</header>
+				<section id="blog-masonry">
+					<article class="span1">
+						<div>
+							<h1>AEDI</h1>
+							<img width="100" src="img/projects/aedi.png" alt="AEDI" />
+							<p>Side-project: Web-oriented information system ordered by the student association, to manage their various services.</p>
+							<p>Website computerizing the main services of the <abbr title="Student Association of the Computer-Science Department of INSA-Lyon">AEDI</abbr> (events registration, professional contact book, job offers listing, ...) and offering a new modern façade.</p>
+							<details>
+								As secretary-general of the AEDI and front-end lead-programmer, I participated in the specifications and then in the implementation of the dynamic contact book and the static pages design.
+							</details>
+							<footer>
+								<time datetime="2012">2012-13</time>
+								<p>Web-service, Jquery, Ajax, PHP, HTML5, Bootstrap</p>
+							</footer>
+						</div>
+					</article>
+					<article class="span1">
+						<div>
+							<h1>Rithm</h1>
+							<img width="100" src="img/projects/rithm.png" alt="Rithm" />
+							<p>Long-term school project, "Hospital Automation System" to oversee the patients and rooms conditions.</p>
+							<p>Based on a network of sensors/actuators, an inference engine and a web interface, it is highly modular, making it easy to add new devices (real or virtual) and rules.</p>
+							<details>
+								My task was to implement in C++ the needed protocols (<em>EnOcean, JSON</em>), in order to communicate with the various elements. I also participated in the development of the Web server and client, including the implementation of the real-time hospital map.
+							</details>
+							<footer>
+								<time datetime="2012">2012</time>
+								<p>Sensors/Actuators, C++, NodeJS, HTML5, SCRUM</p>
+							</footer>
+						</div>
+					</article>
+					<article class="span1">
+						<div>
+							<h1>Klaim</h1>
+							<img width="100" src="img/projects/klaim.png" alt="Klaim" />
+							<p>Side-project: Messaging service, available on computers and mobile phones, that aims at replacing the traditionnal Short Message Service.</p>
+							<p>Instant texting / No fee (Wifi, 3G) / Multi-plateforme experience (Iphone, WF7, Android, browsers) / Cloud Storage</p>
+							<details>
+								As a member of this project, I've implemented the Ajax layer for the browser client to continually communicate with the server (Comet/Long Polling Request + Iframe-pipe).
+							</details>
+							<footer>
+								<time datetime="2011">2011</time>
+								<p>Ajax, Comet, Front-end, Jquery</p>
+							</footer>
+						</div>
+					</article>
+				</section>
+			</section>
+		</div>
+
+        <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>-->
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+		<script>
+			$('#scene').css('height', (window.innerHeight)+'px');
+			$('#demo-menu').css('margin-top', (window.innerHeight/2-$('#demo-menu li').length*16)+'px');
+		</script>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <!--<script>
+            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>-->
+    </body>
+</html>
