@@ -12,8 +12,8 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/normalize.css"/>
+        <link id=1 rel="stylesheet" href="css/main.css"/>
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body>
@@ -23,64 +23,70 @@
 					<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
 				<![endif]-->
 
-				<header>
+				<header id="main-header">
 					<h1><a href="/">Aldream</a></h1>
 					<nav id="top_menu">
 						<ul>
-							<a href="index.php"><li class="back_blue">Blog</li></a>
+							<a href="index.html"><li class="back_blue">Blog</li></a>
 							<a href="demo.html"><li class="back_green">Demo</li></a>
 							<a href="projects.html"><li class="back_yellow">Projects</li></a>
 							<a href="about.html"><li class="back_red">About</li></a>
 						</ul>
 					</nav>
 				</header>
+				
 				<section id="blog-masonry">
+					<h1>Projects</h1>
 					<article class="span1">
 						<div>
 							<h1>AEDI</h1>
-							<img width="100" src="img/projects/aedi.png" alt="AEDI" />
-							<p>Side-project: Web-oriented information system ordered by the student association, to manage their various services.</p>
+							<a href="http://aedi.insa-lyon.fr" title="aedi.insa-lyon.fr"><img src="img/projects/aedi.png" alt="AEDI" /></a>
+							<p>Web-oriented information system ordered by the student assoc., to manage their various services.</p>
 							<p>Website computerizing the main services of the <abbr title="Student Association of the Computer-Science Department of INSA-Lyon">AEDI</abbr> (events registration, professional contact book, job offers listing, ...) and offering a new modern façade.</p>
-							<details>
-								As secretary-general of the AEDI and front-end lead-programmer, I participated in the specifications and then in the implementation of the dynamic contact book and the static pages design.
-							</details>
+							<p class="task">
+								As <em>(now former)</em> secretary-general of the AEDI and front-end lead-programmer, I participated in the specification process, before implementing the dynamic contact book, the static pages design, and finally handing it over to the <em>client</em>.
+							</p>
+							<p class="type">Side-project - <a href="http://aedi.insa-lyon.fr" title="aedi.insa-lyon.fr">website</a> - <a href="https://github.com/IFAEDI/S.I" title="AEDI Website Repo">repo</a></p>
 							<footer>
 								<time datetime="2012">2012-13</time>
-								<p>Web-service, Jquery, Ajax, PHP, HTML5, Bootstrap</p>
+								<p>Jquery, Ajax, PHP, HTML5, Bootstrap</p>
 							</footer>
 						</div>
 					</article>
 					<article class="span1">
 						<div>
 							<h1>Rithm</h1>
-							<img width="100" src="img/projects/rithm.png" alt="Rithm" />
-							<p>Long-term school project, "Hospital Automation System" to oversee the patients and rooms conditions.</p>
+							<a href="https://github.com/H4311/PLD-SR" title="Rithm Repository"><img src="img/projects/rithm.png" alt="Rithm" /></a>
+							<p>"Hospital Automation System" to oversee the patients and rooms conditions in real-time.</p>
 							<p>Based on a network of sensors/actuators, an inference engine and a web interface, it is highly modular, making it easy to add new devices (real or virtual) and rules.</p>
-							<details>
-								My task was to implement in C++ the needed protocols (<em>EnOcean, JSON</em>), in order to communicate with the various elements. I also participated in the development of the Web server and client, including the implementation of the real-time hospital map.
-							</details>
+							<p class="task">
+								My task was to implement in C++ the needed protocols (<em>EnOcean, JSON</em>), in order to communicate with the various elements. I also helped to implement the Web server and client, including the real-time hospital map.
+							</p>
+							<p class="type">Long-term school project - <a href="https://github.com/H4311/PLD-SR" title="Rithm Repository">repo</a></p>
 							<footer>
+								<p>Automation, C++, NodeJS, HTML5, SCRUM</p>
 								<time datetime="2012">2012</time>
-								<p>Sensors/Actuators, C++, NodeJS, HTML5, SCRUM</p>
 							</footer>
 						</div>
 					</article>
 					<article class="span1">
 						<div>
 							<h1>Klaim</h1>
-							<img width="100" src="img/projects/klaim.png" alt="Klaim" />
-							<p>Side-project: Messaging service, available on computers and mobile phones, that aims at replacing the traditionnal Short Message Service.</p>
-							<p>Instant texting / No fee (Wifi, 3G) / Multi-plateforme experience (Iphone, WF7, Android, browsers) / Cloud Storage</p>
-							<details>
-								As a member of this project, I've implemented the Ajax layer for the browser client to continually communicate with the server (Comet/Long Polling Request + Iframe-pipe).
-							</details>
+							<a href="http://klaim.it" title="Klaim.it"><img src="img/projects/klaim.png" alt="Klaim" /></a>
+							<p>Messaging service, available on computers and mobile phones, that aims at replacing SMS.</p>
+							<p>Instant texting / No fee (Wifi, 3G) / Multi-plateforme experience (Iphone, WF7, Android, browsers) / Cloud Storage / Encryption/ 5 languages available</p>
+							<p class="task">
+								As a member of this project, I've implemented the Ajax layer for the browser client to continually communicate with the server (Comet/Long Polling Request + Iframe-pipe). I also helped with some UI features.
+							</p>
+							<p class="type">Side-project - <a href="http://klaim.it" title="Klaim.it">website</a></p>
 							<footer>
 								<time datetime="2011">2011</time>
-								<p>Ajax, Comet, Front-end, Jquery</p>
+								<p>Ajax, Comet, Jquery</p>
 							</footer>
 						</div>
 					</article>
 				</section>
+				<p>Smaller projects, half-baked ideas, experiments gone wrong ... Check my <a href="https://github.com/Aldream" title="GitHub Account">GitHub Account</a> to find out more!</p>
 			</section>
 		</div>
 
@@ -89,8 +95,7 @@
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
 		<script>
-			$('#scene').css('height', (window.innerHeight)+'px');
-			$('#demo-menu').css('margin-top', (window.innerHeight/2-$('#demo-menu li').length*16)+'px');
+			$('#board').css('height', (window.scrollHeight)+'px');
 		</script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
