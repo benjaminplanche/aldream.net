@@ -15,6 +15,44 @@
         <link rel="stylesheet" href="css/normalize.css"/>
         <link id=1 rel="stylesheet" href="css/main.css"/>
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+		<script>
+			var Aldream = {
+				cache: [],
+				doTransition: true,
+				currentPage: 'projects',
+				metaPositions: {
+					index: [350,-100,-450,0,-30,0],
+					blog: [450,-500,-650,0,-5,0],
+					demo: [-700,-200,-500,0,20,0],
+					projects: [0,-800,-600,0,45,0],
+					about: [-400,-800,-450,0,70,0]},
+				origOffset: {
+					index: [0,0,0,0,0,0],
+					blog: [0,0,0,0,0,0],
+					demo: [0,0,0,0,0,0],
+					projects: [-2,-630,0,0,0,0],
+					about: [0,0,0,0,0,0]},
+				transformZoom : function(targetName, transition, callback) {
+					for (var el in Aldream.metaPositions) {
+						$('#'+el)[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
+						$('#'+el).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', callback);
+						var tr = [];
+						for (var i = 0; i < 6; i++) {
+							tr[i] = Aldream.metaPositions[el][i]-Aldream.metaPositions[targetName][i]+Aldream.origOffset[targetName][i];
+						}
+						tr = 'translateX('+tr[0]+'em) translateY('+tr[1]+'em) translateZ('+tr[2]+'em) rotateX('+tr[3]+'deg) rotateY('+tr[4]+'deg) rotateZ('+tr[5]+'deg)';
+						$('#'+el)[0].style[Modernizr.prefixed('transform')] = tr; // Positioning every element relative to the current user's position.
+					}
+				},
+				transformDezoom : function(transition, callback) {
+					for (var el in Aldream.metaPositions) {
+						$('#'+el)[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
+						$('#'+el).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', callback);
+						$('#'+el)[0].style[Modernizr.prefixed('transform')] = 'translateX('+Aldream.metaPositions[el][0]+'em) translateY('+Aldream.metaPositions[el][1]+'em) translateZ('+Aldream.metaPositions[el][2]+'em) rotateX('+Aldream.metaPositions[el][3]+'deg) rotateY('+Aldream.metaPositions[el][4]+'deg) rotateZ('+Aldream.metaPositions[el][5]+'deg)';
+					}
+				}
+			};
+		</script>
     </head>
     <body>
 		<div id="board">
@@ -95,11 +133,7 @@
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
 		<script>
-			$('#board').css('height', (window.scrollHeight)+'px');
-			$('a').click(function () {
-				$.load('index.html document');
-				return false;
-			});
+			$('#board').css('height', (window.scrollHeight>window.innerHeight?window.scrollHeight:window.innerHeight)+'px');
 		</script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

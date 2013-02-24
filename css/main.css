@@ -137,7 +137,7 @@ textarea {
 }
 
 
-#universe {
+#meta {
 	background: #03060f; /* Old browsers */
 		background: -moz-radial-gradient(center, ellipse cover,  #03060f 0%, #140626 89%, #1b1e33 100%); /* FF3.6+ */
 			background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#03060f), color-stop(89%,#140626), color-stop(100%,#1b1e33)); /* Chrome,Safari4+ */
@@ -167,54 +167,15 @@ textarea {
 	transition: all 2s;
 }
 
-#universe > div  {
-	width: 80em;
+#meta > div  {
+	position: fixed;
+	width: 100em;
 	height: 200em;
 	background: #111; /* Old browsers */
 	border: 20px #999 solid;
 	border-radius: 20px;
 	display: inline-block;
-	transition: all 2s;
 	transform-origin: 0em 0em 0em;
-}
-
-#universe #index:hover  {
-	transform: none;
-		-webkit-transform: none;
-			-moz-transform: none;
-				-o-transform: none; 
-}
-
-#universe #index {
-    transform: scale(.1) translateZ(-350em) translateX(250em) translateY(0em) rotateY(90deg);
-		-webkit-transform: scale(.1) translateZ(-350em) translateX(250em) translateY(0em) rotateY(90deg);
-			-moz-transform: scale(.1) translateZ(-350em) translateX(250em) translateY(0em) rotateY(90deg);
-				-o-transform: scale(.1) translateZ(-35em) translateX(25em) translateY(0em) rotateY(90deg);
-}
-#universe #blog {
-    transform: scale(.1) translateZ(-60em) translateX(0em) translateY(20em) rotateY(0deg);
-		-webkit-transform: scale(.1) translateZ(-60em) translateX(0em) translateY(20em) rotateY(0deg);
-			-moz-transform: scale(.1) translateZ(-60em) translateX(0em) translateY(20em) rotateY(0deg);
-				-o-transform: scale(.1) translateZ(-60em) translateX(0em) translateY(20em) rotateY(0deg);
-}
-#universe #demo {
-    transform: scale(.1) translateZ(-25em) translateX(10em) translateY(-20em) rotateY(90deg);
-		-webkit-transform: scale(.1) translateZ(-25em) translateX(10em) translateY(-20em) rotateY(90deg);
-			-moz-transform: scale(.1) translateZ(-25em) translateX(10em) translateY(-20em) rotateY(90deg);
-				-o-transform: scale(.1) translateZ(-25em) translateX(10em) translateY(-20em) rotateY(90deg); 
-}
-#universe #projects {
-    transform: scale(.1) translateZ(-60em) translateX(0em) translateY(-80em) rotateY(90deg);
-		-webkit-transform: scale(.1) translateZ(-60em) translateX(0em) translateY(-80em) rotateY(90deg);
-			-moz-transform: scale(.1) translateZ(-60em) translateX(0em) translateY(-80em) rotateY(90deg);
-				-o-transform: scale(.1) translateZ(-60em) translateX(0em) translateY(-80em) rotateY(90deg); 
-}
-
-#universe #about {
-    transform: scale(.1) translateZ(-25em) translateX(-10em) translateY(-80em) rotateY(90deg);
-		-webkit-transform: scale(.1) translateZ(-25em) translateX(-10em) translateY(-80em) rotateY(90deg);
-			-moz-transform: scale(.1) translateZ(-25em) translateX(-10em) translateY(-80em) rotateY(90deg);
-				-o-transform: scale(.1) translateZ(-25em) translateX(-10em) translateY(-80em) rotateY(90deg); 
 }
 
 /* BLOG */
@@ -455,11 +416,14 @@ article footer p {
 
 #blog-masonry+p {
 	color: #444;
-	padding: .5em;
-	background: #aaa;
+	padding: .3em;
+	background: #222;
 	border-radius: 10px;
 	font-size: .8em;
 	text-align: center;
+	margin-bottom: 15px;
+	box-shadow: 1px -1px 1px #2d2d2d;
+	text-shadow: 1px -1px 1px #111;
 }
 
 /* DEMO */
