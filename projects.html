@@ -30,12 +30,13 @@
 					index: [0,0,0,0,0,0],
 					blog: [0,0,0,0,0,0],
 					demo: [0,0,0,0,0,0],
-					projects: [-2,-630,0,0,0,0],
+					projects: [-2,-28.2,-0,0,0,0],
 					about: [0,0,0,0,0,0]},
 				transformZoom : function(targetName, transition, callback) {
+					$('#'+targetName).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+					$('#'+targetName).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', callback);
 					for (var el in Aldream.metaPositions) {
 						$('#'+el)[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
-						$('#'+el).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', callback);
 						var tr = [];
 						for (var i = 0; i < 6; i++) {
 							tr[i] = Aldream.metaPositions[el][i]-Aldream.metaPositions[targetName][i]+Aldream.origOffset[targetName][i];
@@ -43,13 +44,35 @@
 						tr = 'translateX('+tr[0]+'em) translateY('+tr[1]+'em) translateZ('+tr[2]+'em) rotateX('+tr[3]+'deg) rotateY('+tr[4]+'deg) rotateZ('+tr[5]+'deg)';
 						$('#'+el)[0].style[Modernizr.prefixed('transform')] = tr; // Positioning every element relative to the current user's position.
 					}
+					
+						
 				},
 				transformDezoom : function(transition, callback) {
+					// First we dezoom a bit and make the current content fade away to delete it (keeping the content would slow the transition):
+					// Then we move the camera back to its initial position, watching the whole scene:
+					$('#'+Aldream.currentPage).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+					$('#'+Aldream.currentPage).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', function() {
+						$('#'+Aldream.currentPage).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+						$('#'+Aldream.currentPage).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', callback);
+						// We delete the previous content:
+						$('#'+Aldream.currentPage)[0].style[Modernizr.prefixed('transition')] = 'none';
+						$('#'+Aldream.currentPage + ' #board').css('opacity', 1);
+						for (var el in Aldream.metaPositions) {
+							$('#'+el)[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
+							$('#'+el)[0].style[Modernizr.prefixed('transform')] = 'translateX('+Aldream.metaPositions[el][0]+'em) translateY('+Aldream.metaPositions[el][1]+'em) translateZ('+Aldream.metaPositions[el][2]+'em) rotateX('+Aldream.metaPositions[el][3]+'deg) rotateY('+Aldream.metaPositions[el][4]+'deg) rotateZ('+Aldream.metaPositions[el][5]+'deg)';
+						}
+					});
+									
 					for (var el in Aldream.metaPositions) {
 						$('#'+el)[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
-						$('#'+el).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', callback);
-						$('#'+el)[0].style[Modernizr.prefixed('transform')] = 'translateX('+Aldream.metaPositions[el][0]+'em) translateY('+Aldream.metaPositions[el][1]+'em) translateZ('+Aldream.metaPositions[el][2]+'em) rotateX('+Aldream.metaPositions[el][3]+'deg) rotateY('+Aldream.metaPositions[el][4]+'deg) rotateZ('+Aldream.metaPositions[el][5]+'deg)';
+						var tr = [];
+						for (var i = 0; i < 6; i++) {
+							tr[i] = Aldream.metaPositions[el][i]-Aldream.metaPositions[Aldream.currentPage][i]+Aldream.origOffset[Aldream.currentPage][i];
+						}
+						tr = 'translateX('+tr[0]+'em) translateY('+(tr[1]-100)+'em) translateZ('+(tr[2]-100)+'em) rotateX('+tr[3]+'deg) rotateY('+tr[4]+'deg) rotateZ('+tr[5]+'deg)';
+						$('#'+el)[0].style[Modernizr.prefixed('transform')] = tr; // Positioning every element relative to the current user's position.
 					}
+					$('#'+Aldream.currentPage + ' #board').css('opacity', 0);
 				}
 			};
 		</script>

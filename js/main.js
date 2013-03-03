@@ -28,10 +28,9 @@ $(document).ready(function(){
 							Aldream.transformDezoom('all 1.5s', function(){
 								isDezoomOver = true;
 								if (isDezoomOver && isContentLoaded) {
-									$('#'+newPage).html(Aldream.cache[newPage]);
+									$('#'+newPage).html(Aldream.cache[newPage].body);
 								}
 							}); // Then dezooming to see the whole picture.
-							$('#'+Aldream.currentPage + ' #board').css('opacity', 0); // TO DO
 						});
 					}
 					if (Aldream.cache[newPage]) {
