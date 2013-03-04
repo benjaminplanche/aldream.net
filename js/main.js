@@ -29,6 +29,10 @@ $(document).ready(function(){
 								isDezoomOver = true;
 								if (isDezoomOver && isContentLoaded) {
 									$('#'+newPage).html(Aldream.cache[newPage].body);
+									$('#'+ newPage + ' #board').css('opacity', 0);
+									Aldream.transformZoom(newPage, 'opacity 1.5s, transform 1.5s 1.5s', function() {
+										$('body').html(Aldream.cache[newPage].body);
+									}); // Positioning every element relative to the current user's position.
 								}
 							}); // Then dezooming to see the whole picture.
 						});
@@ -39,9 +43,13 @@ $(document).ready(function(){
 					else {
 						$('<div></div>').load(target, function (rep) {
 							isContentLoaded = true;
-							Aldream.cache[newPage] = rep.split('<body>')[1].split('</body>')[0];
+							Aldream.cache[newPage] = {meta: {}, body: rep.split('<body>')[1].split('</body>')[0]};
 							if (isDezoomOver && isContentLoaded) {
 								$('#'+newPage).html(Aldream.cache[newPage]);
+								$('#'+ newPage + ' #board').css('opacity', 0);
+								Aldream.transformZoom(newPage, 'all 1.5s', function() {
+									$('body').html(Aldream.cache[newPage].body);
+								}); // Positioning every element relative to the current user's position.
 							}
 						});
 					}

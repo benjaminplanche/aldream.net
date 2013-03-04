@@ -33,8 +33,18 @@
 					projects: [-2,-28.2,-0,0,0,0],
 					about: [0,0,0,0,0,0]},
 				transformZoom : function(targetName, transition, callback) {
+					$('#'+targetName + ' #board').unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+					
 					$('#'+targetName).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
-					$('#'+targetName).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', callback);
+					$('#'+targetName).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', function() {
+						$('#'+targetName).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+						$('#'+targetName + ' #board').unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+						callback();
+					});
+					
+					$('#'+ targetName + ' #board')[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
+					$('#'+ targetName + ' #board').css('opacity', 1);
+					
 					for (var el in Aldream.metaPositions) {
 						$('#'+el)[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
 						var tr = [];
@@ -45,7 +55,6 @@
 						$('#'+el)[0].style[Modernizr.prefixed('transform')] = tr; // Positioning every element relative to the current user's position.
 					}
 					
-						
 				},
 				transformDezoom : function(transition, callback) {
 					// First we dezoom a bit and make the current content fade away to delete it (keeping the content would slow the transition):
@@ -53,10 +62,13 @@
 					$('#'+Aldream.currentPage).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
 					$('#'+Aldream.currentPage).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', function() {
 						$('#'+Aldream.currentPage).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
-						$('#'+Aldream.currentPage).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', callback);
+						$('#'+Aldream.currentPage).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', function() {
+							$('#'+Aldream.currentPage).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+							$('#'+Aldream.currentPage + ' #board').unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+							callback();
+						});
 						// We delete the previous content:
-						$('#'+Aldream.currentPage)[0].style[Modernizr.prefixed('transition')] = 'none';
-						$('#'+Aldream.currentPage + ' #board').css('opacity', 1);
+						$('#'+Aldream.currentPage).html('');
 						for (var el in Aldream.metaPositions) {
 							$('#'+el)[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
 							$('#'+el)[0].style[Modernizr.prefixed('transform')] = 'translateX('+Aldream.metaPositions[el][0]+'em) translateY('+Aldream.metaPositions[el][1]+'em) translateZ('+Aldream.metaPositions[el][2]+'em) rotateX('+Aldream.metaPositions[el][3]+'deg) rotateY('+Aldream.metaPositions[el][4]+'deg) rotateZ('+Aldream.metaPositions[el][5]+'deg)';
@@ -72,7 +84,8 @@
 						tr = 'translateX('+tr[0]+'em) translateY('+(tr[1]-100)+'em) translateZ('+(tr[2]-100)+'em) rotateX('+tr[3]+'deg) rotateY('+tr[4]+'deg) rotateZ('+tr[5]+'deg)';
 						$('#'+el)[0].style[Modernizr.prefixed('transform')] = tr; // Positioning every element relative to the current user's position.
 					}
-					$('#'+Aldream.currentPage + ' #board').css('opacity', 0);
+					$('#'+ Aldream.currentPage + ' #board')[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
+					$('#'+ Aldream.currentPage + ' #board').css('opacity', 0);
 				}
 			};
 		</script>
@@ -156,7 +169,7 @@
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
 		<script>
-			$('#board').css('height', (window.scrollHeight>window.innerHeight?window.scrollHeight:window.innerHeight)+'px');
+			//$('#board').css('height', (window.scrollHeight>window.innerHeight?window.scrollHeight:window.innerHeight)+'px');
 		</script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
