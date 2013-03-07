@@ -20,6 +20,7 @@
 				cache: [],
 				doTransition: true,
 				currentPage: 'projects',
+				nbPages : 5,
 				metaPositions: {
 					index: [350,-100,-450,0,-30,0],
 					blog: [450,-500,-650,0,-5,0],
@@ -42,7 +43,7 @@
 						callback();
 					});
 					
-					$('#'+ targetName + ' #board')[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
+					//$('#'+ targetName + ' #board')[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
 					$('#'+ targetName + ' #board').css('opacity', 1);
 					
 					for (var el in Aldream.metaPositions) {
@@ -56,37 +57,57 @@
 					}
 					
 				},
-				transformDezoom : function(transition, callback) {
+/*				transformDezoom : function(currentPage, targetName, content, callback) {
 					// First we dezoom a bit and make the current content fade away to delete it (keeping the content would slow the transition):
 					// Then we move the camera back to its initial position, watching the whole scene:
-					$('#'+Aldream.currentPage).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
-					$('#'+Aldream.currentPage).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', function() {
-						$('#'+Aldream.currentPage).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
-						$('#'+Aldream.currentPage).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', function() {
-							$('#'+Aldream.currentPage).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
-							$('#'+Aldream.currentPage + ' #board').unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
-							callback();
-						});
-						// We delete the previous content:
-						$('#'+Aldream.currentPage).html('');
-						for (var el in Aldream.metaPositions) {
-							$('#'+el)[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
-							$('#'+el)[0].style[Modernizr.prefixed('transform')] = 'translateX('+Aldream.metaPositions[el][0]+'em) translateY('+Aldream.metaPositions[el][1]+'em) translateZ('+Aldream.metaPositions[el][2]+'em) rotateX('+Aldream.metaPositions[el][3]+'deg) rotateY('+Aldream.metaPositions[el][4]+'deg) rotateZ('+Aldream.metaPositions[el][5]+'deg)';
-						}
-					});
-									
+			
 					for (var el in Aldream.metaPositions) {
-						$('#'+el)[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
+						$('#'+el)[0].style[Modernizr.prefixed('transition')] = 'transform 2s';
 						var tr = [];
 						for (var i = 0; i < 6; i++) {
-							tr[i] = Aldream.metaPositions[el][i]-Aldream.metaPositions[Aldream.currentPage][i]+Aldream.origOffset[Aldream.currentPage][i];
+							tr[i] = Aldream.metaPositions[el][i]-Aldream.metaPositions[currentPage][i]+Aldream.origOffset[currentPage][i];
 						}
 						tr = 'translateX('+tr[0]+'em) translateY('+(tr[1]-100)+'em) translateZ('+(tr[2]-100)+'em) rotateX('+tr[3]+'deg) rotateY('+tr[4]+'deg) rotateZ('+tr[5]+'deg)';
 						$('#'+el)[0].style[Modernizr.prefixed('transform')] = tr; // Positioning every element relative to the current user's position.
 					}
-					$('#'+ Aldream.currentPage + ' #board')[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
-					$('#'+ Aldream.currentPage + ' #board').css('opacity', 0);
-				}
+					
+					
+					$('#'+ currentPage + ' #board')[0].style[Modernizr.prefixed('transition')] = 'opacity 1s';
+					$('#'+ currentPage + ' #board').css('opacity', 0);
+					
+					for (var el in Aldream.metaPositions) {
+						$('#'+el).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+						$('#'+el).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', function() {
+							var elClo = el
+							return function() {
+								$('#'+elClo).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+								if (elClo == currentPage) {
+									$('#'+currentPage).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', function() {
+										// We delete the previous content:
+										$('#'+currentPage).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+										$('#'+currentPage).html('');
+									});
+								}
+								
+								$('#'+elClo)[0].style[Modernizr.prefixed('transition')] = 'transform 2s';
+								var tr = [];
+								for (var i = 0; i < 6; i++) {
+									tr[i] = Aldream.metaPositions[elClo][i]-Aldream.metaPositions[targetName][i]+Aldream.origOffset[targetName][i];
+								}
+								$('#'+elClo)[0].style[Modernizr.prefixed('transform')] = 'translateX('+Aldream.metaPositions[elClo][0]+'em) translateY('+Aldream.metaPositions[elClo][1]+'em) translateZ('+Aldream.metaPositions[elClo][2]+'em) rotateX('+Aldream.metaPositions[elClo][3]+'deg) rotateY('+Aldream.metaPositions[elClo][4]+'deg) rotateZ('+Aldream.metaPositions[elClo][5]+'deg)';
+								
+								if (elClo == targetName) {
+									$('#'+ targetName + ' #board')[0].style[Modernizr.prefixed('transition')] = 'opacity 1s 1s';
+									$('#'+ targetName + ' #board').css('opacity', 1);
+								}
+							};
+						}());
+						
+						$('#'+el)[0].style[Modernizr.prefixed('transition')] = 'transform 2s';
+						$('#'+el)[0].style[Modernizr.prefixed('transform')] = 'translateX('+Aldream.metaPositions[el][0]+'em) translateY('+Aldream.metaPositions[el][1]+'em) translateZ('+Aldream.metaPositions[el][2]+'em) rotateX('+Aldream.metaPositions[el][3]+'deg) rotateY('+Aldream.metaPositions[el][4]+'deg) rotateZ('+Aldream.metaPositions[el][5]+'deg)';
+					}
+
+				}*/
 			};
 		</script>
     </head>
