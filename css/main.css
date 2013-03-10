@@ -129,14 +129,6 @@ textarea {
 }
 
 
-#board {
-	background: url('../img/pattern-stroke.png') repeat;
-	margin: 0;
-	padding: 0;
-	z-index: -99;
-}
-
-
 #meta {
 	background: #03060f; /* Old browsers */
 		background: -moz-radial-gradient(center, ellipse cover,  #03060f 0%, #140626 89%, #1b1e33 100%); /* FF3.6+ */
@@ -179,6 +171,13 @@ textarea {
 }
 
 /* BLOG */
+
+#projects {
+	background: url('../img/pattern-stroke.png') repeat;
+	margin: 0;
+	padding: 0;
+	z-index: -99;
+}
 
 #main-header, #blog-masonry, #blog-masonry+p {
 	width: 62.875em;
@@ -325,8 +324,8 @@ textarea {
 
 #blog-masonry > h1 {
 	font-size: 10em;
-	margin-top: -.4em;
-	position: fixed;
+	margin-top: -.5em;
+	position: absolute;
 	text-shadow: 1px -1px 1px #2d2d2d;
 }
 

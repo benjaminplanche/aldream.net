@@ -34,26 +34,26 @@
 					projects: [-2,-28.2,-0,0,0,0],
 					about: [0,0,0,0,0,0]},
 				transformZoom : function(targetName, transition, callback) {
-					$('#'+targetName + ' #board').unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+					$('#meta-'+targetName + ' > section').unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
 					
-					$('#'+targetName).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
-					$('#'+targetName).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', function() {
-						$('#'+targetName).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
-						$('#'+targetName + ' #board').unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+					$('#meta-'+targetName).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+					$('#meta-'+targetName).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', function() {
+						$('#meta-'+targetName).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+						$('#meta-'+targetName + ' > section').unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
 						callback();
 					});
 					
-					//$('#'+ targetName + ' #board')[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
-					$('#'+ targetName + ' #board').css('opacity', 1);
+					//$('#'+ targetName + ' > section')[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
+					$('#meta-'+ targetName + ' > section').css('opacity', 1);
 					
 					for (var el in Aldream.metaPositions) {
-						$('#'+el)[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
+						$('#meta-'+el)[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
 						var tr = [];
 						for (var i = 0; i < 6; i++) {
 							tr[i] = Aldream.metaPositions[el][i]-Aldream.metaPositions[targetName][i]+Aldream.origOffset[targetName][i];
 						}
 						tr = 'translateX('+tr[0]+'em) translateY('+tr[1]+'em) translateZ('+tr[2]+'em) rotateX('+tr[3]+'deg) rotateY('+tr[4]+'deg) rotateZ('+tr[5]+'deg)';
-						$('#'+el)[0].style[Modernizr.prefixed('transform')] = tr; // Positioning every element relative to the current user's position.
+						$('#meta-'+el)[0].style[Modernizr.prefixed('transform')] = tr; // Positioning every element relative to the current user's position.
 					}
 					
 				},
@@ -72,8 +72,8 @@
 					}
 					
 					
-					$('#'+ currentPage + ' #board')[0].style[Modernizr.prefixed('transition')] = 'opacity 1s';
-					$('#'+ currentPage + ' #board').css('opacity', 0);
+					$('#'+ currentPage + ' > section')[0].style[Modernizr.prefixed('transition')] = 'opacity 1s';
+					$('#'+ currentPage + ' > section').css('opacity', 0);
 					
 					for (var el in Aldream.metaPositions) {
 						$('#'+el).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
@@ -97,8 +97,8 @@
 								$('#'+elClo)[0].style[Modernizr.prefixed('transform')] = 'translateX('+Aldream.metaPositions[elClo][0]+'em) translateY('+Aldream.metaPositions[elClo][1]+'em) translateZ('+Aldream.metaPositions[elClo][2]+'em) rotateX('+Aldream.metaPositions[elClo][3]+'deg) rotateY('+Aldream.metaPositions[elClo][4]+'deg) rotateZ('+Aldream.metaPositions[elClo][5]+'deg)';
 								
 								if (elClo == targetName) {
-									$('#'+ targetName + ' #board')[0].style[Modernizr.prefixed('transition')] = 'opacity 1s 1s';
-									$('#'+ targetName + ' #board').css('opacity', 1);
+									$('#'+ targetName + ' > section')[0].style[Modernizr.prefixed('transition')] = 'opacity 1s 1s';
+									$('#'+ targetName + ' > section').css('opacity', 1);
 								}
 							};
 						}());
@@ -111,86 +111,84 @@
 			};
 		</script>
     </head>
-    <body>
-		<div id="board">
-			<section id="projects">
-				<!--[if lt IE 7]>
-					<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-				<![endif]-->
+    <body id="projects">
+		<section>
+			<!--[if lt IE 7]>
+				<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+			<![endif]-->
 
-				<header id="main-header">
-					<h1><a href="/">Aldream</a></h1>
-					<nav id="top_menu">
-						<ul>
-							<a href="index.html"><li class="back_blue">Blog</li></a>
-							<a href="demo.html"><li class="back_green">Demo</li></a>
-							<a href="projects.html"><li class="back_yellow">Projects</li></a>
-							<a href="about.html"><li class="back_red">About</li></a>
-						</ul>
-					</nav>
-				</header>
-				
-				<section id="blog-masonry">
-					<h1>Projects</h1>
-					<article class="span1">
-						<div>
-							<h1>AEDI</h1>
-							<a href="http://aedi.insa-lyon.fr" title="aedi.insa-lyon.fr"><img src="img/projects/aedi.png" alt="AEDI" /></a>
-							<p>Web-oriented information system ordered by the student assoc., to manage their various services.</p>
-							<p>Website computerizing the main services of the <abbr title="Student Association of the Computer-Science Department of INSA-Lyon">AEDI</abbr> (events registration, professional contact book, job offers listing, ...) and offering a new modern façade.</p>
-							<p class="task">
-								As <em>(now former)</em> secretary-general of the AEDI and front-end lead-programmer, I participated in the specification process, before implementing the dynamic contact book, the static pages design, and finally handing it over to the <em>client</em>.
-							</p>
-							<p class="type">Side-project - <a href="http://aedi.insa-lyon.fr" title="aedi.insa-lyon.fr">website</a> - <a href="https://github.com/IFAEDI/S.I" title="AEDI Website Repo">repo</a></p>
-							<footer>
-								<time datetime="2012">2012-13</time>
-								<p>Jquery, Ajax, PHP, HTML5, Bootstrap</p>
-							</footer>
-						</div>
-					</article>
-					<article class="span1">
-						<div>
-							<h1>Rithm</h1>
-							<a href="https://github.com/H4311/PLD-SR" title="Rithm Repository"><img src="img/projects/rithm.png" alt="Rithm" /></a>
-							<p>"Hospital Automation System" to oversee the patients and rooms conditions in real-time.</p>
-							<p>Based on a network of sensors/actuators, an inference engine and a web interface, it is highly modular, making it easy to add new devices (real or virtual) and rules.</p>
-							<p class="task">
-								My task was to implement in C++ the needed protocols (<em>EnOcean, JSON</em>), in order to communicate with the various elements. I also helped to implement the Web server and client, including the real-time hospital map.
-							</p>
-							<p class="type">Long-term school project - <a href="https://github.com/H4311/PLD-SR" title="Rithm Repository">repo</a></p>
-							<footer>
-								<p>Automation, C++, NodeJS, HTML5, SCRUM</p>
-								<time datetime="2012">2012</time>
-							</footer>
-						</div>
-					</article>
-					<article class="span1">
-						<div>
-							<h1>Klaim</h1>
-							<a href="http://klaim.it" title="Klaim.it"><img src="img/projects/klaim.png" alt="Klaim" /></a>
-							<p>Messaging service, available on computers and mobile phones, that aims at replacing SMS.</p>
-							<p>Instant texting / No fee (Wifi, 3G) / Multi-plateforme experience (Iphone, WF7, Android, browsers) / Cloud Storage / Encryption/ 5 languages available</p>
-							<p class="task">
-								As a member of this project, I've implemented the Ajax layer for the browser client to continually communicate with the server (Comet/Long Polling Request + Iframe-pipe). I also helped with some UI features.
-							</p>
-							<p class="type">Side-project - <a href="http://klaim.it" title="Klaim.it">website</a></p>
-							<footer>
-								<time datetime="2011">2011</time>
-								<p>Ajax, Comet, Jquery</p>
-							</footer>
-						</div>
-					</article>
-				</section>
-				<p>Smaller projects, half-baked ideas, experiments gone wrong ... Check my <a href="https://github.com/Aldream" title="GitHub Account">GitHub Account</a> to find out more!</p>
+			<header id="main-header">
+				<h1><a href="/">Aldream</a></h1>
+				<nav id="top_menu">
+					<ul>
+						<a href="index.html"><li class="back_blue">Blog</li></a>
+						<a href="demo.html"><li class="back_green">Demo</li></a>
+						<a href="projects.html"><li class="back_yellow">Projects</li></a>
+						<a href="about.html"><li class="back_red">About</li></a>
+					</ul>
+				</nav>
+			</header>
+			
+			<section id="blog-masonry">
+				<h1>Projects</h1>
+				<article class="span1">
+					<div>
+						<h1>AEDI</h1>
+						<a href="http://aedi.insa-lyon.fr" title="aedi.insa-lyon.fr"><img src="img/projects/aedi.png" alt="AEDI" /></a>
+						<p>Web-oriented information system ordered by the student assoc., to manage their various services.</p>
+						<p>Website computerizing the main services of the <abbr title="Student Association of the Computer-Science Department of INSA-Lyon">AEDI</abbr> (events registration, professional contact book, job offers listing, ...) and offering a new modern façade.</p>
+						<p class="task">
+							As <em>(now former)</em> secretary-general of the AEDI and front-end lead-programmer, I participated in the specification process, before implementing the dynamic contact book, the static pages design, and finally handing it over to the <em>client</em>.
+						</p>
+						<p class="type">Side-project - <a href="http://aedi.insa-lyon.fr" title="aedi.insa-lyon.fr">website</a> - <a href="https://github.com/IFAEDI/S.I" title="AEDI Website Repo">repo</a></p>
+						<footer>
+							<time datetime="2012">2012-13</time>
+							<p>Jquery, Ajax, PHP, HTML5, Bootstrap</p>
+						</footer>
+					</div>
+				</article>
+				<article class="span1">
+					<div>
+						<h1>Rithm</h1>
+						<a href="https://github.com/H4311/PLD-SR" title="Rithm Repository"><img src="img/projects/rithm.png" alt="Rithm" /></a>
+						<p>"Hospital Automation System" to oversee the patients and rooms conditions in real-time.</p>
+						<p>Based on a network of sensors/actuators, an inference engine and a web interface, it is highly modular, making it easy to add new devices (real or virtual) and rules.</p>
+						<p class="task">
+							My task was to implement in C++ the needed protocols (<em>EnOcean, JSON</em>), in order to communicate with the various elements. I also helped to implement the Web server and client, including the real-time hospital map.
+						</p>
+						<p class="type">Long-term school project - <a href="https://github.com/H4311/PLD-SR" title="Rithm Repository">repo</a></p>
+						<footer>
+							<p>Automation, C++, NodeJS, HTML5, SCRUM</p>
+							<time datetime="2012">2012</time>
+						</footer>
+					</div>
+				</article>
+				<article class="span1">
+					<div>
+						<h1>Klaim</h1>
+						<a href="http://klaim.it" title="Klaim.it"><img src="img/projects/klaim.png" alt="Klaim" /></a>
+						<p>Messaging service, available on computers and mobile phones, that aims at replacing SMS.</p>
+						<p>Instant texting / No fee (Wifi, 3G) / Multi-plateforme experience (Iphone, WF7, Android, browsers) / Cloud Storage / Encryption/ 5 languages available</p>
+						<p class="task">
+							As a member of this project, I've implemented the Ajax layer for the browser client to continually communicate with the server (Comet/Long Polling Request + Iframe-pipe). I also helped with some UI features.
+						</p>
+						<p class="type">Side-project - <a href="http://klaim.it" title="Klaim.it">website</a></p>
+						<footer>
+							<time datetime="2011">2011</time>
+							<p>Ajax, Comet, Jquery</p>
+						</footer>
+					</div>
+				</article>
 			</section>
-		</div>
+			<p>Smaller projects, half-baked ideas, experiments gone wrong ... Check my <a href="https://github.com/Aldream" title="GitHub Account">GitHub Account</a> to find out more!</p>
+		</section>
 
         <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>-->
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
 		<script>
-			//$('#board').css('height', (window.scrollHeight>window.innerHeight?window.scrollHeight:window.innerHeight)+'px');
+			//$('> section').css('height', (window.scrollHeight>window.innerHeight?window.scrollHeight:window.innerHeight)+'px');
 		</script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
