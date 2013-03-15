@@ -23,7 +23,6 @@
 			<![endif]-->
 
 			<!-- Add your site or application content here -->
-			<section id="scene">
 			<header>
 				<h1> Demo #1, by <a href ="http://aldream.net" title="Aldream.net">Aldream</a></h1>
 				<nav id="site-menu">
@@ -38,11 +37,11 @@
 				<nav id="demo-menu">
 					<ul>
 						<li>
-							<a href="#">●</a>
+							<a href="demo/js1k-landscape.html" require="">●</a>
 							<div>
-								<h2>Demo #1</h2>
-								<p>Most Light-weight Tooltip</p>
-								<details>WebGL, CSS, JS</details>
+								<h2>Loom</h2>
+								<p>1024B Landscape generator (JS1K submission)</p>
+								<details>Procedural Generation, Stochastic Interpolation, Painter Algorithm</details>
 							</div>
 						</li>
 						<li class="inv">
@@ -113,7 +112,7 @@
 					</ul>
 				</nav>
 			</header>
-			</section>
+			<iframe id="scene" src=""></iframe> 
 		</section>
 
         <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>-->
@@ -123,6 +122,15 @@
 		<script>
 			$('#scene').css('height', (window.innerHeight)+'px');
 			$('#demo-menu').css('margin-top', (window.innerHeight/2-$('#demo-menu li').length*16)+'px');
+			if(window.location.hash) {
+				$('#scene').attr('src', "demo/"+window.location.hash.substring(1)+".html");
+			}
+			
+			$('#demo-menu li>a').click(function(){
+				$('#scene').attr('src', $(this).attr('href'));
+				history.pushState({}, $(this).next().find('h2').text(), "#"+$(this).attr('href').split("/")[1].split(".")[0]);
+				return false;
+			});
 		</script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
