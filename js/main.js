@@ -1,10 +1,14 @@
 $(document).ready(function(){
-	$('#blog-masonry').masonry({
-		itemSelector: 'article',
-		gutterWidth: 20
+	var $container = $('#blog-masonry');
+	$container.imagesLoaded(function(){
+	  $container.masonry({
+			itemSelector : 'article',
+			columnWidth: 318,
+			gutterWidth: 20,
+			isAnimated: !Modernizr.csstransitions
+		});
 	});
-	$('> section').css('height', $(document).height()+'px');
-	
+	/*
 	function Navigation() {
 		var target = $(this).attr('href');
 		if (target.indexOf("://") == -1) { // Intern link	
@@ -96,5 +100,5 @@ $(document).ready(function(){
 			
 		}
 	}
-	$('a').each(Navigation);
+	$('a').each(Navigation);*/
 });

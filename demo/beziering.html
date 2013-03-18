@@ -1,0 +1,432 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Bezier's Wandering</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<script src="lib/kinetic-v4.3.0.min.js"></script>
+		<style>
+			body {
+			margin: 0px;
+			padding: 0px;
+		  }
+		</style>
+	</head>
+	<body>
+		<div id="demo"></div>
+		<script>
+	/**
+     * Bezier constructor.
+	 * This class illustrates the process used in De Casteljau's algorithm to calculate Bezier curves.
+     * @constructor
+     * @param {Array[3D Point]} Set of control points
+	 * @param {Kinetic.Stage} Stage
+	 * @param {int} Cycle time in ms
+	 * @param {Array[Color]} Colors for each control level
+	 * @param {Array[float]} Opacities for each control level
+	 * @param {Array[int]} Size of the elements for each control level
+	 * @param {int} Lifespan of the trails - TODO: IMPROVE
+	 * @param {Function(Array[3D Point], int):void} Function moving the control points
+     */
+	BezierWandering = function(points, stage, cycle, colors, opacities, strokes, trailLife, movementFunction) {
+	
+		var bez = this;	
+		function createLine(points) {
+			return new Kinetic.Line({
+				points: points.slice(),
+				stroke: 'grey',
+				strokeWidth: bez.strokes[0],
+				opacity: bez.opacities[0],
+				lineCap: 'round',
+				lineJoin: 'round'
+			});
+		}
+		
+		function createPoint(p, radius, color, opacity) {
+			return new Kinetic.Circle({
+				x: p.x,
+				y: p.y,
+				radius: radius*p.z,
+				fill: 'rgb('+color[0]+','+color[1]+','+color[2]+')',
+				stroke: 'black',
+				opacity: opacity,
+				strokeWidth: radius*p.z/2
+			});
+		}
+		
+		function createCurve(p1, stroke, color, opacity) {
+			return new Kinetic.Line({
+				points: [{x: p1.x, y: p1.y}, p1],
+				stroke: 'rgb('+color[0]+','+color[1]+','+color[2]+')',
+				opacity: opacity,
+				strokeWidth: stroke*p1.z,
+				lineCap: 'round',
+				lineJoin: 'round'
+			});
+		}
+		
+		this.bezierPoints = [];
+		
+		this.cycle = cycle;
+		this.movementFunction = movementFunction;
+		
+		this.displayPoints = [];
+		this.displayLines = [];
+		this.displayCurves = [];
+		
+		this.oldColors = [];
+		this.newColors = [];
+		this.colors = [];
+		for (var i=0; i < colors.length; i++) {
+			this.oldColors.push(colors[i].slice());
+			this.newColors.push(colors[i].slice());
+			this.colors.push(colors[i].slice());
+		}
+		this.changeColorsElapsed = 0;
+		this.changeColorsDuration = 0;
+		
+		this.opacities = opacities.slice();
+		this.oldOpacities = opacities.slice();
+		this.newOpacities = opacities.slice();
+		this.changeOpacitiesElapsed = 0;
+		this.changeOpacitiesDuration = 0;
+		
+		this.strokes = strokes;
+		
+		this.oldCoef = 0;
+		this.coef = 0;
+		this.nbPoints = points.length;
+		
+		this.linesLayer = new Kinetic.Layer();
+		this.pointsLayer = new Kinetic.Layer();
+		this.curvesLayer = new Kinetic.Layer();
+		this.curvesLayer.setClearBeforeDraw(false); // to keep the trail
+	
+		// Initialization of the various levels of controls (points and segments):
+		// Each level is composed of the "tweened" points, their trail (the curves), and the segments linking them.
+		
+		// 1st level (the givent controls points):
+		this.bezierPoints.push(points);
+		
+		this.displayPoints.push([]);
+		this.displayCurves.push([]);
+		for (var j=0; j < this.nbPoints; j++) {
+			this.displayPoints[0].push(createPoint(points[j], strokes[0], colors[0], opacities[0]));
+			this.pointsLayer.add(this.displayPoints[0][j]);
+			
+			this.displayCurves[0].push(createCurve(this.displayPoints[0][j], strokes[0], colors[0], opacities[0]));
+			this.curvesLayer.add(this.displayCurves[0][j]);
+		}
+			
+		this.displayLines.push(createLine(points));
+		
+		this.displayLines[0].attrs.points.push(this.bezierPoints[0][0]); // Closing the path.
+		this.linesLayer.add(this.displayLines[0]);
+		
+		// The following levels:
+		for (var i=0; i < this.nbPoints; i++) {
+			var iPoints = [];
+			var iDisplayPoints = [];
+			var iDisplayCurves = [];
+			// We have to make a deep copy of the points:
+			for (var j=0; j < this.nbPoints; j++) {
+				iPoints.push({x: points[j].x, y: points[j].y, z: points[j].z});
+				
+				iDisplayPoints.push(createPoint(points[j], strokes[i+1], colors[i+1], opacities[i+1]));
+				this.pointsLayer.add(iDisplayPoints[j]);
+				
+				iDisplayCurves.push(createCurve(iPoints[j], strokes[i+1], colors[i+1], opacities[i+1]));
+				this.curvesLayer.add(iDisplayCurves[j]);
+			}
+			
+			this.bezierPoints.push(iPoints);
+			
+			this.displayPoints.push(iDisplayPoints);
+			this.displayCurves.push(iDisplayCurves);
+			this.displayLines.push(createLine(iPoints));
+			this.displayLines[i+1].attrs.points.push(this.bezierPoints[i+1][0]); // Closing the path.
+			this.linesLayer.add(this.displayLines[i+1]);
+		}
+		
+		// By drawing this almost transparent rectangle each frame over the trail, we create the blur effect:
+		this.curvesLayer.add(new Kinetic.Rect({
+			x: 0,
+			y: 0,
+			width: stage.attrs.width,
+			height: stage.attrs.height,
+			fill: 'white',
+			opacity: 1.0/trailLife,
+			strokeWidth: 0
+		  }));
+
+		stage.add(this.curvesLayer);
+		stage.add(this.linesLayer);
+		stage.add(this.pointsLayer);
+		
+		this.animCalcAndLines = new Kinetic.Animation(function(frame) {
+			bez.updateControlPoints(frame);
+		}, this.linesLayer);
+		this.animPoints = new Kinetic.Animation(function(frame) {
+			bez.updateCircles(frame);
+		}, this.pointsLayer);
+		this.animCurves = new Kinetic.Animation(function(frame) {
+			bez.checkLoopBeforeDrawCurves(frame);
+		}, this.curvesLayer);	
+		this.curvesLayer.afterDraw(function() {
+			bez.updateCurvesPoints();
+		});
+	
+		
+	}
+	
+	BezierWandering.prototype = {
+		setColors: function(colors, time) {
+			for (var i=0; i < colors.length; i++) {
+				this.oldColors[i] = this.colors[i].slice();
+				this.newColors[i] = colors[i].slice();
+			}
+			this.changeColorsElapsed = 0;
+			this.changeColorsDuration = time;
+		}, 
+		
+		tweenColors: function(frame) {
+			this.changeColorsElapsed += frame.timeDiff;
+			var elapsed = this.changeColorsElapsed / this.changeColorsDuration;
+			elapsed = elapsed > 1 ? 1 : elapsed;
+			for (var i=0; i < (this.nbPoints+1); i++) {
+				// Calculating new current color:
+				for (var j=0; j < 3; j++) {
+					this.colors[i][j] = Math.round((1.0-elapsed)*this.oldColors[i][j] + elapsed*this.newColors[i][j]);
+				}
+				
+				// Applying it:
+				for (var j=0; j < this.nbPoints; j++) {
+					this.displayPoints[i][j].setFill('rgb('+this.colors[i][0]+','+this.colors[i][1]+','+this.colors[i][2]+')');
+					this.displayCurves[i][j].setStroke('rgb('+this.colors[i][0]+','+this.colors[i][1]+','+this.colors[i][2]+')');
+				}
+			}
+			if ( elapsed == 1 ) {
+				this.changeColorsDuration = 0;
+				this.changeColorsElapsed = 0;
+			}
+		},
+		
+		setOpacities: function(opacities, time) {
+			this.oldOpacities = this.opacities.slice();
+			this.newOpacities = opacities.slice();
+			this.changeOpacitiesElapsed = 0;
+			this.changeOpacitiesDuration = time;
+		}, 
+		
+		tweenOpacities: function(frame) {
+			this.changeOpacitiesElapsed += frame.timeDiff;
+			var elapsed = this.changeOpacitiesElapsed / this.changeOpacitiesDuration;
+			elapsed = elapsed > 1 ? 1 : elapsed;
+			for (var i=0; i < (this.nbPoints+1); i++) {
+				// Calculating new current opacity:
+				this.opacities[i] = (1.0-elapsed)*this.oldOpacities[i] + elapsed*this.newOpacities[i];
+				
+				// Applying it:
+				for (var j=0; j < this.nbPoints; j++) {
+					this.displayPoints[i][j].setOpacity(this.opacities[i]);
+					this.displayCurves[i][j].setOpacity(this.opacities[i]);
+				}
+				this.displayLines[i].setOpacity(this.opacities[0]);
+			}
+			if ( elapsed == 1 ) {
+				this.changeOpacitiesDuration = 0;
+				this.changeOpacitiesElapsed = 0;
+			}
+		},
+		
+		setMovementFunction: function(mvtFunc) {
+			this.movementFunction = mvtFunc;
+		},
+		
+		start: function(){
+			this.animCalcAndLines.start();
+			this.animPoints.start();
+			this.animCurves.start();
+		},
+		
+		stop: function(){
+			this.animCalcAndLines.stop();
+			this.animPoints.stop();
+			this.animCurves.stop();
+		},
+		
+		updateCurvesPoints: function() {
+			for (var i=0; i < this.displayCurves.length; i++) {
+				for (var j=0; j < this.nbPoints; j++) {
+					this.displayCurves[i][j].attrs.points[0].x = this.displayCurves[i][j].attrs.points[1].x;
+					this.displayCurves[i][j].attrs.points[0].y = this.displayCurves[i][j].attrs.points[1].y;
+					this.displayCurves[i][j].attrs.strokeWidth = this.strokes[i]*this.bezierPoints[i][j].z;
+				}
+			}
+		},
+		
+		checkLoopBeforeDrawCurves: function(frame) {
+			if (this.oldCoef > this.coef) { // We finished the loop:
+				this.updateCurvesPoints();
+			}
+			this.oldCoef = this.coef;
+		},
+		
+		updateCircles: function(frame) {
+			for (var i=0; i < this.displayCurves.length; i++) {
+				for (var j=0; j < this.nbPoints; j++) {
+					this.displayPoints[i][j].attrs.x = this.bezierPoints[i][j].x;
+					this.displayPoints[i][j].attrs.y = this.bezierPoints[i][j].y;
+					this.displayPoints[i][j].attrs.radius = this.strokes[i]*this.bezierPoints[i][j].z;
+					this.displayPoints[i][j].attrs.strokeWidth = this.displayPoints[i][j].attrs.radius/2;
+					this.displayPoints[i][j].setZIndex(this.bezierPoints[i][j].z*100);
+				}
+			}
+			
+		},
+		
+		updateControlPoints: function(frame) {
+			this.coef = (frame.time % this.cycle) / this.cycle;
+			if (typeof(this.movementFunction) == 'function') {
+				this.movementFunction(frame.time, this.bezierPoints[0]); // Move around
+			}
+			for (var i=1; i < this.displayCurves.length; i++) {
+				for (var j=0; j < this.nbPoints; j++) {
+					this.bezierPoints[i][j].x = (1-this.coef)*this.bezierPoints[i-1][j].x + this.coef*this.bezierPoints[i-1][(j+1)%this.nbPoints].x;
+					this.bezierPoints[i][j].y = (1-this.coef)*this.bezierPoints[i-1][j].y + this.coef*this.bezierPoints[i-1][(j+1)%this.nbPoints].y;
+					this.bezierPoints[i][j].z = (1-this.coef)*this.bezierPoints[i-1][j].z + this.coef*this.bezierPoints[i-1][(j+1)%this.nbPoints].z;
+				}
+			}
+						
+			if (this.changeColorsDuration != 0) {
+				this.tweenColors(frame);
+			}
+			if (this.changeOpacitiesDuration != 0) {
+				this.tweenOpacities(frame);
+			}
+		}
+	}
+	
+	//  Generic event abstractor
+	function addEvent( obj, evt, fn )
+	{
+		if ( 'undefined' != typeof obj.addEventListener ) {
+			obj.addEventListener( evt, fn, false );
+		}
+		else if ( 'undefined' != typeof obj.attachEvent ) {
+			obj.attachEvent( "on" + evt, fn );
+		}
+	}
+	function removeEvent( obj, evt)
+	{
+		if ( 'undefined' != typeof obj.removeEventListener ) {
+			obj.removeEventListener(evt, arguments.callee,false);
+		}
+		else if ( 'undefined' != typeof obj.detachEvent ) {
+			obj.detachEvent( "on" + evt);
+		}
+	}
+	
+		
+	var stage = new Kinetic.Stage({
+		container: 'demo',
+		width: window.innerWidth-10,
+		height: window.innerHeight-10
+	});
+	stage.setListening(false);
+	
+	//var points = [{x: 100, y: 300}, {x: 500, y: 100}, {x: 700, y: 400}, {x: 400, y: 600}, {x: 250, y: 500}];
+	//var colors = ['black', 'blue', 'green', 'yellow', 'orange', 'red'];
+	
+	var w = window.innerWidth;
+	var h = window.innerHeight;
+	var points2 = [{x: w/3-w/20, y: h/3, z: 1}, {x: 5*w/9-w/20, y: h/10, z: 4}, {x: 7*w/9-w/20, y: h/10, z: 2}, {x: 19*w/20, y: h/3, z: 3}, {x: 8*w/9-w/20, y: 2*h/3, z: 1}, {x: 6*w/9-w/20, y: 9*h/10, z: 2}, {x: 4*w/9-w/20, y: 2*h/3, z: 1} ];
+	var colors2 = ['black', 'marron', 'violet', 'blue', 'green', 'yellow', 'orange', 'red'];
+	var colors2Hexa = [[0x00,0x00,0x00], [0x77,0x66,0x22], [0xaa,0x00,0xaa], [0x00,0x00,0xff], [0x00,0xff,0x00], [0xff,0xff,0x00], [0xff,0x88,0x00], [0xff,0x00,0x00]];
+	var colors3Hexa = [[0xaa,0x00,0xaa], [0x00,0x00,0xff], [0x00,0xff,0x00], [0xff,0xff,0x00], [0xff,0xaa,0x00], [0xff,0x00,0x00], [0x00,0x00,0x00], [0x77,0x66,0x22]];
+	var colorsGrey = ['#000000', '#111111', '#333333', '#555555', '#777777', '#999999', '#bbbbbb', '#dddddd'];
+	var colorsGreyHexa = [[0xdd,0xdd,0xdd], [0xbb,0xbb,0xbb], [0x99,0x99,0x99], [0x77,0x77,0x77], [0x55,0x55,0x55], [0x33,0x33,0x33], [0x11,0x11,0x11], [0x00,0x00,0x00]];
+	
+	//var opacities = [20, 30, 40, 55, 70, 100];
+	var opacities2 = [0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.85, 1];
+	var opacitiesGrey = [0.10, 0.15, 0.20, 0.30, 0.40, 0.50, 0.60, 0.75];
+	
+	//var strokes = [1, 1, 2, 3, 4, 6];
+	var strokes2 = [1, 1, 2, 3, 4, 5, 6, 7];
+	
+	
+	var period = 1000;
+	var delta1 = 2 * Math.PI / period * 0.017 + 0.001;	
+	var delta2 = 2 * Math.PI / period * 0.083 + 0.001;	
+	var mouseMovement = [0,0];
+	var prevMousePos = [0,0];
+
+	function StartDemo(e)
+    {
+		mouseMovement[0] = 0;
+		mouseMovement[1] = 0;
+		prevMousePos[0] = e.clientX;
+		prevMousePos[1] = e.clientY;
+		demo2.setMovementFunction(move);
+		demo2.setColors(colors2Hexa, 1000);
+		demo2.setOpacities(opacities2, 8000);
+		
+		
+		addEvent(document.getElementsByTagName( 'body' )[0], 'mousemove', function(e)
+		{
+			mouseMovement[0] = e.clientX - prevMousePos[0];
+			mouseMovement[1] = prevMousePos[1] - e.clientY;
+			prevMousePos[0] = e.clientX;
+			prevMousePos[1] = e.clientY;
+		});
+    };
+	
+	function StopDemo(e)
+    {
+		removeEvent(document.getElementsByTagName( 'body' )[0], 'mousemove');
+		demo2.setMovementFunction(null);
+		demo2.setColors(colorsGreyHexa, 1000);
+		demo2.setOpacities(opacitiesGrey, 8000);
+    };
+	
+	function HandleDemo(e) {
+		if (HandleDemo.isOn) {
+			StopDemo(e);
+		}
+		else {
+			StartDemo(e);
+		}
+		HandleDemo.isOn = !HandleDemo.isOn;
+	}
+	
+	addEvent(document.getElementById( 'demo' ), 'click', HandleDemo);
+	
+	var move = function(frame, points) {
+		var t1 = frame*delta1;
+		var t2 = frame*delta2;
+		
+		for(var i = 0; i < points.length; i++) {
+			var vect = [prevMousePos[0]-points[i].x, prevMousePos[1]-points[i].y];
+			var dist = Math.sqrt(vect[0]*vect[0] + vect[1]*vect[1])/100;
+			
+			points[i].x += (i+1)/2*Math.cos(t1) + vect[0]/400*Math.cos(t2);
+			points[i].y -= (points.length-i+1)/2*Math.sin(t2*(i+1)) + vect[1]/400*Math.cos(t1);
+			points[i].z -= Math.sin(t1*(i+1))/200/(i+1);
+			
+			if (points[i].x < 20) { points[i].x = 20; }
+			else if (points[i].x > (stage.attrs.width-20)) { points[i].x = stage.attrs.width-20; }
+			if (points[i].y < 20) { points[i].y = 20; }
+			else if (points[i].y > (stage.attrs.height-20)) { points[i].y = stage.attrs.height-20; }
+			if (points[i].z <= 0) { points[i].z = 0.1; }
+		}
+	}
+	
+	//var demo = new BezierWandering(points, stage, 5000, colors, opacities, strokes, 20, 0, 0);
+	//demo.start();
+	
+	var demo2 = new BezierWandering(points2, stage, 10000, colorsGreyHexa, opacitiesGrey, strokes2, 10, null);
+	demo2.start();
+
+		</script>
+	</body>
+</html>
