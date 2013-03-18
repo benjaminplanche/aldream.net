@@ -1,5 +1,11 @@
-$(document).ready(function(){
+﻿$(document).ready(function(){
 	var $container = $('#blog-masonry');
+	$container.masonry({
+		itemSelector : 'article',
+		columnWidth: 318,
+		gutterWidth: 20,
+		isAnimated: !Modernizr.csstransitions
+	});
 	$container.imagesLoaded(function(){
 	  $container.masonry({
 			itemSelector : 'article',

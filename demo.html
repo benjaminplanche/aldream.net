@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
@@ -25,10 +25,10 @@
 			<!-- Add your site or application content here -->
 			<header>
 				<div id="demo-info">
-					<a href="javascript:ToggleInfo()"><img width=18 alt="Info" src="img/glyphicons-color/circle-info-grey.png"/></a>
+					<a href="javascript:ToggleInfo();"><img width=18 alt="Info" src="img/glyphicons-color/circle-info-grey.png"/></a>
 					<div></div>
 				</div>
-				<h1> <span id="demo-title">Demo #1</span>, by <a href ="http://aldream.net" title="Aldream.net">Aldream</a></h1>
+				<h1> <span id="demo-title">ERROR</span>, by <a href ="http://aldream.net" title="Aldream.net">Aldream</a></h1>
 				<nav id="site-menu">
 					<ul>
 						<li><a href="index.html" title="Home"><img width=15 alt="Home" src="img/glyphicons-color/home-grey.png"/></a></li>
@@ -41,63 +41,113 @@
 				<nav id="demo-menu">
 					<ul>
 						<li>
-							<a href="demo/js1k-2013-loom.html" require="">●</a>
+							<a href="javascript:LoadDemo('demo/js1k-2013-loom.html');">●</a>
 							<div class="desc">
 								<img src="img/demo/js1k-2013-loom.jpg" />
-								<h2><a href="demo/js1k-2013-loom.html">Loom</a></h2>
+								<h2><a href="javascript:LoadDemo('demo/js1k-2013-loom.html');">Loom</a></h2>
 								<p>1024B landscape generator (JS1K submission)</p>
 								<details>procedural generation, stochastic interpolation, painter algorithm</details>
 							</div>
 							<div class="info">
-								Blablabla BlablablaBlablabla Blablabla BlablablaBlablab laBlablablaBlablabla  Blablabla Blablabla BlablablaBlablabla Blablabla BlablablaBlablab laBlablablaBlablabla  Blablabla Blablabla BlablablaBlablabla Blablabla BlablablaBlablab laBlablablaBlablabla  Blablabla
+								<p><em>Spring is coming, The mountains take off their white mantle, Random mesh of life and ice, lakes and rocks.</em></p>
+								<h3>Controls</h3>
+								<ul>
+								  <li>Move the mouse to fly around.</li>
+									<li>Use the wheel to draw near or observe from afar.</li>
+									<li>Click to enjoy the view (may take ~1-3s to display) or resume your journey.</li>
+									<li>Actualize the page to generate a different landscape.</li>
+									<li>Change the ratio of the window if you find the relief too flat or too steep (it should look fine with a landscape ratio, but you can have different tastes...)</li>
+								</ul>
+								<h3>Description</h3>
+								<p>Final JS1K entry for the <a href="http://js1k.com/2013-spring/" title="JS1k Spring'13">Spring'13</a> edition.</p>
+								<p>This demo uses the same rendering method as my other submission (see <a href="javascript:LoadDemo('demo/js1k-2013-morphose.html');" title="Morphose Demo">here</a> too), the <a href="https://en.wikipedia.org/wiki/Painter%27s_algorithm" title="Wikipedia Article - Painter's algorithm">Painter's algorithm</a>, simplistic but quite light.</p>
+								<p>The landscape is generated using a mix between the <a href="https://en.wikipedia.org/wiki/Diamond-square_algorithm" title="Wikipedia Article - Diamond-square algorithm"> Midpoint displacement and the Diamond-square algorithms</a>, starting with a 2x2 matrix to get a detailed 257x257 heightmap, which is then used to build the 3D mesh.</p>
+								<p>Colors are applied taking into account the height (water < beach < vegetation < snow) and an rough estimation of the incline for the luminosity. By playing with those parameters and using the flexibility of the HSL color system, it is thus possible to create various nuances of vegetation (meadows for the sun-bathed hills, forests in the coombs, alpines above <small>- imagination can be required here</small>) or to simulate the effect of the sun on the snow (only found in the shadows for the lower altitudes).</p>
+								<p><small>By the way, don't fly to close to the surface or you might get entangled in the mesh and unravel the whole world (well, you will actually just get some threads spoiling the view)... Also, if you keep zooming, you will eventually reach a <em>negative distance</em>, inverting the controls. Both are harmless, but now you won't be surprised. I hadn't enough bytes left to better handle the zoom, sorry.<br/>
+								As for "why only stroking and not filling the faces?", the answer is simple: I couldn't afford to do both. I found the gaps left by stroking interesting, like a reminder of the "substantial" part of emptiness in the universe fabric. ;-)</small></p>
+								<h3>Source (1023B)</h3>
+								<pre>_='dgr1,R5;Y=.6;g[T=Z=l=0K[o,4,9,h=8];D8>l;Li=p*o-1;d[++l]hgv==o&iU)+jUw=i*p+j,gwK=(i%2?#*2+	w+p]+	w@]4:(v++oV#+@Vv)+h&Y!=6>?6:Bi=pirDL;k;kDZ++K[m=iq=j	u=o*i+j(i+k)(j@-k)z=	u@+k*pmCqCy=	u+o@x+(z-yr,"hsl("+[99&7<(y-=x)?1:67/z:2!32&6x*2/y:y)+"%",40&7&lt;y?x:6.04x/3:6x:1/5)]+"%)"]}}eNAfillRect(0,0,h=c.widOEWidO-17,r=c.hFEHF-21m=-GZw=-_ZBGYx=_Ydh`Ldj=9;j;vo,um,tw,d.push(z=o*v+(k=m*u+w*t)*x,(v*x-o*kz*rC(w*u-m*tz*h+h)	9K10]}d.sort(return f[3]-n[3]}`d)Style=	9AbegPaO(!AmovI8Q75Q42Q18Q7]!(BT?sete,16):0clickNclearo!$moveNZX/h;YY/r$=b.onNR+=f.dJ|-f.DJ/40};[function(f,nL=--j]-R*]!AlIfor(=[];MaO.i)j=p;j	dg[l-1][u*r-9,=2D[8-T]};b.on);-random()*f.client],--;wheelinAstrokeTimeout(	w]&lt;z?[l]/;e(T^=3))/!),#j%2?(v$mouse&*(@+1Aa.Bo=C+r,E=nerFeightGcos(IeTo(	JeltaYK]=L){N=OthQ	U/2|0V]2:_s(`l  ';for(Y=0;$='`_VUQONLKJIGFECBA@&$#!	'[Y++];)with(_.split($))_=join(pop());eval(_)</pre>
+								<p>Take a look at the comments in the running script, or at my JS1K submission, to see the <em>beautified</em> source and get more technical explanations.</p>
+
 							</div>
 						</li>
 						<li>
-							<a href="demo/js1k-2013-morphose.html" require="">●</a>
+							<a href="javascript:LoadDemo('demo/js1k-2013-morphose.html');">●</a>
 							<div class="desc">
 								<img src="img/demo/js1k-2013-morphose.jpg" />
-								<h2><a href="demo/js1k-2013-morphose.html">Morphose</a></h2>
+								<h2><a href="javascript:LoadDemo('demo/js1k-2013-morphose.html');">Morphose</a></h2>
 								<p>1024B 3D demo (JS1K submission)</p>
 								<details>mesh generation, tweening, painter algorithm</details>
 							</div>
 							<div class="info">
-								1024B 3D demo (JS1K submission) Blablabla BlablablaBlablab laBlablablaBlablabla  Blablabla Blablabla BlablablaBlablabla Blablabla BlablablaBlablab laBlablablaBlablabla  Blablabla Blablabla BlablablaBlablabla Blablabla BlablablaBlablab laBlablablaBlablabla  Blablabla
+								<p><em>"They said I could be anything..." <small>- 3D Mesh</small></em></p>
+
+								<h3>Controls</h3>
+								<ul>
+									<li>Change the camera orientation with the mouse.</li>
+									<li>Click to generate an impulse, briefly affecting the mesh cohesion. Click several times to stack impulses and get a kaleidoscope-like effect.</li> 
+									<li>Press any key to switch between "immaterialness" (starting mode) or "reality" (i.e. to invert the depth...).</li>
+								</ul>
+
+								<h3>Description</h3>
+								<p>First JS1K entry for the <a href="http://js1k.com/2013-spring/" title="JS1k Spring'13">Spring'13</a> edition.</p>
+								<p>This demo uses the <a href="https://en.wikipedia.org/wiki/Painter%27s_algorithm" title="Wikipedia Article - Painter's algorithm">Painter's algorithm</a> to render the 3D mesh: after projecting each face on the coordinate system defined by the camera, we sort them by decreasing depth to get the painting order. Simple, but quite light (and it is possible to use this painting order to apply effects such as a depth fog).</p>
+								<p>The displayed shape is the result of a chaotic tweening between two pre-generated meshes, a cube and a sphere. To get a smooth tweening for the faces, the sphere geometry is created by mapping each vertex of the cube (cube-mapping method).</p>
+								<p>To reduce the "collision" effect when the camera enters the shape and to make the whole demo looks more "unreal", I decided to invert the depth order during the rendering process. You can still observe the original order by pressing any keys.</p>
+								<p>Alas, this demo wasn't running as smoothly with Firefox and Opera as with Chrome (and I couldn't apply most of the optimization tricks because of the specificity of this scene or the lack of bytes). So I decided to add a simple browser detector, to reduce the shape details for Firefox and Opera. I'm not fond of this exception, but I found the render lags even worse (and it was interesting to search a trick to detect the browsers in a minimal number of bytes...). Now that you're aware of the difference, I just invite you to give it a try on Chrome, if you want more details.</p>
+
+								<h3>Source (1020B)</h3>
+								<pre>_='X=navigatK.vendK?1:2;SCTt=Z=Y=F=U=4,Vv=[eg2-4f%2)x=v[fBy$1)Bz$2)BC	x,y,zd=sqrLx*x+y!+z*zS	x/d,y/d,z/d)Of=6;fi&ij&jkQ;kS	C	E,jE+1,j+1E+k,j+^k_=d,F++;V*eR-`97*g*2^(R)},Py=abs(g-e)/g;1<y?0:^(3-2!)!!OMRecL0,0,W=c.widthGWidth-21,H=c.hJGHJ-21W/Q,H/Q,si=`23D=0T)D+=P(T	--,47T	||T.shifL);R=P(++t%263,97)/2,y=-w=-z=Y+x=Y+)C){s	e=U^+tan(_)*D))*_*R);f=9;f;vz,ux!,rx*w,s	N=z*v+xk=y*u+w*r(x*v-z*k)/N*H+H,(w*u-r!)/N*W+W));s=_}s.sKLe[6]-g[6]})s)>>"hsl("+[263i/s),"47%",F*X*X/77]+"%)",Abeg#Path(Amov@87542187](()clickT97)mousemoveZX/W,YY/HkeypressU=-UOsetInterval(M,16)function(e,g){	[Math.=V(C--fSf])+e*]Al#@fK(cos(=[	[F]),.push(+.5|0return ;F # 9]AfillOb.onQ*e.client],--;)`47s#(Astroke=+i)s/4*X-2,Z+`31*(!*y#in$=v[(f+&=16/X;>Style=@eTo(sAa.B%3EV(iG=#nerJeightKorLt(O};Q=2^1-_S`t/';for(Y in $='`_^QOLKJGEBA@>&$#!	')with(_.split($[Y]))_=join(pop());eval(_)</pre>
+								<p>Take a look at the comments in the running script, or at my JS1K submission, to see the <em>beautified</em> source and get more technical explanations.</p>
+
 							</div>
 						</li>
 						<li>
-							<a href="demo/beziering.html" require="">●</a>
+							<a href="javascript:LoadDemo('demo/beziering.html');">●</a>
 							<div class="desc">
 								<img src="img/demo/beziering.jpg" />
-								<h2><a href="demo/beziering.html">Beziering</a></h2>
+								<h2><a href="javascript:LoadDemo('demo/beziering.html');">Beziering</a></h2>
 								<p>Intoxicated Bezier curves</p>
 								<details>canvas, bezier</details>
 							</div>
 							<div class="info">
-								Intoxicated Bezier curves BlablablaBlablab laBlablablaBlablabla  Blablabla Blablabla BlablablaBlablabla Blablabla BlablablaBlablab laBlablablaBlablabla  Blablabla Blablabla BlablablaBlablabla Blablabla BlablablaBlablab laBlablablaBlablabla  Blablabla
+								<p><em>Intoxicated Bézier curves tracer</em></p>
+
+								<h3>Controls</h3>
+								<ul>
+									<li>Click to give it some life, click again to get some peace.</li>
+								</ul>
+
+								<h3>Description</h3>
+								<p>Some time ago, I read with great interest a presentation made by Steven Wittens, aka <a href="http://www.acko.net" title="Acko.net">Acko</a>, and I like <a href="http://acko.net/files/fullfrontal/fullfrontal/slides-net/" title="Making things with Maths - Slides">"making things with Maths"</a> too... Following his explanations and adding a <em>personal touch</em>, I made my own Bézier plotter.</p>
+								<p>The <a href="http://kineticjs.com" title="KineticJS.com">Kinetic.js library</a> is used here to handle various canvas layers easily.</p>
 							</div>
 						</li>
 						<li>
-							<a href="demo/404-windy.html" require="">●</a>
+							<a href="javascript:LoadDemo('demo/404-windy.html');">●</a>
 							<div class="desc">
 								<img src="img/demo/404-windy.jpg" />
-								<h2><a href="demo/404-windy.html">404-Windy</a></h2>
+								<h2><a href="javascript:LoadDemo('demo/404-windy.html);">404-Windy</a></h2>
 								<p>#404 CSS animation</p>
 								<details>css animation, css 3D</details>
 							</div>
 							<div class="info">
-								#404 CSS animation BlablablaBlablab laBlablablaBlablabla  Blablabla Blablabla BlablablaBlablabla Blablabla BlablablaBlablab laBlablablaBlablabla  Blablabla Blablabla BlablablaBlablabla Blablabla BlablablaBlablab laBlablablaBlablabla  Blablabla
+								<p>A simple experiment using CSS animations and 3D transforms.<br/>
+								JS is only used beforehand to randomize the animations durations.</p>
+								<p>Don't search for any meaning here, I'm not sure either what I wanted to represent...</p>
 							</div>
 						</li>
 						<li>
-							<a href="demo/404-acid.html" require="">●</a>
+							<a href="javascript:LoadDemo('demo/404-acid.html');">●</a>
 							<div class="desc">
 								<img src="img/demo/404-acid.jpg" />
-								<h2><a href="demo/404-acid.html">404-Acid</a></h2>
+								<h2><a href="javascript:LoadDemo('demo/404-acid.html');">404-Acid</a></h2>
 								<p>#404 CSS animation</p>
 								<details>dom manipulation</details>
 							</div>
 							<div class="info">
-								#404 CSS animation laBlablablaBlablabla  Blablabla Blablabla BlablablaBlablabla Blablabla BlablablaBlablab laBlablablaBlablabla  Blablabla Blablabla BlablablaBlablabla Blablabla BlablablaBlablab laBlablablaBlablabla  Blablabla
+								<p>At first I was trying to implement a function to alter the text content of a DOM tree by inserting new node inside... (It is indeed a bit more complicated than it sounds, since you can't use directly <em>innerHTML</em> or <em>innerText</em> without breaking the tree by also affecting the HTML nodes it may already contain. You have to iterate through the whole tree to find every text-node leaf.)<br/>
+								... and the tests I was using slowly drift toward <em>that</em>... (Why am I sharing this, btw?)</p>
 							</div>
 						</li>
 					</ul>
@@ -114,7 +164,8 @@
 			function AdjustDim() {
 				$('#scene').css('height', (window.innerHeight)+'px');
 				$('#scene').css('width', '100%');
-				$('#demo-menu').css('margin-top', (window.innerHeight/2-$('#demo-menu li').length*16)+'px');
+				$('#demo-menu').css('margin-top', (window.innerHeight/2-$('#demo-menu li').length*8)+'px');
+				$('#demo-info').css('max-height', (window.innerHeight - 40)+'px');
 			}
 			$(window).resize(AdjustDim);
 			AdjustDim();
@@ -122,45 +173,42 @@
 			function ToggleInfo() {
 				if ($('#demo-info > div').css('display') == 'block') {
 					$('#demo-info > div').css('display', 'none');
-					$('#demo-info').css('width', 'auto');
+					$('#demo-info').css('max-width', 'auto');
 					$('#demo-info').css('background', 'none');
-					$('#demo-info > div').html('');
+					$('#demo-info').css('border', 'none');
 				} else {
-					var info = $('#demo-menu li>a[href="demo/'+window.location.hash.substring(1)+'.html"] ~ .info').html();
-					$('#demo-info').css('width', '20em');
-					$('#demo-info > div').html(info);
+					$('#demo-info').css('max-width', '30em');
+					$('#demo-info').css('max-height', (window.innerHeight - 40)+'px');
+					$('#demo-info').css('border', '1px solid #ddd');
 					$('#demo-info > div').css('display', 'block');
 					$('#demo-info').css('background', '#fff');
 				}
 			}
 			
-			$('#demo-menu').css('margin-top', (window.innerHeight/2-$('#demo-menu li').length*16)+'px');
+			function LoadDemo(url) {
+				$('#scene').attr('src', url);
+				var title = $('#demo-menu h2>a[href="javascript:LoadDemo(\''+url+'\');"]').text();
+				history.pushState({}, title, "#"+url.split("/")[1].split(".")[0]);
+				$('#demo-title').text(title);
+				var info = $('#demo-menu li>a[href="javascript:LoadDemo(\''+url+'\');"] ~ .info').html();
+				$('#demo-info > div').html(info);
+			};
+			
 			if(window.location.hash) {
-				var urlDemo = 'demo/'+window.location.hash.substring(1)+'.html';
-				var title = $('#demo-menu h2>a[href="'+urlDemo+'"]').text();
-				if (title) {
-					$('#scene').attr('src', urlDemo);
-					$('#demo-title').text(title);
+				var url = 'demo/'+window.location.hash.substring(1)+'.html';
+				var title = $('#demo-menu h2>a[href="javascript:LoadDemo(\''+url+'\');"]').text();
+				if ($('#demo-menu h2>a[href="javascript:LoadDemo(\''+url+'\');"]').length > 0) {
+					LoadDemo(url);
 				}
 				else {
-				
-					$('#scene').attr('src', 'demo/404-acid.html');
-					$('#demo-title').text('404-Acid');
+					LoadDemo('demo/404-acid.html');
 					alert('Sorry, this demo couldn\'t be found.');
 				}
 			}
-			
-			$('#demo-menu li>a, #demo-menu h2>a').click(function(){
-				$('#scene').attr('src', $(this).attr('href'));
-				var title = $(this).next().find('h2').text();
-				history.pushState({}, title, "#"+$(this).attr('href').split("/")[1].split(".")[0]);
-				$('#demo-title').text(title);
-				if ($('#demo-info > div').css('display') == 'block') {
-					var info = $('#demo-menu li>a[href="'+$(this).attr('href')+'"] ~ .info').html();
-					$('#demo-info > div').html(info);
-				}
-				return false;
-			});
+			else {
+				var lastDemo = $('#demo-menu li a').first().attr('href').split("'")[1];
+				LoadDemo(lastDemo);
+			}
 			
 			$('#demo-menu div img').each(function() {
 				var top = ($(this).parent().height()/2-25)+'px';

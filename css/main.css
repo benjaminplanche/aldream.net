@@ -1,4 +1,4 @@
-/*
+﻿/*
  * HTML5 Boilerplate
  *
  * What follows is the result of much research on cross-browser styling.
@@ -98,6 +98,9 @@ textarea {
    Global
    =============================== */
  
+.right {
+	text-align: right;
+}
 /* 4 colors */ 
 .colorText:nth-child(4n+1), #demo-menu li:nth-child(4n+1):hover > a, #demo-menu li:nth-child(4n+1) > .desc details, article:nth-child(4n+2) a, article:nth-child(4n+2) footer {
     color: hsl(217, 74%, 39%);
@@ -480,6 +483,14 @@ article h1 {
 	letter-spacing: .02em;
 	text-transform: uppercase;
 }
+article .cols2 {
+	-moz-column-count:2; /* Firefox */
+		-webkit-column-count:2; /* Safari and Chrome */
+			column-count:2;
+	-moz-column-gap:40px; /* Firefox */
+-webkit-column-gap:40px; /* Safari and Chrome */
+column-gap:40px;
+}
 article img {
 	display: inline-block;
 	margin: 20px 0 0 0;
@@ -601,7 +612,7 @@ article footer p {
 	opacity: 1;
 }
 
-#demo header h1 a:hover {
+#demo header h1 a:hover, #demo-info > div a:hover {
 	text-decoration: underline;
 	color: #bbb;
 }
@@ -612,6 +623,7 @@ article footer p {
 	right: 1.2em;
 	border-radius: 5px;
 	opacity: .8;
+	overflow: auto;
 }
 
 #demo-info > a {
@@ -619,9 +631,19 @@ article footer p {
 	margin-right: 3px;
 }
 #demo-info > div {
-	font-size: .8em;
+	font-size: .7em;
 	display: none;
 	padding: 20px;
+}
+#demo-info h3 {
+	margin: 5px;
+}
+#demo-info pre {
+	margin: 5px;
+	padding: 5px;
+	border-radius: 5px;
+	background: #aaa;
+	font-size: .8em;
 }
 
 #demo-menu {
