@@ -1,0 +1,107 @@
+<p><em>Spring is coming, The mountains take off their white mantle, Random mesh of life and ice, lakes and rocks.</em></p>
+
+<h3>Controls</h3>
+<ul>
+  <li>Move the mouse to fly around.</li>
+	<li>Use the wheel to draw near or observe from afar.</li>
+	<li>Click to enjoy the view (may take ~1-3s to display) or resume your journey.</li>
+	<li>Actualize the page to generate a different landscape.</li>
+	<li>Change the ratio of the window if you find the relief too flat or too steep (it should look fine with a landscape ratio, but you can have different tastes...)</li>
+</ul>
+
+<h3>Description</h3>
+<p>Final JS1K entry for the <a href="http://js1k.com/2013-spring/" title="JS1k Spring'13">Spring'13</a> edition.</p>
+<p>This demo uses the same rendering method as my <a href=XXXXXX title=XXXX>other submission</a> (see <a href="#js1k-2013-morphose" title="Morphose Demo">here</a> too), the <a href="https://en.wikipedia.org/wiki/Painter%27s_algorithm" title="Wikipedia Article - Painter's algorithm">Painter's algorithm</a>, simplistic but quite light.</p>
+<p>The landscape is generated using a mix between the <a href="https://en.wikipedia.org/wiki/Diamond-square_algorithm" title="Wikipedia Article - Diamond-square algorithm"> Midpoint displacement and the Diamond-square algorithms</a>, starting with a 2x2 matrix to get a detailed 257x257 heightmap, which is then used to build the 3D mesh.</p>
+<p>Colors are applied taking into account the height (water < beach < vegetation < snow) and an rough estimation of the incline for the luminosity. By playing with those parameters and using the flexibility of the HSL color system, it is thus possible to create various nuances of vegetation (meadows for the sun-bathed hills, forests in the coombs, alpines above <small>- imagination can be required here</small>) or to simulate the effect of the sun on the snow (only found in the shadows for the lower altitudes).</p>
+<p><small>By the way, don't fly to close to the surface or you might get entangled in the mesh and unravel the whole world (well, you will actually just get some threads spoiling the view)... Also, if you keep zooming, you will eventually reach a <em>negative distance</em>, inverting the controls. Both are harmless, but now you won't be surprised. I hadn't enough bytes left to better handle the zoom, sorry.<br/>
+As for "why only stroking and not filling the faces?", the answer is simple: I couldn't afford to do both. I found the gaps left by stroking interesting, like a reminder of the "substantial" part of emptiness in the universe fabric. ;-)</small></p>
+
+<h3>Source</h3>
+<pre>XXXXX</pre>
+<p>Take a look at the comments in the running script, or at my JS1K submission, to see the <em>beautified</em> source and get more technical explanations.</p>
+
+
+---------------
+
+<p><em>"They said I could be anything..." <small>- 3D Mesh</small></em></p>
+
+<h3>Controls</h3>
+<ul>
+	<li>Change the camera orientation with the mouse.</li>
+	<li>Click to generate an impulse, briefly affecting the mesh cohesion. Click several times to stack impulses and get a kaleidoscope-like effect.</li> 
+	<li>Press any key to switch between "immaterialness" (starting mode) or "reality" (i.e. to invert the depth...).</li>
+</ul>
+
+<h3>Description</h3>
+<p>First JS1K entry for the <a href="http://js1k.com/2013-spring/" title="JS1k Spring'13">Spring'13</a> edition.</p>
+<p>This demo uses the <a href="https://en.wikipedia.org/wiki/Painter%27s_algorithm" title="Wikipedia Article - Painter's algorithm">Painter's algorithm</a> to render the 3D mesh: after projecting each face on the coordinate system defined by the camera, we sort them by decreasing depth to get the painting order. Simple, but quite light (and it is possible to use this painting order to apply effects such as a depth fog).</p>
+<p>The displayed shape is the result of a chaotic tweening between two pre-generated meshes, a cube and a sphere. To get a smooth tweening for the faces, the sphere geometry is created by mapping each vertex of the cube (cube-mapping method).</p>
+<p>To reduce the "collision" effect when the camera enters the shape and to make the whole demo looks more "unreal", I decided to invert the depth order during the rendering process. You can still observe the original order by pressing any keys.</p>
+<p>Alas, this demo wasn't running as smoothly with Firefox and Opera as with Chrome (and I couldn't apply most of the optimization tricks because of the specificity of this scene or the lack of bytes). So I decided to add a simple browser detector, to reduce the shape details for Firefox and Opera. I'm not fond of this exception, but I found the render lags even worse (and it was interesting to search a trick to detect the browsers in a minimal number of bytes...). Now that you're aware of the difference, I just invite you to give it a try on Chrome, if you want more details.</p>
+
+<h3>Source</h3>
+<pre>XXXXX</pre>
+<p>Take a look at the comments in the running script, or at my JS1K submission, to see the <em>beautified</em> source and get more technical explanations.</p>
+
+
+
+---------------
+
+<p><em>Intoxicated Bézier curves tracer</em></p>
+
+<h3>Controls</h3>
+<ul>
+	<li>Click to give it some life, click again to get some peace.</li>
+</ul>
+
+<h3>Description</h3>
+<p>Some time ago, I read with great interest a presentation made by Steven Wittens, aka <a href="http://www.acko.net" title="Acko.net">Acko</a>, I like <a href="http://acko.net/files/fullfrontal/fullfrontal/slides-net/" title="Making things with Maths - Slides">"making things with Maths"</a> too... Following his explanations and adding a <em>personal touch</em>, I made my own Bézier plotter.</p>
+<p>The <a href="http://kineticjs.com" title="KineticJS.com">Kinetic.js library</a> is used here to handle various canvas layers easily.</p>
+
+
+---------------
+
+<p>A simple experiment using CSS animations and 3D transforms.<br/>
+JS is only used beforehand to randomize the animations durations.</p>
+<p>Don't search for any meaning here, I'm not sure either what I wanted to represent...</p>
+
+---------------
+
+<p>At first I was trying to implement a function to alter the text content of a DOM tree by inserting new node inside... (It is indeed a bit more complicated than it sounds, since you can't use directly <em>innerHTML</em> or <em>innerText</em> without breaking the tree by also affecting the HTML nodes it may already contain. You have to iterate through the whole tree to find every text-node leaf.)<br/>
+... and the tests I was using slowly drift toward <em>that</em>... (Why am I sharing this, btw?)</p>
+
+
+------------------------------
+
+<p>After forsaking my previous website for such a long time, I decided to shut it down, and build a new one from its ashes. I will do my best to add new entries as regularly as I can, by sharing and describing the experiments I do on my spare time.<br/>
+While designing of this website, I tried to apply some new technologies, playing with CSS3 and HTML5. I'm not quite satisfied with the current result yet, and I'm still working on some improvements, so the experience may change in the coming weeks... Wait & See.<br/>
+In the same time, I will start pushing online some demos I worked on those past weeks. Articles about the interesting notions I faced while implementing them (3D rendering, procedural generation, Bézier curves, JS minification, DOM traversal, etc) should follow soon.</p>
+
+------------------------------
+<p>So let's inaugurate the demo section with a small canvas application I made some time ago, after reading some interesting <a href="http://acko.net/files/fullfrontal/fullfrontal/slides-net/" title="Making things with Maths - Slides">slides</a> made by Steven Wittens, aka <a href="http://www.acko.net" title="Acko.net">Acko</a>.<br/>
+I just tried to illustrate on my own way the graphic method to draw Bézier curves. <a href="demo.html#beziering" title="Beziering - Demo">See the demo</a></p>
+
+------------------------------
+
+<p>Today's demos are actually more experiments gone wrong than real displays, but... well, it was fun to make, and the occasion to apply some of my readings about DOM manipulation or CSS animations / 3D transforms. See the <a href="demo.html#404-acid" title="404-Acid - Demo">DOM demo</a> or the <a href="demo.html#404-windy" title="404 Windy - Demo">CSS one</a></p>
+
+------------------------------
+
+<p>A year ago, I translated and personalized a Matlab school-project, about procedural generation and 3D rendering, into a JS demo. It was quite heavy (I was using <a href="http://sylvester.jcoglan.com/" title="Sylvester.js Library">sylvester.js</a> to handle matrices and vectors), slow and somehow buggy, but at that time I was satisfied with all I learned from doing it, and had other projects to take care of.<br/>
+Then I discovered the <a href="http://js1k.com/" title="JS1K">JS1K challenge</a>, and decided that if a new edition should come, I would try to optimize my "landscaper" to submit it.<br/>
+The new edition finally came. It was a real challenge for me to crush my old and immature demo into 1024 bytes. In the process, I learnt many mathematical or programming tricks, making it totally worth the efforts. Moreover, I ended up with a demo not only lighter, but faster and more detailed than the original one! Feedback is most welcome! <a href="demo.html#loom" title="Loom - Demo">See the demo</a></p>
+
+------------------------------
+
+<p>I finally had so much fun implementing my minimalist 3D renderer, that I wanted to try to apply it to something else than landscapes. So I started writing small functions to build various geometries ans then display them, until it came to me that I could make an "old-school" demo out of that.
+Here is the result: the Painter's algo, a cube, a sphere, and a chaotic tweening between both geometries to generate pseudo-random shapes...<br/>
+To get some feedback, I submitted it on JS1K (actually, I posted it before <a href="demo.html#loom" title="Loom - Demo">Loom</a>, as only the last entry per author will compete. And I still have a preference for my landscape demo, which also fits the competition's theme...). <a href="demo.html#morphose" title="Morphose - Demo">See the demo</a></p>
+
+-------------------------------------------
+Next articles:
+- Bezier
+- Painter's Algo
+- Landscape generation
+- Color labelling
+- Mesh volume and COM
