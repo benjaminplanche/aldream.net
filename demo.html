@@ -121,6 +121,10 @@
 
 								<h3>Description</h3>
 								<p>Some time ago, I read with great interest a presentation made by Steven Wittens, aka <a href="http://www.acko.net" title="Acko.net">Acko</a>, and I like <a href="http://acko.net/files/fullfrontal/fullfrontal/slides-net/" title="Making things with Maths - Slides">"making things with Maths"</a> too... Following his explanations and adding a <em>personal touch</em>, I made my own Bézier plotter.</p>
+								<p>This is in fact a direct graphic interpretation of <a href="https://en.wikipedia.org/wiki/De_Casteljau%27s_algorithm#B.C3.A9zier_curve" title="Wikipedia Article - De Casteljau's algorithm">De Casteljau's algorithm</a> to evaluate Bézier curves.</p>
+								Given a polyline P<small>0</small> made of <em>n</em> segments (<em>n+1</em> points). Every iteration <em>#i</em> of our algorithm, we take, for each oriented segment, the point situated at <em>(i/MAX_ITE)%</em> of the segment length, and we connect these points to build a new polyline P<small>1</small> of <em>n-1</em> segments. We recursively repeat this operation on the polyline and its descendants (P<small>2</small> with <em>n-2</em> segments, P<small>3</small> with <em>n-3</em> segments,etc), until we get a polyline of 0 segment, ie. a single point.</p>
+								<p>If we follow the path of this point through the consecutive iterations, we get a Bézier curve of degree <em>n</em> (while the moving segments extremities of a polyline P<small>X</small> follow Bézier curves of degree <em>X</em>).</p>
+								<p>The specificity here is that I use close polylines: the overlapping effect (by adding a segment to close them) allows me to virtually avoid the segments decrease every iteration (it thus could be possible to iterate infinitely, until reaching the limit state.</p>
 								<p>The <a href="http://kineticjs.com" title="KineticJS.com">Kinetic.js library</a> is used here to handle various canvas layers easily.</p>
 							</div>
 						</li>
