@@ -24,19 +24,15 @@ body {
 	font-family: 'Open Sans', sans-serif;
 }
 
-/*
- * Remove text-shadow in selection highlight: h5bp.com/i
- * These selection declarations have to be separate.
- * Customize the background color to match your design.
- */
-
 ::-moz-selection {
-    background: #b3d4fc;
+	color: #fff;
+    background: #777;
     text-shadow: none;
 }
 
 ::selection {
-    background: #b3d4fc;
+	color: #fff;
+    background: #777;
     text-shadow: none;
 }
 
