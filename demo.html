@@ -33,10 +33,10 @@
 				<h1> <span id="demo-title">Loading...</span>, by <a href ="http://aldream.net" title="Aldream.net">Aldream</a></h1>
 				<nav id="menu-top-mini-demo">
 					<ul>
-						<li><a href="index.html" title="Blog"><img width=12 alt="Blog" src="img/glyphicons-color/book-blue.png"/></a></li>
-						<li><a href="demo.html" title="Demo"><img width=15 alt="Demo" src="img/glyphicons-color/eye-green.png"/></a></li>
-						<li><a href="projects.html" title="Projects"><img width=15 alt="Projects" src="img/glyphicons-color/star-yellow.png"/></a></li>
-						<li><a href="about.html" title="About"><img width=15 alt="About" src="img/glyphicons-color/user-red.png"/></a></li>
+						<li><a href="/blog" title="Blog"><img width=12 alt="Blog" src="img/glyphicons-color/book-blue.png"/></a></li>
+						<li><a href="/demo" title="Demo"><img width=15 alt="Demo" src="img/glyphicons-color/eye-green.png"/></a></li>
+						<li><a href="/projects" title="Projects"><img width=15 alt="Projects" src="img/glyphicons-color/star-yellow.png"/></a></li>
+						<li><a href="/about" title="About"><img width=15 alt="About" src="img/glyphicons-color/user-red.png"/></a></li>
 					</ul>
 				</nav>
 				<nav id="demo-menu">
@@ -158,7 +158,7 @@
 					</ul>
 				</nav>
 			</header>
-			<iframe id="scene" src=""></iframe> 
+			<iframe name="scene" id="scene" src=""></iframe> 
 		</section>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -204,9 +204,19 @@
 				}
 			};
 			
-			if (window.location.hash) {
-				var url = 'demo/'+window.location.hash.substring(1)+'.html';
+			var hash = window.location.hash.substring(1);
+			if (!hash) {
+				var regexHash = new RegExp('/demo/([A-Za-z0-9-]+)/?$');
+				hash = regexHash.exec(location.href);
+				if (hash) {
+					hash = hash[1];
+				}
+			}
+			
+			if (hash) {
+				var url = 'demo/'+hash+'.html';
 				if ($('#demo-menu h2>a[href="'+url+'"]').length > 0) {
+					history.replaceState({url:url}, hash, 'demo#'+hash);
 					LoadDemo(url);
 				}
 				else {

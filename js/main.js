@@ -1,5 +1,15 @@
 ﻿$(document).ready(function(){
+	function MoveToPseudoAnchor() {
+		var regexHash = new RegExp('/blog/([A-Za-z0-9-]+)/?$');
+		var pseudoHash = regexHash.exec(location.href);
+		if (pseudoHash) {
+			$(document).scrollTop( $("#"+pseudoHash[1]).offset().top );
+		}
+	}
 	var $container = $('#blog-masonry');
+	$('.masonry').bind("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", function() {
+		MoveToPseudoAnchor();
+	});
 	$container.masonry({
 		itemSelector : 'article',
 		columnWidth: 320,
@@ -8,7 +18,11 @@
 		isFitWidth: true
 	});
 	$container.imagesLoaded(function(){
-	  $container.masonry({
+		$('.masonry').bind("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", function() {
+			$('.masonry').unbind("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd");
+			MoveToPseudoAnchor();
+		});
+		$container.masonry({
 			itemSelector : 'article',
 			columnWidth: 320,
 			gutterWidth: 20,
@@ -16,7 +30,7 @@
 			isFitWidth: true
 		});
 	});
-	
+	MoveToPseudoAnchor();
 	
 	/*
 	var Aldream = {

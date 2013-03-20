@@ -14,7 +14,6 @@
 		</script>
 		<script>
 /*
-// MORPHOSE - by Benjamin (Bill) Planche
 // "BEAUTIFIED" SOURCE, made from the much dirtier original one (10kB limit here, so to take a look at the implementation process, or at the tricks used, check my website)
 
 // Maps:
@@ -54,21 +53,21 @@ function GenerateVertex (i, j, face, trId) {
 }
 
 var trId = 0;
-// To save some bytes, we iterate desc. The idea is that for each element we iterate on, we evaluate the triangles faces of the square which as for top-left corner this element. So we don't want to iterate on the last column and last row. We thus start at the previous ones (reason why we decreased newDim by 1):
+// To save some bytes, we iterate desc. The idea is that for each element we iterate on, we evaluate the triangles faces of the square which as for top-left corner this element.
 for (var f = 6; f--;)
 	for (var i=NB_DIV/X; i--;)
-		// X --- o	Schema representing the faces extracted from a square. X is the current element.
-		// |  \  |
-		// o --- o
+	// X --- o	Schema representing the faces extracted from a square. X is the current element.
+	// |  \  |
+	// o --- o
 		for (j = NB_DIV/X; j--;) for (k=2;k--;) // We iterate 2 times for each square in order to generate the 2 corresponding triangle-faces.
 			// We store each face information into an array [V1.X, V1.Y, V1.Z, V2.X, V2.Y, V2.Z, V3.X, V3.Y, V3.Z, color]:
 			facesSphere[trId] = [],
 			facesCube[trId] = [],
-			GenerateVertex(i,j, f, trId), 	// 1st vertex (top-left corner of the square)
+			GenerateVertex(i,j, f, trId), 		// 1st vertex (top-left corner of the square)
 			GenerateVertex(i+1,j+1, f, trId),	// 2nd vertex (bottom-right)
-													// 3rd vertex - the one varying (either corresponding to the element on the next row, or the one on the next col). We use a modulo 2 on the face's id to select the good one.
-			// Byte saving trick:(faceId+1)%2 = k. And we don't mind which triangle we generate first, so k makes a cheaper way to distinguish them.
+												// 3rd vertex - the one varying (either corresponding to the element on the next row, or the one on the next col). We use a modulo 2 on the face's id to select the good one.
 			facesSphere[trId].push(GenerateVertex(i+k,j+1-k, f, trId)), // Will be useful to add some visual effects during the rendering.
+			// Byte saving trick:(faceId+1)%2 = k. And we don't mind which triangle we generate first, so k makes a cheaper way to distinguish them.
 			trId++;
 
 ///
@@ -134,21 +133,21 @@ function Paint () {
 			u=Tween(facesCube[l][--j], facesSphere[l][j], coefTween, T, pulseCos)+coef*x*y,
 			r=Tween(facesCube[l][--j], facesSphere[l][j], coefTween, T, pulseCos)+coef*x*w;
 			
-			// For each face, we store its screen information into an array [P1.Z, P1.Y, P1.X, P2.Z, P2.Y, P2.X, P3.Z, P3.Y, P3.X, origDist], with Z the depth viewed from the camera:
+			// For each face, we store its screen information into an array [P1.Z, P1.Y, P1.X, P2.Z, P2.Y, P2.X, P3.Z, P3.Y, P3.X, origDist], with Z the depth from the camera:
 			var k = y*u+w*r, N = z*v+x*k;
 			screenCoord[l].push(N,(x*v-z*k)/N*wHeight + wHeight +.5|0,(w*u-r*y)/N*wWidth + wWidth +.5|0);
 		}
 		screenCoord[l][9] = facesSphere[l][9]
 	}
 	
-	// To draw the mesh, we use the simple Painter's algorithm (which works well in our case, since we don't have overlapping elements): we sort the faces by decreasing depth (we will simply use P3.dist instead of the average) and draw them it this order.
+	// To draw the mesh, we use the simple Painter's algorithm (which works well in our case, since we don't have overlapping elements): we sort the faces by decreasing depth (far -> near - we will simply use P3.dist instead of the average) and draw them it this order.
 	screenCoord.sort(function(H,S){return H[6]-S[6]}); // Sorting
 			
 	for (l in screenCoord) // Evaluating the face color and drawing it:
 		a.fillStyle = a.strokeStyle='hsl('+[
-			399*coefTween/screenCoord[l][9],	// Hue - Function of the time and of the original distance to the origin.
-			'50%',									// Saturation - constant
-			l/75*X*X*Math.cos(pulseCos/7)			// Luminosity - Function of the periodic pulse + Cheap fog effect by using the sorted index
+			399*coefTween/screenCoord[l][9],// Hue - Function of the time and of the original distance to the origin.
+			'50%',							// Saturation - constant
+			l/75*X*X*Math.cos(pulseCos/7)	// Luminosity - Function of the periodic pulse + Cheap fog effect by using the sorted index
 		]+'%)',
 		a.beginPath(),
 		a.moveTo(screenCoord[l][8], screenCoord[l][7]),

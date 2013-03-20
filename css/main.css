@@ -100,16 +100,16 @@ textarea {
 	text-align: center;
 }
 /* 4 colors */ 
-.colorText:nth-child(4n+1), #demo-menu li:nth-child(4n+1):hover > a, #demo-menu li:nth-child(4n+1) > .desc details, article:nth-child(4n+2) a, article:nth-child(4n+2) footer, #demo-menu .desc:nth-child(4n+2) h2 a:hover, #about article:nth-child(4n+2) p * {
+.colorText:nth-child(4n+1), #demo-menu li:nth-child(4n+1):hover > a, #demo-menu li:nth-child(4n+1) > .desc details, article:nth-child(4n+2) a, article:nth-child(4n+2) footer, #demo-menu li:nth-child(4n+1) h2 a:hover, #about article:nth-child(4n+2) p * {
     color: hsl(217, 74%, 39%);
 }
-.colorText:nth-child(4n+2), #demo-menu li:nth-child(4n+2):hover > a, #demo-menu li:nth-child(4n+2) > .desc details, article:nth-child(4n+3) a, article:nth-child(4n+3) footer, #demo-menu .desc:nth-child(4n+3) h2 a:hover, #about article:nth-child(4n+3) p * {
+.colorText:nth-child(4n+2), #demo-menu li:nth-child(4n+2):hover > a, #demo-menu li:nth-child(4n+2) > .desc details, article:nth-child(4n+3) a, article:nth-child(4n+3) footer, #demo-menu li:nth-child(4n+2) h2 a:hover, #about article:nth-child(4n+3) p * {
     color: hsl(133, 74%, 39%);
 }
-.colorText:nth-child(4n+3), #demo-menu li:nth-child(4n+3):hover > a, #demo-menu li:nth-child(4n+3) > .desc details, article:nth-child(4n+0) a, article:nth-child(4n+0) footer, #demo-menu .desc:nth-child(4n+0) h2 a:hover, #about article:nth-child(4n+0) p * {
+.colorText:nth-child(4n+3), #demo-menu li:nth-child(4n+3):hover > a, #demo-menu li:nth-child(4n+3) > .desc details, article:nth-child(4n+0) a, article:nth-child(4n+0) footer, #demo-menu li:nth-child(4n+3) h2 a:hover, #about article:nth-child(4n+0) p * {
     color: hsl(42, 74%, 51%);
 }
-.colorText:nth-child(4n+0), #demo-menu li:nth-child(4n+0):hover > a, #demo-menu li:nth-child(4n+0) > .desc details, article:nth-child(4n+1) a, article:nth-child(4n+1) footer, #demo-menu .desc:nth-child(4n+1) h2 a:hover, #about article:nth-child(4n+1) p * {
+.colorText:nth-child(4n+0), #demo-menu li:nth-child(4n+0):hover > a, #demo-menu li:nth-child(4n+0) > .desc details, article:nth-child(4n+1) a, article:nth-child(4n+1) footer, #demo-menu li:nth-child(4n+0) h2 a:hover, #about article:nth-child(4n+1) p * {
     color: hsl(0, 74%, 39%);
 }
 
@@ -524,6 +524,10 @@ article img {
 	float: right;
 	margin: 0 0 0 15px;
 }
+#projects article .no-border:hover {
+	border: none;
+	background: none;
+}
 #projects .no-border {
 	border: none;
 }
@@ -622,6 +626,11 @@ article footer .twitter-share-button {
 			-ms-transform: none;
 				-o-transform: none;
 					transform: none;
+}
+
+#about .tweets div {
+	margin: 0;
+	padding: 10px;
 }
 
 #error #blog-masonry {
