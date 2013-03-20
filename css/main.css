@@ -544,6 +544,16 @@ article footer p {
 	float: right;
 	margin: 0;
 }
+#blog article footer time{
+	float: right;
+	margin-bottom: 10px;
+	text-align: right;
+}
+article footer .twitter-share-button {
+	float: left;
+	position:relative;
+	top: -4px;
+}
 .task, .type {
 	border-top: 1px solid #777;
 	font-size: .8em;
