@@ -249,7 +249,7 @@ article:nth-child(4n+1) img {
    Blog / Projet / About
    =============================== */
 
-#projects, #about, #blog {
+#projects, #about, #blog, #error  {
 	background: url('../img/pattern-stroke.png') repeat;
 	margin: 0;
 	padding: 0;
@@ -568,7 +568,7 @@ article footer p {
 }
 
 /* ABOUT */
-#about article {
+#about article, #error article {
 	background: #222;
 	border: none;
 	color: #999;
@@ -607,7 +607,7 @@ article footer p {
 	padding: 0;
 }
 
-#about article:after {
+#about article:after, #error article:after {
 	-webkit-box-shadow: none;
 		-moz-box-shadow: none;
 			box-shadow: none;
@@ -616,6 +616,22 @@ article footer p {
 			-ms-transform: none;
 				-o-transform: none;
 					transform: none;
+}
+
+#error #blog-masonry {
+	padding-top:7em;
+	margin-bottom: 1em;
+}
+#error #blog-masonry > h1{
+	left: 1em;
+}
+#error article {
+	margin: auto;
+	margin-top: 6em;
+}
+#error article p {
+	font-size: 1.2em;
+	margin-bottom: 10px;
 }
 
 
