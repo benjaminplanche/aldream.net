@@ -1064,4 +1064,78 @@ article footer p {
     h3 {
         page-break-after: avoid;
     }
+	
+	#main-header {
+		position: absolute;
+		left: 50%;
+		margin-left: -31.4375em;
+		height: 5em;
+		z-index: 99;
+	}
+	
+	#main-header h1
+	{
+		position: absolute;
+		top: -1.5em;
+		font-family: serif;
+		font-size: 5em;
+		font-weight: normal;
+	}
+	#main-header h1 a, header h1 a:visited
+	{
+		display: inline-block;
+		text-decoration: none;
+		transform: none;
+			-webkit-transform: none;
+				-moz-transform: none;
+					-ms-transform: none;
+						-o-transform: none;
+	}
+	#main-header h1 a:before, #main-header h1 a:after {
+		display: none;
+	}
+	.span1 {
+		width: 62.25em;
+	}
+	.span2 {
+		width: 62.25em;
+	}
+	.span3 {
+		width: 62.25em;
+	}
+	
+	.masonry-brick[style] {
+		position:relative !important;
+		display:block !important;
+		left:0 !important;
+		top:auto !important;
+		float:left;
+		margin: 1em auto;
+	}
+	
+	article {
+		page-break-inside: avoid;
+    }
+	
+	article::after {
+		content: "";
+		display: none;
+	}
+	
+	.span1 img {
+		float: right;
+		margin: 1em;
+	}
+	.span2 img {
+		margin-left: 10.5em;
+	}
+	
+	#blog-masonry > h1 {
+		font-size: 3em;
+		margin-top: -1em;
+	}
+
+	#blog-masonry {
+		margin: 3em auto;
+	}
 }
