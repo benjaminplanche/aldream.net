@@ -13,6 +13,7 @@
         <title>Aldream - About</title>
         <meta name="viewport" content="width=device-width">
 
+		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/normalize.css"/>
         <link id=1 rel="stylesheet" href="css/main.css"/>
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
@@ -25,12 +26,20 @@
 
 			<header id="main-header">
 				<h1><a href="/">Aldream</a></h1>
-				<nav id="top_menu">
+				<nav id="menu-top">
 					<ul>
-						<a href="index.html"><li class="back_blue">Blog</li></a>
-						<a href="demo.html"><li class="back_green">Demo</li></a>
-						<a href="projects.html"><li class="back_yellow">Projects</li></a>
-						<a href="about.html"><li class="back_red">About</li></a>
+						<a href="index.html"><li>Blog</li></a>
+						<a href="demo.html"><li>Demo</li></a>
+						<a href="projects.html"><li>Projects</li></a>
+						<a href="about.html"><li>About</li></a>
+					</ul>
+				</nav>
+				<nav id="menu-top-mini">
+					<ul>
+						<li><a href="index.html" title="Blog"><img width=22 alt="Blog" src="img/glyphicons-color/book-blue.png"/></a></li>
+						<li><a href="demo.html" title="Demo"><img width=25 alt="Demo" src="img/glyphicons-color/eye-green.png"/></a></li>
+						<li><a href="projects.html" title="Projects"><img width=25 alt="Projects" src="img/glyphicons-color/star-yellow.png"/></a></li>
+						<li><a href="about.html" title="About"><img width=25 alt="About" src="img/glyphicons-color/user-red.png"/></a></li>
 					</ul>
 				</nav>
 			</header>
@@ -39,25 +48,40 @@
 				<h1>About</h1>
 				<article class="span1 desc">
 					<div>
-						<p>Hey, I'm a 22 year-old french student in Computer Science at INSA-Lyon</p>
-						
-						<p>I'm especially interested in image processing, procedural generation, and everything leading to more intelligent or aesthetic applications.<br/>
-						Using maths to give sense to raw information, or birth to whole sceneries, is the kind of magic which never grows old to me.</p>
-
-						<p>Even though I usually work on desktop projects, I made the Web my playground, enjoying the current exhuberance around the new technologies. I'm also keen on UI design.</p>
-
-						<p>I like learning new stuff through personal experiments (hence this website for instance) or group projects (side-projects, game-jams,...).</p>
-
-						<p>I enjoy travelling around, seeing new horizons, meeting new people. I'm currently doing an pretty cool internship in Japan, as a gap year.</p>
-
-						<p>AFK, I'm a movie buff, a photo hobbyist, a music enthousiast and an occasional mountains roamer.</p>
+						<h2>Resume</h2>
+						<p>Learn more about my professional background: </p>
+						<p class="center"><a href="doc/Benjamin Planche - Curriculum Vitae - EN.pdf" title="Resume - PDF - EN">Resume - English version</a></p>
+						<h2>Contact</h2>
+						<p>Always a pleasure to discuss. Click to display my email: </p>
+						<p id="secretContainer" class="center"><a href="javascript:DisplayTopSecretTotallySecured()" title="You swear you're not a bot?">Contact me</a></p>
+						<h2>Social Networks</h2>
+						<ul>
+							<li>I try to look serious on <a href="http://www.linkedin.com/in/benjaminplanche/en" title="My Linkedin Resume">Linkedin</a>.</li>
+							<li><a href="https://github.com/Aldream" title="My Github Account">Github</a> centralizes most of my projects.</li>
+							<li>I sometimes <a href="https://twitter.com/b_aldream" title="My Twitter Page">tweet</a> about my passions.</li>
+							<li>I seek feedback on <a href="http://www.flickr.com/photos/billleroux" title="My Flickr Portefolio">Flickr</a>.</li>
+						</ul>
 					</div>
 				</article>
-				<article class="span1"><a class="twitter-timeline" data-dnt="true" href="https://twitter.com/b_aldream" data-widget-id="311832754729918464">Tweets de @b_aldream</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+				<article class="span1 desc">
+					<div>
+						<p><strong>Hey, I'm a 22 year-old french student in Computer Science at <a href="http://insa-lyon.fr/en" title="INSA-Lyon">INSA-Lyon</a>.</strong></p>
+						
+						<p>I'm especially interested in <strong>image processing</strong>, <strong>procedural generation</strong>, and everything leading to more <em>intelligent</em> or <em>aesthetic</em> applications.</p>
 
-</article>
-				
+						<p>Even though I usually work on <strong>desktop</strong> projects, I made the <strong>Web</strong> my playground, enjoying the current exhuberance around the <em>new technologies</em>. I'm also keen on <strong>UI</strong> design.</p>
+
+						<p>I like learning new stuff through <a href="demo.html" title="Demo Sandbox">personal experiments</a> (hence this website) or <a href="projects.html" title="Projects">group projects</a> (side-projects, game-jams,...).</p>
+
+						<p>I enjoy <em>travelling around, seeing new horizons, meeting new people</em>. I'm currently doing a pretty cool internship in Japan, as a gap year.</p>
+
+						<p>AFK, I'm a <em>movie</em> buff, a <em>photo</em> hobbyist, a <em>music</em> enthousiast and an occasional mountains <em>roamer</em>.</p>
+					</div>
+				</article>
+				<article class="span1">
+					<a class="twitter-timeline" data-dnt="true" href="https://twitter.com/b_aldream" data-widget-id="311832754729918464">Tweets de @b_aldream</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+				</article>
 			</section>
 			<footer id="page-footer">&copy; Aldream 2013</footer>
 		</section>
@@ -67,6 +91,12 @@
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
 		<script>
+			function DisplayTopSecretTotallySecured() {
+				var directive = ['109','097','105','108','116','111']
+				var secret = ['098','101','110','106','097','109','105','110','046','112','108','097','110','099','104','101','064','097','108','100','114','101','097','109','046','110','101','116'];
+				var key='&#';
+				$('#secretContainer').html('<a href="mailto:'+key+secret.join(key)+'">'+key+secret.join(key)+'</a>');
+			}
 			//$('> section').css('height', (window.scrollHeight>window.innerHeight?window.scrollHeight:window.innerHeight)+'px');
 		</script>
 

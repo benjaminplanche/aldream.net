@@ -5,14 +5,15 @@
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
-        <meta content="Benjamin Bill Planche" name="author">
-	<meta content="Portfolio of Benjamin (Bill) Planche, aka Aldream. About image processing, computer graphics, web experiments,..." name="description">
-	<meta content="aldream, benjamin, planche, bill, blog, demo, projects, web, image, graphics, article" name="keywords">
-	<meta content="index,follow" name="robots">
+		<meta content="Benjamin Bill Planche" name="author">
+		<meta content="Portfolio of Benjamin (Bill) Planche, aka Aldream. About image processing, computer graphics, web experiments,..." name="description">
+		<meta content="aldream, benjamin, planche, bill, blog, demo, projects, web, image, graphics" name="keywords">
+		<meta content="index,follow" name="robots">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>Aldream - Blog</title>
         <meta name="viewport" content="width=device-width">
 
+		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/normalize.css"/>
         <link rel="stylesheet" href="css/main.css"/>
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
@@ -26,24 +27,32 @@
 			<!-- Add your site or application content here -->
 			<header id="main-header">
 				<h1><a href="/">Aldream</a></h1>
-				<nav id="top_menu">
+				<nav id="menu-top">
 					<ul>
-						<a href="index.html"><li class="back_blue">Blog</li></a>
-						<a href="demo.html"><li class="back_green">Demo</li></a>
-						<a href="projects.html"><li class="back_yellow">Projects</li></a>
-						<a href="about.html"><li class="back_red">About</li></a>
+						<a href="index.html"><li>Blog</li></a>
+						<a href="demo.html"><li>Demo</li></a>
+						<a href="projects.html"><li>Projects</li></a>
+						<a href="about.html"><li>About</li></a>
+					</ul>
+				</nav>
+				<nav id="menu-top-mini">
+					<ul>
+						<li><a href="index.html" title="Blog"><img width=22 alt="Blog" src="img/glyphicons-color/book-blue.png"/></a></li>
+						<li><a href="demo.html" title="Demo"><img width=25 alt="Demo" src="img/glyphicons-color/eye-green.png"/></a></li>
+						<li><a href="projects.html" title="Projects"><img width=25 alt="Projects" src="img/glyphicons-color/star-yellow.png"/></a></li>
+						<li><a href="about.html" title="About"><img width=25 alt="About" src="img/glyphicons-color/user-red.png"/></a></li>
 					</ul>
 				</nav>
 			</header>
 			<section id="blog-masonry">
 				<h1>Articles</h1>
-				<article class="span1">
+				<article id="morphose" class="span1">
 					<div>
 						<h1>Morphose</h1>
 						<img width="280" src="img/blog/morphose.jpg" alt="Morphose - Demo, Mesh Tweening" title="Morphose - Demo, Mesh Tweening"/>
-						<p>I finally had so much fun implementing my minimalist 3D renderer, that I wanted to try to apply it to something else than landscapes.</p>
+						<p>I finally had so much fun implementing my minimalist <strong>3D renderer</strong>, that I wanted to try to apply it to something else than landscapes.</p>
 						<p>So I started writing small functions to build various geometries ans then display them, until it came to me that I could make an <em>old-school</em> demo out of that.</p>
-						<p>Here is the result: the Painter's algo, a cube, a sphere, and a chaotic tweening between both geometries to generate pseudo-random shapes...</p>
+						<p>Here is the result: the Painter's algo, a cube, a sphere, and a chaotic tweening between both geometries to <strong>generate pseudo-random shapes</strong>, in <strong>1020 bytes</strong>.</p>
 						<p>To get some feedback, I submitted it on <a href="http://js1k.com/2013-spring/" title="JS1K">JS1K</a> (actually, I posted it before <a href="demo.html#js1k-2013-loom" title="Loom - Demo">Loom</a>, as only the last entry per author will compete. And I still have a preference for my landscape demo, which also fits the competition's theme...).</p>
 						<p class="right"><a href="demo.html#js1k-2013-morphose" title="Morphose - Demo">See the demo</a></p>
 						<footer>
@@ -51,14 +60,14 @@
 						</footer>
 					</div>
 				</article>
-				<article class="span2">
+				<article id="loom" class="span2">
 					<div>
 						<h1>Loom</h1>
-						<img width="620" src="img/blog/loom-wide2.jpg" alt="Loom - Demo, Landscape generator" title="Loom - Demo, Landscape generator"/>
+						<img class="wideImg" width="280" src="img/blog/loom.jpg" alt="Loom - Demo, Landscape generator" title="Loom - Demo, Landscape generator"/>
 						<div class="cols2">
-							<p>A year ago, I translated and personalized a Matlab school-project, about procedural generation and 3D rendering, into a JS demo. It was quite heavy (I was for instance using <a href="http://sylvester.jcoglan.com/" title="Sylvester.js Library">sylvester.js</a> to handle matrices and vectors), slow and somehow buggy, but at that time I was satisfied with all I learned from doing it, and had other projects to take care of.</p>
+							<p>A year ago, I translated and personalized a Matlab school-project, about <em>procedural generation and 3D rendering</em>, into a JS demo. It was quite heavy (I was for instance using <a href="http://sylvester.jcoglan.com/" title="Sylvester.js Library">sylvester.js</a> to handle matrices and vectors), slow and somehow buggy, but at that time I was satisfied with all I learned from doing it, and had other projects to take care of.</p>
 							<p>Then I discovered the <a href="http://js1k.com/" title="JS1K">JS1K challenge</a>, and decided that if a new edition should come, I would try to optimize my "landscaper" to submit it.</p>
-							<p>The new edition finally came. It was a real challenge for me to crush my old and immature demo into 1024 bytes. In the process, I learnt many mathematical or programming tricks, making it totally worth the efforts.<br/>
+							<p>The new edition finally came. It was a real challenge for me to crush my old and immature demo into 1024 bytes (<strong>1023B</strong> in fact). In the process, I learnt many <strong>mathematical or programming tricks</strong>, making it totally worth the efforts.<br/>
 							Moreover, I ended up with a demo <em>not only lighter, but faster and more detailed</em> than the original one! Feedback is most welcome!</p>
 							<p class="right"><a href="demo.html#js1k-2013-loom" title="Loom - Demo">See the demo</a></p>
 						</div>
@@ -67,21 +76,21 @@
 						</footer>
 					</div>
 				</article>
-				<article class="span1">
+				<article id="404-windy-acid" class="span1">
 					<div>
 						<h1>404-Windy & 404-Acid</h1>
-						<p>Today's demos are actually more experiments gone wrong than real displays, but... well, it was fun to make, and the occasion to apply some of my readings about DOM manipulation or CSS animations / 3D transforms.</p>
+						<p>Today's demos are actually more experiments gone wrong than real displays, but... well, it was fun to make, and the occasion to apply some of my readings about <em>DOM manipulation</em> or <em>CSS animations / 3D transforms</em>.</p>
 						<p class="right">See the <a href="demo.html#404-acid" title="404-Acid - Demo">DOM demo</a> or the <a href="demo.html#404-windy" title="404 Windy - Demo">CSS one</a></p>
 						<footer>
 							<time datetime="2013-03-16">2013-03-16</time>
 						</footer>
 					</div>
 				</article>
-				<article class="span1">
+				<article id="beziering" class="span1">
 					<div>
 						<h1>Beziering</h1>
 						<img width="280" src="img/blog/beziering.jpg" alt="Beziering - Demo, Bézier tracer" title="Beziering - Demo, Bézier tracer"/>
-						<p>So let's inaugurate the demo section with a small canvas application I made some time ago, after reading some interesting <a href="http://acko.net/files/fullfrontal/fullfrontal/slides-net/" title="Making things with Maths - Slides">slides</a> made by Steven Wittens, aka <a href="http://www.acko.net" title="Acko.net">Acko</a>.<br/>
+						<p>So let's inaugurate the demo section with a small <strong>canvas application</strong> I made some time ago, after reading some interesting <a href="http://acko.net/files/fullfrontal/fullfrontal/slides-net/" title="Making things with Maths - Slides">slides</a> made by Steven Wittens, aka <a href="http://www.acko.net" title="Acko.net">Acko</a>.<br/>
 						I just tried to illustrate on my own way the graphic method to draw Bézier curves.</p>
 						<p class="right"><a href="demo.html#beziering" title="Beziering - Demo">See the demo</a></p>
 						<footer>
@@ -89,7 +98,7 @@
 						</footer>
 					</div>
 				</article>
-				<article class="span2">
+				<article id="start-again" class="span2">
 					<div>
 						<h1>Let's start again</h1>
 						<div class="cols2">
@@ -110,7 +119,38 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
-
+		<script>
+			function AdaptImageToScreenSize() {
+				if (innerWidth > 690) {
+					if (!this.alreadyWide) {
+						$('.wideImg').each(function(){
+							var src = $(this).attr('src');
+							var srcArray = src.split('.');
+							src = srcArray.pop();
+							src = srcArray.join('.') + '-wide.' + src;
+							$(this).attr('src', src);
+							$(this).attr('width', 620);
+						});
+						this.alreadyWide = true;
+					}
+				}
+				else {
+					if (this.alreadyWide) {
+						$('.wideImg').each(function(){
+							var src = $(this).attr('src').split('-wide').join('');
+							$(this).attr('src', src);
+							$(this).attr('width', 280);
+						});
+						this.alreadyWide = false;
+					}
+				}
+			}
+			AdaptImageToScreenSize.alreadyWide = innerWidth > 690;
+			if (AdaptImageToScreenSize.alreadyWide) {
+				AdaptImageToScreenSize();
+			}
+			$(window).resize(AdaptImageToScreenSize);
+		</script>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <!--<script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];

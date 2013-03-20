@@ -2,18 +2,22 @@
 	var $container = $('#blog-masonry');
 	$container.masonry({
 		itemSelector : 'article',
-		columnWidth: 318,
+		columnWidth: 320,
 		gutterWidth: 20,
-		isAnimated: !Modernizr.csstransitions
+		isAnimated: !Modernizr.csstransitions,
+		isFitWidth: true
 	});
 	$container.imagesLoaded(function(){
 	  $container.masonry({
 			itemSelector : 'article',
-			columnWidth: 318,
+			columnWidth: 320,
 			gutterWidth: 20,
-			isAnimated: !Modernizr.csstransitions
+			isAnimated: !Modernizr.csstransitions,
+			isFitWidth: true
 		});
 	});
+	
+	
 	/*
 	function Navigation() {
 		var target = $(this).attr('href');

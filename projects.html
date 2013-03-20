@@ -5,20 +5,20 @@
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
-<meta content="Benjamin Bill Planche" name="author">
-	<meta content="Portfolio of Benjamin (Bill) Planche, aka Aldream. About image processing, computer graphics, web experiments,..." name="description">
-	<meta content="aldream, benjamin, planche, bill, demo, projects, web, image, graphics, experience, application" name="keywords">
-	<meta content="index,follow" name="robots">
+		<meta content="Benjamin Bill Planche" name="author">
+		<meta content="Portfolio of Benjamin (Bill) Planche, aka Aldream. About image processing, computer graphics, web experiments,..." name="description">
+		<meta content="aldream, benjamin, planche, bill, demo, projects, web, image, graphics, experience, application" name="keywords">
+		<meta content="index,follow" name="robots">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>Aldream - Projects</title>
         <meta name="viewport" content="width=device-width">
         
+		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/normalize.css"/>
         <link id=1 rel="stylesheet" href="css/main.css"/>
-		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 		
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
-		<script>
+		<!--<script>
 			var Aldream = {
 				cache: [],
 				doTransition: true,
@@ -112,7 +112,7 @@
 
 				}*/
 			};
-		</script>
+		</script>!-->
     </head>
     <body id="projects">
 		<section>
@@ -122,12 +122,20 @@
 
 			<header id="main-header">
 				<h1><a href="/">Aldream</a></h1>
-				<nav id="top_menu">
+				<nav id="menu-top">
 					<ul>
-						<a href="index.html"><li class="back_blue">Blog</li></a>
-						<a href="demo.html"><li class="back_green">Demo</li></a>
-						<a href="projects.html"><li class="back_yellow">Projects</li></a>
-						<a href="about.html"><li class="back_red">About</li></a>
+						<a href="index.html"><li>Blog</li></a>
+						<a href="demo.html"><li>Demo</li></a>
+						<a href="projects.html"><li>Projects</li></a>
+						<a href="about.html"><li>About</li></a>
+					</ul>
+				</nav>
+				<nav id="menu-top-mini">
+					<ul>
+						<li><a href="index.html" title="Blog"><img width=22 alt="Blog" src="img/glyphicons-color/book-blue.png"/></a></li>
+						<li><a href="demo.html" title="Demo"><img width=25 alt="Demo" src="img/glyphicons-color/eye-green.png"/></a></li>
+						<li><a href="projects.html" title="Projects"><img width=25 alt="Projects" src="img/glyphicons-color/star-yellow.png"/></a></li>
+						<li><a href="about.html" title="About"><img width=25 alt="About" src="img/glyphicons-color/user-red.png"/></a></li>
 					</ul>
 				</nav>
 			</header>
@@ -137,7 +145,7 @@
 				<article class="span1">
 					<div>
 						<h1><a href="http://aedi.insa-lyon.fr" title="aedi.insa-lyon.fr">AEDI</a></h1>
-						<a href="http://aedi.insa-lyon.fr" title="aedi.insa-lyon.fr"><img src="img/projects/aedi.png" alt="AEDI" /></a>
+						<a class="no-border" href="http://aedi.insa-lyon.fr" title="aedi.insa-lyon.fr"><img src="img/projects/aedi.png" alt="AEDI" /></a>
 						<p>Web-oriented information system ordered by the student assoc., to manage their various services.</p>
 						<p>Website computerizing the main services of the <abbr title="Student Association of the Computer-Science Department of INSA-Lyon">AEDI</abbr> (events registration, professional contact book, job offers listing, ...) and offering a new modern façade.</p>
 						<p class="task">
@@ -153,7 +161,7 @@
 				<article class="span1">
 					<div>
 						<h1><a href="https://github.com/H4311/PLD-SR" title="Rithm Repository">Rithm</a></h1>
-						<a href="https://github.com/H4311/PLD-SR" title="Rithm Repository"><img src="img/projects/rithm.png" alt="Rithm" /></a>
+						<a class="no-border" href="https://github.com/H4311/PLD-SR" title="Rithm Repository"><img src="img/projects/rithm.png" alt="Rithm" /></a>
 						<p>"Hospital Automation System" to oversee the patients and rooms conditions in real-time.</p>
 						<p>Based on a network of sensors/actuators, an inference engine and a web interface, it is highly modular, making it easy to add new devices (real or virtual) and rules.</p>
 						<p class="task">
@@ -169,7 +177,7 @@
 				<article class="span1">
 					<div>
 						<h1><a href="http://klaim.it" title="Klaim.it">Klaim</a></h1>
-						<a href="http://klaim.it" title="Klaim.it"><img src="img/projects/klaim.png" alt="Klaim" /></a>
+						<a class="no-border" href="http://klaim.it" title="Klaim.it"><img src="img/projects/klaim.png" alt="Klaim" /></a>
 						<p>Messaging service, available on computers and mobile phones, that aims at replacing SMS.</p>
 						<p>Instant texting / No fee (Wifi, 3G) / Multi-plateforme experience (Iphone, WF7, Android, browsers) / Cloud Storage / Encryption/ 5 languages available</p>
 						<p class="task">
