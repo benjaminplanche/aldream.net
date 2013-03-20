@@ -2,15 +2,9 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        
-	<meta content="Benjamin Bill Planche" name="author">
-	<meta content="Portfolio of Benjamin (Bill) Planche, aka Aldream. About image processing, computer graphics, web experiments,..." name="description">
-	<meta content="aldream, benjamin, planche, demo, web, image, graphics, 404, sandbox" name="keywords">
-	<meta content="index,follow" name="robots">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Aldream - 404-Windy</title>
-	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.pack.js"></script>
-	<style>
+        <title>404</title>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.pack.js"></script>
+		<style>
 
 @keyframes flyAway {
 	0% 		{background: green; transform: translateX(-100em) translateY(25em) translateZ(10em) scale(1) rotateY(720deg) rotateX(360deg);}
@@ -171,7 +165,7 @@ body {
 table {
 	width: 37.2em;
 	margin:auto;
-	margin-top: 25%;
+	margin-top: 50%;
 	background: rgb(30,80,30);
 	padding: 1em;
 	border: 1em solid rgb(50,40,30);
@@ -225,27 +219,7 @@ p {
 	font-weight: bold;
 }
 		</style>
-		<script type="text/javascript">
-$(document).ready(function() {
-	// Almost everything done through CSS. JS is only here to add some randomness to the anim duration...
-	
-	function DefineAnimation(el) { // Restarting the animation with a random duration:
-		el.css('animation-name', 'none');
-		el.css('animation-duration', (16+Math.round(Math.random()*1200)/100)+'s');
-		setTimeout(function() {
-			el.css('animation-name', '');
-		}, 13);
-	}
 
-	$('#demo .x').each(function(index) {
-		$(this).text([4,0,4][index%3]); // That's ugly. I love it.
-		DefineAnimation($(this));
-		$(this).bind('animationiteration', function(name) {
-			DefineAnimation($(this));
-		});
-	});
-});
-		</script>
 	</head>
     <body>
 		<div id="demo"><div id="scene">
@@ -260,5 +234,28 @@ $(document).ready(function() {
 			</div>
 			<p class="bottom">404<br/>Error<br/>-<br/>This page doesn't exist.</p>
 		</div></div>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+        <script type="text/javascript">
+			$(document).ready(function() {
+				// Almost everything done through CSS. JS is only here to add some randomness to the anim duration...
+				
+				function DefineAnimation(el) { // Restarting the animation with a random duration:
+					el.css('animation-name', 'none');
+					el.css('animation-duration', (16+Math.round(Math.random()*1200)/100)+'s');
+					setTimeout(function() {
+						el.css('animation-name', '');
+					}, 13);
+				}
+
+				$('#demo .x').each(function(index) {
+					$(this).text([4,0,4][index%3]); // That's ugly. I love it.
+					DefineAnimation($(this));
+					$(this).bind('animationiteration', function(name) {
+						DefineAnimation($(this));
+					});
+				});
+			});
+		</script>
 	</body>
 </html>
