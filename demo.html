@@ -30,7 +30,7 @@
 					<a href="javascript:ToggleInfo();"><img width=18 alt="Info" src="img/glyphicons-color/circle-info-grey.png"/></a>
 					<div></div>
 				</div>
-				<h1> <span id="demo-title">ERROR</span>, by <a href ="http://aldream.net" title="Aldream.net">Aldream</a></h1>
+				<h1> <span id="demo-title">Loading...</span>, by <a href ="http://aldream.net" title="Aldream.net">Aldream</a></h1>
 				<nav id="menu-top-mini-demo">
 					<ul>
 						<li><a href="index.html" title="Blog"><img width=12 alt="Blog" src="img/glyphicons-color/book-blue.png"/></a></li>
@@ -42,10 +42,10 @@
 				<nav id="demo-menu">
 					<ul>
 						<li>
-							<a href="javascript:LoadDemo('demo/js1k-2013-loom.html');">●</a>
+							<a class="sandBoxLink" href="demo/js1k-2013-loom.html">●</a>
 							<div class="desc">
 								<img src="img/demo/js1k-2013-loom.jpg" />
-								<h2><a href="javascript:LoadDemo('demo/js1k-2013-loom.html');">Loom</a></h2>
+								<h2><a class="sandBoxLink" href="demo/js1k-2013-loom.html">Loom</a></h2>
 								<p>1024B landscape generator (JS1K submission)</p>
 								<details>procedural generation, stochastic interpolation, painter algorithm</details>
 							</div>
@@ -61,7 +61,7 @@
 								</ul>
 								<h3>Description</h3>
 								<p>Final JS1K entry for the <a href="http://js1k.com/2013-spring/" title="JS1k Spring'13">Spring'13</a> edition.</p>
-								<p>This demo uses the same rendering method as my other submission (see <a href="javascript:LoadDemo('demo/js1k-2013-morphose.html');" title="Morphose Demo">here</a> too), the <a href="https://en.wikipedia.org/wiki/Painter%27s_algorithm" title="Wikipedia Article - Painter's algorithm">Painter's algorithm</a>, simplistic but quite light.</p>
+								<p>This demo uses the same rendering method as my other submission (see <a class="sandBoxLink" href="demo/js1k-2013-morphose.html" title="Morphose Demo">here</a> too), the <a href="https://en.wikipedia.org/wiki/Painter%27s_algorithm" title="Wikipedia Article - Painter's algorithm">Painter's algorithm</a>, simplistic but quite light.</p>
 								<p>The landscape is generated using a mix between the <a href="https://en.wikipedia.org/wiki/Diamond-square_algorithm" title="Wikipedia Article - Diamond-square algorithm"> Midpoint displacement and the Diamond-square algorithms</a>, starting with a 2x2 matrix to get a detailed 257x257 heightmap, which is then used to build the 3D mesh.</p>
 								<p>Colors are applied taking into account the height (water < beach < vegetation < snow) and an rough estimation of the incline for the luminosity. By playing with those parameters and using the flexibility of the HSL color system, it is thus possible to create various nuances of vegetation (meadows for the sun-bathed hills, forests in the coombs, alpines above <small>- imagination can be required here</small>) or to simulate the effect of the sun on the snow (only found in the shadows for the lower altitudes).</p>
 								<p><small>By the way, don't fly to close to the surface or you might get entangled in the mesh and unravel the whole world (well, you will actually just get some threads spoiling the view)... Also, if you keep zooming, you will eventually reach a <em>negative distance</em>, inverting the controls. Both are harmless, but now you won't be surprised. I hadn't enough bytes left to better handle the zoom, sorry.<br/>
@@ -73,10 +73,10 @@
 							</div>
 						</li>
 						<li>
-							<a href="javascript:LoadDemo('demo/js1k-2013-morphose.html');">●</a>
+							<a class="sandBoxLink" href="demo/js1k-2013-morphose.html">●</a>
 							<div class="desc">
 								<img src="img/demo/js1k-2013-morphose.jpg" />
-								<h2><a href="javascript:LoadDemo('demo/js1k-2013-morphose.html');">Morphose</a></h2>
+								<h2><a class="sandBoxLink" href="demo/js1k-2013-morphose.html">Morphose</a></h2>
 								<p>1024B 3D demo (JS1K submission)</p>
 								<details>mesh generation, tweening, painter algorithm</details>
 							</div>
@@ -104,10 +104,10 @@
 							</div>
 						</li>
 						<li>
-							<a href="javascript:LoadDemo('demo/beziering.html');">●</a>
+							<a class="sandBoxLink" href="demo/beziering.html">●</a>
 							<div class="desc">
 								<img src="img/demo/beziering.jpg" />
-								<h2><a href="javascript:LoadDemo('demo/beziering.html');">Beziering</a></h2>
+								<h2><a class="sandBoxLink" href="demo/beziering.html">Beziering</a></h2>
 								<p>Intoxicated Bezier curves</p>
 								<details>canvas, bezier</details>
 							</div>
@@ -129,10 +129,10 @@
 							</div>
 						</li>
 						<li>
-							<a href="javascript:LoadDemo('demo/404-windy.html');">●</a>
+							<a class="sandBoxLink" href="demo/404-windy.html">●</a>
 							<div class="desc">
 								<img src="img/demo/404-windy.jpg" />
-								<h2><a href="javascript:LoadDemo('demo/404-windy.html);">404-Windy</a></h2>
+								<h2><a class="sandBoxLink" href="demo/404-windy.html">404-Windy</a></h2>
 								<p>#404 CSS animation</p>
 								<details>css animation, css 3D</details>
 							</div>
@@ -143,10 +143,10 @@
 							</div>
 						</li>
 						<li>
-							<a href="javascript:LoadDemo('demo/404-acid.html');">●</a>
+							<a class="sandBoxLink" href="demo/404-acid.html">●</a>
 							<div class="desc">
 								<img src="img/demo/404-acid.jpg" />
-								<h2><a href="javascript:LoadDemo('demo/404-acid.html');">404-Acid</a></h2>
+								<h2><a class="sandBoxLink" href="demo/404-acid.html">404-Acid</a></h2>
 								<p>#404 CSS animation</p>
 								<details>dom manipulation</details>
 							</div>
@@ -190,19 +190,23 @@
 				}
 			}
 			
-			function LoadDemo(url) {
-				$('#scene').attr('src', url);
-				var title = $('#demo-menu h2>a[href="javascript:LoadDemo(\''+url+'\');"]').text();
-				history.pushState({}, title, "#"+url.split("/")[1].split(".")[0]);
+			function LoadDemo(url, doPush) {
+				//$('#scene').attr('src', url); // Bad idea: causes a troublesome pushState.
+				window.frames['scene'].location.replace(url);
+				var title = $('#demo-menu h2>a[href="'+url+'"]').text();
+				var hash = "#"+url.split("/").pop().split(".")[0];
 				$('#demo-title').text(title);
-				var info = $('#demo-menu li>a[href="javascript:LoadDemo(\''+url+'\');"] ~ .info').html();
+				var info = $('#demo-menu li>a[href="'+url+'"] ~ .info').html();
 				$('#demo-info > div').html(info);
+				if (doPush) {
+					history.pushState({url:url}, title, hash);
+					//$('#scene').load(function(){$('#scene').unbind('load'); history.replaceState(state, title, hash);});
+				}
 			};
 			
-			if(window.location.hash) {
+			if (window.location.hash) {
 				var url = 'demo/'+window.location.hash.substring(1)+'.html';
-				var title = $('#demo-menu h2>a[href="javascript:LoadDemo(\''+url+'\');"]').text();
-				if ($('#demo-menu h2>a[href="javascript:LoadDemo(\''+url+'\');"]').length > 0) {
+				if ($('#demo-menu h2>a[href="'+url+'"]').length > 0) {
 					LoadDemo(url);
 				}
 				else {
@@ -211,9 +215,21 @@
 				}
 			}
 			else {
-				var lastDemo = $('#demo-menu li a').first().attr('href').split("'")[1];
+				var lastDemo = $('#demo-menu li a').first().attr('href');
 				LoadDemo(lastDemo);
 			}
+			
+			$('.sandBoxLink').click(function(){ LoadDemo($(this).attr('href'), true); return false;});
+			
+			window.onpopstate = function(event) {
+				if (event.state && event.state.url) {
+					LoadDemo(event.state.url);
+				}
+				else if (!window.location.hash) {
+					var lastDemo = $('#demo-menu li a').first().attr('href');
+					LoadDemo(lastDemo);
+				}
+			};
 			
 			$('#demo-menu div img').each(function() {
 				var top = ($(this).parent().height()/2-25)+'px';
