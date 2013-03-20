@@ -19,6 +19,49 @@
 	
 	
 	/*
+	var Aldream = {
+				cache: [],
+				doTransition: true,
+				currentPage: 'projects',
+				nbPages : 5,
+				metaPositions: {
+					index: [350,-100,-450,0,-30,0],
+					blog: [450,-500,-650,0,-5,0],
+					demo: [-700,-200,-500,0,20,0],
+					projects: [0,-800,-600,0,45,0],
+					about: [-400,-800,-450,0,70,0]},
+				origOffset: {
+					index: [0,0,0,0,0,0],
+					blog: [0,0,0,0,0,0],
+					demo: [0,0,0,0,0,0],
+					projects: [-2,-28.2,-0,0,0,0],
+					about: [0,0,0,0,0,0]},
+				transformZoom : function(targetName, transition, callback) {
+					$('#meta-'+targetName + ' > section').unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+					
+					$('#meta-'+targetName).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+					$('#meta-'+targetName).on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', function() {
+						$('#meta-'+targetName).unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+						$('#meta-'+targetName + ' > section').unbind('transitionend webkitTransitionEnd oTransitionEnd otransitionend');
+						callback();
+					});
+					
+					//$('#'+ targetName + ' > section')[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
+					$('#meta-'+ targetName + ' > section').css('opacity', 1);
+					
+					for (var el in Aldream.metaPositions) {
+						$('#meta-'+el)[0].style[Modernizr.prefixed('transition')] = (!transition)?'none':transition;
+						var tr = [];
+						for (var i = 0; i < 6; i++) {
+							tr[i] = Aldream.metaPositions[el][i]-Aldream.metaPositions[targetName][i]+Aldream.origOffset[targetName][i];
+						}
+						tr = 'translateX('+tr[0]+'em) translateY('+tr[1]+'em) translateZ('+tr[2]+'em) rotateX('+tr[3]+'deg) rotateY('+tr[4]+'deg) rotateZ('+tr[5]+'deg)';
+						$('#meta-'+el)[0].style[Modernizr.prefixed('transform')] = tr; // Positioning every element relative to the current user's position.
+					}
+					
+				}
+			};
+			
 	function Navigation() {
 		var target = $(this).attr('href');
 		if (target.indexOf("://") == -1) { // Intern link	
