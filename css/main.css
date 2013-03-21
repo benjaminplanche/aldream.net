@@ -659,7 +659,6 @@ article footer .twitter-share-button {
 }
 #demo header {
 	position: fixed;
-	z-index: 90;
 	margin-top: 1em;
 }
 
@@ -814,6 +813,7 @@ article footer .twitter-share-button {
 	width: 100%;
 	position: fixed;
 	top: 0;
+	z-index: -1;
 }
 
 
