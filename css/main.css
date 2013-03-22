@@ -664,7 +664,9 @@ article footer .twitter-share-button {
 
 #menu-top-mini-demo {
 	display: block;
-	margin-top: -.6em;
+	position: fixed;
+	top: 0;
+	left: -2.5em;
 }
 
 #menu-top-mini li, #menu-top-mini-demo li {
@@ -731,7 +733,9 @@ article footer .twitter-share-button {
 }
 
 #demo-menu {
-	margin: 20em 0 0 -1em;
+	position: fixed;
+	left: -1em;
+	margin: 0;
 	width: 5em;
 }
 
