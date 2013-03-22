@@ -1,4 +1,8 @@
-aldream.net
+Aldream.net
 ===========
 
-aldream.net - Personal Website (blog, demo, about)
+[Blog](http://aldream.net/blog) - [Demo](http://aldream.net/demo) - [Projects](http://aldream.net/projects) - [About](http://aldream.net/about)
+
+Portfolio of Benjamin (Bill) Planche, aka Aldream. About image processing, computer graphics, web experiments,...
+
+*The repository helps me to keep track of the modifications while adding content / experimenting new stuff.*
