@@ -346,7 +346,7 @@ FileETag None
   RewriteRule ^(blog|index)/?$ index.html [NC,L]
 </IfModule>
 <IfModule mod_rewrite.c>
-  RewriteRule ^([A-Za-z0-9-]+/)+(js|css|img|doc)/(.+)$ $2/$3 [NC,L] 
+  RewriteRule ^([A-Za-z0-9-]+/)+(js|css|img|doc|demo)/(.+)$ $2/$3 [NC,L] 
 </IfModule>
 <IfModule mod_rewrite.c>
   RewriteRule ^([A-Za-z0-9-]+)/?([A-Za-z0-9-]+)?/?$ $1.html [NC,L] 
