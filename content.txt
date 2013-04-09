@@ -10,8 +10,18 @@ You have at hand your various 3D meshes, nicely placed in a scene, and now you w
 - Reporter et dessiner les elements visibles sur votre canvas
 
 ----------------
+OPEN YOUR THIRD EYE
 
-The projection step is quite straightforward (we will suppose you want a perspective projection). 
+So first you have to decide what you want to see, and how. Where will be positioned your camera? Which direction will it be aiming? How far/near can it see? With which ratio? With a realistic perspective projection, an orthographic one or something more exotic? ...
+There are many parameters with barbaric names (try to place "frustum" in a conversation...) to take into account. We won't address all of them right now, so for now, let's only deal with:
+	- A perspective projection (the furthest, the smallest on screen).
+	- A camera positioned at (Cx, Cy, Cz) in the cartesian space, with its orientation defined as (yaw, pitch, roll), the Tait–Bryan angles.
+	- The screen ratio, while respecting the proportions in our scene. We call W the screen's width and H its height.
+
+----------------
+FLATTEN THE WORLD
+
+The projection step is quite straightforward. 
 
 [ Expliquer les maths derriere ]
 
@@ -22,22 +32,33 @@ This matrix formula looks good, but can be laborious to use if you can't afford 
 Nothing we can't implement here. Moreover, you can observe some recurrences in it, which means it is possible to refactore it to save some operations and bytes:
 [Refactored Formula]
 
-We now can compute the positions of 3D elements with respect to the coordinate system defined by our camera (with X and Y are the projection position on the viewfinder and Z the perspective/the depth seen from the camera). 
+We now can compute the positions of 3D elements with respect to the coordinate system defined by our camera (with X and Y are the projection position on the viewfinder and Z the perspective/depth seen from the camera). But it is not over yet: our final medium is the screen/canvas we want to display our scene on, not the camera's viewfinder. We thus have to apply a last transform to get the pixels positions:
 [Expliquer projection dans image]
+	The division by Dz is the key for the perspective effect (the furthest from the camera, the bigger Dz, and thus the smallest the element).
+	Through the multiplication of Dx and Dy by min(H,W), we apply the chosen ratio while preserving the proportions (try to use max(H,W) or to use W with Dx and H with Dy to see how it influences the result).
+	Finally, the addition of half the screen's dimensions centers the elements.
 
 So here is our final projection function, to be applied to every vertex of our scene:
 [Function // expliquer que le clipping est fait par le canvas]
 
-----------------
+There is one important thing I haven't addressed yet : the "clipping" step. When you look at something with your own eyes or a camera, you don't see the "whole scene", e.g. you can't see behind you. Your field of view, your "frustum", is limited to a specific cone or pyramid (truncated, if you take into account the near plane and the far plane. Some cameras can't see objects too close or too far: the planes represent those limits).
+In the above method, we project every element, without disgarding the ones out of view. We need to get rid of them, to "clip" them.
+In my examples, to do that, I simply rely on a property of the HTML canvas: its limits, and its pliability when it comes to　draw out of them. With our transforms, pixels of elements out of the frustum will have their position (Bx, By) out of the canvas field, and when I blindly ask to draw them, the canvas API doesn't complain: the results will just not appear.
+It is far from an efficient solution, and easy improvements can be done (for instance to check by yourself the values of Bx and By before drawing). The best solution would be to clip the scene before the projection, in the 3D space, but here things get a bit more tricky.
+Finally, if you want to truncate your field of view to a certain depth range (delimited by the near and far planes), you can simply disgard the projections with a Dz out of it.
 
-The keyword here is "visible". We don't want to draw our elements higgledy-piggledy, displaying faces which should be hidden under others. We want to respect the depth order while rendering. And that's exactly what the Painter's algorithm is for.
-The idea is quite simple: before drawing our elements, we just sort them by decreasing depth (so from the furthest from the camera position to the closest). By drawing them in this order, the front elements will naturally cover/overlay the ones behind. Like most painters would do.
-Luckily for us, if you remember well, our projection function already computes the depth of the vertices, making the implementation of the rendering function really straightforward:
+----------------
+PAINTER'S STROKE
+
+Objects beyond our perepheral vision are not the only on which are hidden. Some can be totally or partially covered by others.
+So we don't want to draw our elements higgledy-piggledy, displaying faces which should be hidden under others. We want to preserve the depth order while rendering. And that's exactly what the Painter's algorithm is for.
+The idea is quite simple: before displaying our elements, we just sort them by decreasing depth (so from the furthest from the camera position to the closest). By drawing them in this order, the front elements will naturally cover/overlay the ones behind. Like most painters would do.
+Luckily for us, we've already computed the depth of the vertices, Dz, making the implementation of the rendering function really straightforward:
 [Function]
 
 And that's all. We just implemented a really simple 3D renderer (which can be quite useful, for instance if you are dealing with 3D objects in a project, and you need to display them only for testing, and thus don't want to deal with new dependencies just for that... Well, it did happen to me).
 
-But don't be fooled: when I say "simple renderer", I also mean "too simple". The Painter's algorithm has many drawbacks, such as:
+But don't be fooled: when I say "simple renderer", I especially mean "too simple". The Painter's algorithm has many drawbacks, such as:
 - It draws stuff which finally won't be displayed (hidden under). Far from optimal... (unless you have semi-transparent objects in your scene: this flaw becomes a cheap way to automatically manage the transparency)
 - It is "face-wise", ie. it draws face per face, and not pixel per pixel like some other methods. We thus lose in precision (the pixel-wise solutions give you the possibility to compute textures more precisely - pixel per pixel), and we can also face some rendering glitches, for instance in the case of overlapping or piercing polygons (how to order thoses faces?)
 - As implemented here, we don't know which element is above/under which one. This information could be useful to apply some effects, such as shadows (see for example the [http://web.cs.wpi.edu/~matt/courses/cs563/talks/shadow/shadow.html]Shadow Z-buffer algorithm).
@@ -81,3 +102,200 @@ Sphere
 	Now we want a sphere of diameter D, made of the same number 6*N^2 of faces.
 	There are many possible ways to tesselate a sphere, but we have one condition we wish to fulfill: to get a smooth transition when tweening the geometries of our cube and sphere. So we want a *similar* repartition of the vertices.
 	
+	
+	-----------------------------------------------
+	
+	<!doctype html>
+<html>
+	<head>
+		<title>Painter's Algo</title>
+		<meta charset="utf-8" />
+	</head>
+	<body>
+		<canvas></canvas>
+		<script>
+
+// ==== 3D RENDERER =====
+/**
+ * ===Project===
+ * Computes the perspective projection for each vertex of an array of 3D faces.
+ * Parameters:
+ *	- sceneFaces 	(Array<Vertex>):	Array of faces
+ *	- camPosition 	(Vector3): 			Position of the camera
+ *	- camOrientation(Vector3): 			Orientation of the camera - Tait-Bryan angles [yaw, pitch, roll]
+ *	- canvasWidth 	(Int): 				Width of the canvas to project on
+ *	- canvasHeight 	(Int): 				Height of the canvas to project on
+ * Return: Array of projected faces (Array<Vertex>)
+ */
+function Project(sceneFaces, camPosition, camOrientation, canvasWidth, canvasHeight) {
+	var cosYaw = Math.cos(camOrientation[0]),
+		sinYaw = Math.sin(camOrientation[0]),
+		cosPitch = Math.cos(camOrientation[1]),
+		sinPitch = Math.sin(camOrientation[1]),
+		cosRoll = Math.cos(camOrientation[2]),
+		sinRoll = Math.sin(camOrientation[2]),
+		minDim = (canvasWidth < canvasHeight) ? canvasWidth : canvasHeight; // To avoid repeating the callings.
+
+	var projectedFaces = [];
+	var nbVertices;
+	
+	for (id in sceneFaces) {
+		projectedFaces[id] = [];
+		
+		for (j = 0; j < (nbVertices = sceneFaces[id].length) ; j++) { // For each vertex of the face.
+			// 3D Projection:
+			var temp1 = cosYaw*(sceneFaces[id][j][1] - camPosition[1]) - sinYaw*(sceneFaces[id][j][0] - camPosition[0]),
+				temp2 = cosRoll*(sceneFaces[id][j][2] - camPosition[2]) + sinRoll*(sinYaw*(sceneFaces[id][j][1] - camPosition[1]) + cosYaw*(sceneFaces[id][j][0] - camPosition[0]));
+				dX = cosRoll*(sinYaw*(sceneFaces[id][j][1] - camPosition[1]) + cosYaw*(sceneFaces[id][j][0] - camPosition[0])) - sinRoll*(sceneFaces[id][j][2] - camPosition[2]),
+				dY = sinPitch*temp2 + cosPitch*temp1
+				dZ = cosPitch*temp2 - sinPitch*temp1;
+			
+			// Transform to project on the screen:
+			projectedFaces[id].push([dX / dZ * minDim + canvasWidth/2,
+									dY / dZ * minDim + canvasHeight/2,
+									dZ]); 
+		}
+	}
+	
+	return projectedFaces;
+}
+
+/**
+ * ===ComputeBarycentersDepths===
+ * Computes the Z value of the given faces, pushing it into the array defining each face.
+ * Parameter:
+ *	- faces	(Array<Vertex>):	Array of faces
+ */
+function ComputeBarycentersDepths(faces) {
+	for (id in faces) {
+		var barDepth = 0;
+		for (j = 0; j < (nbVertices = faces[id].length) ; j++) { // For each vertex of the face.
+			barDepth += faces[id][j][2];
+		}
+		
+		barDepth /= nbVertices;
+		faces[id].push(barDepth);
+	}
+}
+
+/**
+ * ===Paint===
+ * Computes the Z value of the given faces, pushing it into the array defining each face.
+ * Parameter:
+ *	- projectedFaces	(Array<Object>):	Array of faces, defined by their vertices, their average Z-value and their color ( face = [ [X1, Y1, Z1], ..., [X2, Y2, Z2], Z_bar, color ] )
+ *	- context			(CanvasContext):	Context of the output canvas
+ */
+function Paint(projectedFaces, context) {
+	projectedFaces.sort(function(face1, face2){return (face1[face1.length-2]-face2[face2.length-2]);}); // Sorting by desc Z_bar			
+	for (id in projectedFaces) {
+		// Setting the color:
+		context.fillStyle = context.strokeStyle = projectedFaces[id][projectedFaces[id].length-1];
+		
+		// Tracing the 2D shape:
+		context.beginPath();
+		context.moveTo(projectedFaces[id][0][0], projectedFaces[id][0][1]);
+		for (j = 1; j < (nbVertices = projectedFaces[id].length-2) ; j++) { // For each vertex of the face.
+			context.lineTo(projectedFaces[id][j][0], projectedFaces[id][j][1]);
+		}
+		context.closePath();
+		
+		// Drawing it:
+		context.fill(); context.stroke();
+	}
+}
+
+/**
+ * ===Render===
+ * Render a 3D scene in a canvas using the Painter's Algorithm.
+ * Parameter:
+ *	- sceneFaces 		(Array<Vertex>):	Faces defining the scene to render
+ *	- context 			(CanvasContext): 	Context of the output canvas
+ *	- camPosition 		(Vector3): 			Position of the camera
+ *	- camOrientation	(Vector3): 			Orientation of the camera - Tait-Bryan angles [yaw, pitch, roll]
+ *	- canvasWidth 		(Int):				Width of the canvas to project on
+ *	- canvasHeight 		(Int):				Height of the canvas to project on
+ *	- colorFunction 	(Function): 		Function which attributes a color to each face, depending on some given parameters (define your own signature and edit under)
+ */
+function Render(sceneFaces, context, camPosition, camOrientation, canvasWidth, canvasHeight, colorFunction) {
+	// Projection:
+	var projectedFaces = Project(sceneFaces, camPosition, camOrientation, canvasWidth, canvasHeight);
+	
+	// Preparing to sort the faces:
+	ComputeBarycentersDepths(projectedFaces); // These values can maybe be useful for the color function.
+	
+	// Defining the color of each face (pass the parameters you need and do your own business here - this is just an example):
+	colorFunction(projectedFaces, sceneFaces);
+	
+	// Applying the Painter's Algo & Drawing:
+	Paint(projectedFaces, context);	
+}
+
+
+// ==== EXAMPLE =====
+
+// Shim layer with setTimeout fallback // Thank to Paul Irish (http://paulirish.com/2011/requestanimationframe-for-smart-animating)
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
+// We define a simple 2x2x2 cube, maybe of triangular faces:
+var cubeVertices = [ [-1,  1,  1], [ 1,  1,  1], [ 1, -1,  1], [-1, -1,  1], [-1,  1, -1], [ 1,  1, -1], [ 1, -1, -1], [-1, -1, -1] ];
+var cubesTriangularFaces = [[cubeVertices[0], cubeVertices[1], cubeVertices[2]],
+							[cubeVertices[2], cubeVertices[3], cubeVertices[0]],
+							[cubeVertices[5], cubeVertices[4], cubeVertices[7]],
+							[cubeVertices[7], cubeVertices[6], cubeVertices[5]],
+							[cubeVertices[1], cubeVertices[5], cubeVertices[6]],
+							[cubeVertices[6], cubeVertices[2], cubeVertices[1]],
+							[cubeVertices[4], cubeVertices[0], cubeVertices[3]],
+							[cubeVertices[3], cubeVertices[7], cubeVertices[4]],
+							[cubeVertices[4], cubeVertices[5], cubeVertices[1]],
+							[cubeVertices[1], cubeVertices[0], cubeVertices[4]],
+							[cubeVertices[3], cubeVertices[2], cubeVertices[6]],
+							[cubeVertices[6], cubeVertices[7], cubeVertices[3]]];
+
+// And we display it:
+var canvas = document.getElementsByTagName('canvas')[0];
+canvas.width = canvas.height = 200;
+var context = canvas.getContext('2d');
+var timer = 0;
+
+(function animloop(){
+	// We request the next frame first to assure ~60fps:
+	requestAnimFrame(animloop);
+	
+	// We compute the new state:
+	/*var camPosition = [0, 10*Math.sin(timer/50), 10*Math.cos(timer/50)]
+	var camOrientation = [0,-timer%(Math.PI*100)/50, 0];
+	var camPosition = [10*Math.cos(timer/50), 10*Math.sin(timer/50), 0]
+	var camOrientation = [-Math.PI/2+Math.acos(camPosition[0]/10), -Math.PI/2, 0];*/
+	var camPosition = [10*Math.cos(timer/87)*Math.sin(timer/57), 10*Math.sin(timer/87)*Math.sin(timer/57), 10*Math.cos(timer/57)]
+	var camOrientation = [-Math.PI/2+timer%(Math.PI*87*2)/87, -timer%(Math.PI*57*2)/57, Math.cos(timer/33)/3];
+	var colorFunction = function colorFuncT(projectedFaces, originalFaces) {
+		var cosLum = Math.cos(timer/37), sinLum = Math.sin(timer/23);
+		for (id in projectedFaces) {
+			var hue = (timer/5)%360,
+				saturation = 75+3*projectedFaces[id][0][2],
+				luminosity = 50+(id-projectedFaces.length/2)/projectedFaces.length*20;
+			
+			projectedFaces[id].push('hsl('+hue+','+saturation+'%,'+luminosity+'%)');	
+		}
+	}
+	
+	// We clear the previous frame:
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	
+	// We render the new one:
+	Render(cubesTriangularFaces, context, camPosition, camOrientation, canvas.width, canvas.height, colorFunction);
+	
+	timer++;
+})();
+
+
+		</script>
+	</body>
+</html>
