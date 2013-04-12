@@ -1,0 +1,239 @@
+<!doctype html>
+<html>
+  <head>
+		<title>Painter's Algo</title>
+		<meta charset="utf-8" />
+		<style>
+			body {
+				cursor:pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas></canvas>
+		<script>
+
+// ==== 3D RENDERER =====
+/**
+ * ===Project===
+ * Computes the perspective projection for each vertex of an array of 3D faces.
+ * Parameters:
+ *	- sceneFaces 	(Array<Array<Vertex>>):	Array of faces, defined by their vertices
+ *	- camPosition 	(Vector3): 				Position of the camera
+ *	- camOrientation(Vector3): 				Orientation of the camera - Tait-Bryan angles [yaw, pitch, roll]
+ *	- canvasWidth 	(Int): 					Width of the canvas to project on
+ *	- canvasHeight 	(Int): 					Height of the canvas to project on
+ * Return: Array of projected faces (Array<Array<Vertex>>)
+ */
+function Project(sceneFaces, camPosition, camOrientation, canvasWidth, canvasHeight) {
+	var cosYaw = Math.cos(camOrientation[0]),
+		sinYaw = Math.sin(camOrientation[0]),
+		cosPitch = Math.cos(camOrientation[1]),
+		sinPitch = Math.sin(camOrientation[1]),
+		cosRoll = Math.cos(camOrientation[2]),
+		sinRoll = Math.sin(camOrientation[2]),
+		minDim = (canvasWidth < canvasHeight) ? canvasWidth : canvasHeight; // To avoid repeating the callings.
+
+	var projectedFaces = [];
+	var nbVertices;
+	
+	for (id in sceneFaces) {
+		projectedFaces[id] = [];
+		
+		for (j = 0; j < (nbVertices = sceneFaces[id].length) ; j++) { // For each vertex of the face.
+			// 3D Projection:
+			var temp1 = cosYaw*(sceneFaces[id][j][1] - camPosition[1]) - sinYaw*(sceneFaces[id][j][0] - camPosition[0]),
+				temp2 = cosRoll*(sceneFaces[id][j][2] - camPosition[2]) + sinRoll*(sinYaw*(sceneFaces[id][j][1] - camPosition[1]) + cosYaw*(sceneFaces[id][j][0] - camPosition[0])),
+				dX = cosRoll*(sinYaw*(sceneFaces[id][j][1] - camPosition[1]) + cosYaw*(sceneFaces[id][j][0] - camPosition[0])) - sinRoll*(sceneFaces[id][j][2] - camPosition[2]),
+				dY = sinPitch*temp2 + cosPitch*temp1,
+				dZ = cosPitch*temp2 - sinPitch*temp1;
+			
+			// Transform to project on the screen:
+			projectedFaces[id].push([dX / dZ * minDim + canvasWidth/2,
+									dY / dZ * minDim + canvasHeight/2,
+									dZ]); 
+		}
+	}
+	
+	return projectedFaces;
+}
+
+/**
+ * ===ComputeBarycentersDepths===
+ * Computes the Z value of the given faces, pushing it into the array defining each face.
+ * Parameter:
+ *	- faces	(Array<Vertex>):	Array of faces
+ */
+function ComputeBarycentersDepths(faces) {
+	for (id in faces) {
+		var barDepth = 0;
+		for (j = 0; j < (nbVertices = faces[id].length) ; j++) { // For each vertex of the face.
+			barDepth += faces[id][j][2];
+		}
+		
+		barDepth /= nbVertices;
+		faces[id].push(barDepth);
+	}
+}
+
+/**
+ * ===Paint===
+ * Computes the Z value of the given faces, pushing it into the array defining each face.
+ * Parameter:
+ *	- projectedFaces	(Array<Object>):	Array of faces, defined by their vertices, their
+											average Z-value and their color ( face = [ 
+											[X1, Y1, Z1], ..., [X2, Y2, Z2], Z_bar, color ] )
+ *	- context			(CanvasContext):	Context of the output canvas
+ */
+function Paint(projectedFaces, context) {
+	projectedFaces.sort(function(face1, face2) {
+		return (face1[face1.length-2]-face2[face2.length-2]); // Sorting by desc Z_bar (
+	}); 			
+	for (id in projectedFaces) {
+		// Setting the color:
+		context.fillStyle = context.strokeStyle = projectedFaces[id][projectedFaces[id].length-1];
+		
+		// Tracing the 2D shape:
+		context.beginPath();
+		context.moveTo(projectedFaces[id][0][0], projectedFaces[id][0][1]);
+		for (j = 1; j < (nbVertices = projectedFaces[id].length-2) ; j++) {
+			context.lineTo(projectedFaces[id][j][0], projectedFaces[id][j][1]);
+		}
+		context.closePath();
+		
+		// Drawing it:
+		context.fill(); context.stroke();
+	}
+}
+
+/**
+ * ===Render===
+ * Render a 3D scene in a canvas using the Painter's Algorithm.
+ * Parameter:
+ *	- sceneFaces 		(Array<Vertex>):	Faces defining the scene to render
+ *	- context 			(CanvasContext): 	Context of the output canvas
+ *	- camPosition 		(Vector3): 			Position of the camera
+ *	- camOrientation	(Vector3): 			Orientation of the camera - Tait-Bryan angles [yaw, pitch, roll]
+ *	- canvasWidth 		(Int):				Width of the canvas to project on
+ *	- canvasHeight 		(Int):				Height of the canvas to project on
+ *	- colorFunction 	(Function): 		Function which attributes a color to each face, depending on some given parameters (define your own signature and edit under)
+ */
+function Render(sceneFaces, context, camPosition, camOrientation, canvasWidth, canvasHeight, colorFunction) {
+	// Projection:
+	var projectedFaces = Project(sceneFaces, camPosition, camOrientation, canvasWidth, canvasHeight);
+	
+	// Preparing to sort the faces (we will use their barycenter for that - this isn't perfect, and we can have some glitches, but let's keep it simple):
+	ComputeBarycentersDepths(projectedFaces); // These values can maybe be useful for the color function, that's why we (can) save them.
+	
+	// Defining the color of each face (pass the parameters you need and do your own business here - this is just an example):
+	colorFunction(projectedFaces, sceneFaces);
+	
+	// Applying the Painter's Algo & Drawing:
+	Paint(projectedFaces, context);	
+}
+
+
+// ==== EXAMPLE =====
+
+// Shim layer with setTimeout fallback // Thank to Paul Irish (http://paulirish.com/2011/requestanimationframe-for-smart-animating)
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
+// We define a simple 2x2x2 cube, made of quad faces (building the mesh procedurally isn't complicated, but not the subject of this article):
+var cubeVertices = [ [-1,  1,  1], [ 1,  1,  1], [ 1, -1,  1], [-1, -1,  1], [-1,  1, -1], [ 1,  1, -1], [ 1, -1, -1], [-1, -1, -1] ];
+var cubesQuadriFaces = [[cubeVertices[0], cubeVertices[1], cubeVertices[2], cubeVertices[3]],
+						[cubeVertices[4], cubeVertices[5], cubeVertices[6], cubeVertices[7]],
+						[cubeVertices[1], cubeVertices[5], cubeVertices[6], cubeVertices[2]],
+						[cubeVertices[4], cubeVertices[0], cubeVertices[3], cubeVertices[7]],
+						[cubeVertices[4], cubeVertices[5], cubeVertices[1], cubeVertices[0]],
+						[cubeVertices[3], cubeVertices[2], cubeVertices[6], cubeVertices[7]]]; 
+
+// And we display it:
+var canvas = document.getElementsByTagName('canvas')[0];
+canvas.width = innerWidth-8;
+canvas.height = innerHeight-21;
+var context = canvas.getContext('2d');
+var timer = 52;
+var run = true;
+
+function DrawLaunchUI() {
+	// Semi-transparent layer:
+	context.fillStyle = 'hsla(0, 0%, 100%, .5)';
+	context.fillRect(0, 0, canvas.width, canvas.height);
+  
+	// Rounded rect:
+	context.fillStyle = 'hsla(0, 0%, 75%, .7)';
+	context.beginPath();
+	var left = canvas.width/2-30, right = canvas.width/2+30, top = canvas.height/2-30, bottom = canvas.height/2+30, radius = 10;
+	context.beginPath();
+	context.moveTo(left + radius, top);
+	context.lineTo(right - radius, top);
+	context.quadraticCurveTo(right, top, right, top + radius);
+	context.lineTo(right, bottom - radius);
+	context.quadraticCurveTo(right, bottom, right - radius, bottom);
+	context.lineTo(left + radius, bottom);
+	context.quadraticCurveTo(left, bottom, left, bottom - radius);
+	context.lineTo(left, top + radius);
+	context.quadraticCurveTo(left, top, left + radius, top);
+	context.closePath();
+	context.fill();
+	
+	// Arrow:
+	context.fillStyle = 'hsl(0, 0%, 50%)';
+	context.beginPath();
+	context.moveTo(left + 15, top + 15);
+	context.lineTo(right - 13, canvas.height/2);
+	context.lineTo(left + 15, bottom - 15);
+	context.closePath();
+	context.fill();
+}
+
+function Run(){
+	// We request the next frame first to assure ~60fps:
+	if (run) {
+		requestAnimFrame(Run);
+	
+		// We compute the new state: 
+		//	- we make the camera turn and roll around the cube while still focusing on its center:
+		var camPosition = [5*Math.cos(timer/87)*Math.sin(timer/57), 5*Math.sin(timer/87)*Math.sin(timer/57), 5*Math.cos(timer/57)];
+		var camOrientation = [-Math.PI/2+timer%(Math.PI*87*2)/87, -timer%(Math.PI*57*2)/57, Math.cos(timer/33)/3];
+		
+		//	- we set the colors over time:
+		var colorFunction = function colorFuncT(projectedFaces, originalFaces) {
+			var cosLum = Math.cos(timer/37), sinLum = Math.sin(timer/23);
+			for (id in projectedFaces) {
+				var hue = (timer/5)%360,
+					saturation = 75+3*projectedFaces[id][0][2],
+					luminosity = 50+(id-projectedFaces.length/2)/projectedFaces.length*20;
+				
+				projectedFaces[id].push('hsl('+hue+','+saturation+'%,'+luminosity+'%)');	
+			}
+		}
+	
+		// We clear the previous frame:
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		
+		// We render the new one:
+		Render(cubesQuadriFaces, context, camPosition, camOrientation, canvas.width, canvas.height, colorFunction);
+		timer++;
+	}
+	else DrawLaunchUI();
+}
+
+window.onclick = function() {
+	run = !run;
+	if (run) Run();
+}
+
+// We generate an overview of the scene, then wait for the user to launch it:
+Run(); 
+run = false;
+		</script>
+	</body>
+</html>
