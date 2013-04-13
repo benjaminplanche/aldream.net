@@ -1,0 +1,498 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+		<meta content="Benjamin Bill Planche" name="author">
+		<meta content="Portfolio of Benjamin (Bill) Planche, aka Aldream. About image processing, computer graphics, web experiments,..." name="description">
+		<meta content="aldream, benjamin, planche, bill, blog, web, image, graphics, painter, algorithm" name="keywords">
+		<meta content="index,follow" name="robots">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Aldream - The Painter's Algorithm</title>
+        <meta name="viewport" content="width=device-width">
+
+		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="../css/normalize.css"/>
+        <link rel="stylesheet" href="../css/main.css"/>
+		<link href="../css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
+		<link href="../css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body id="blog">
+			<!--[if lt IE 7]>
+				<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+			<![endif]-->
+
+			<!-- Add your site or application content here -->
+			<header id="main-header">
+				<h1><a href="../">Aldream</a></h1>
+				<nav id="menu-top">
+					<ul>
+						<a href="../blog"><li>Blog</li></a>
+						<a href="../demo"><li>Demo</li></a>
+						<a href="../projects"><li>Projects</li></a>
+						<a href="../about"><li>About</li></a>
+					</ul>
+				</nav>
+				<nav id="menu-top-mini">
+					<ul>
+						<li><a href="../blog" title="Blog"><img width=22 alt="Blog" src="../img/glyphicons-color/book-blue.png"/></a></li>
+						<li><a href="../demo" title="Demo"><img width=25 alt="Demo" src="../img/glyphicons-color/eye-green.png"/></a></li>
+						<li><a href="../projects" title="Projects"><img width=25 alt="Projects" src="../img/glyphicons-color/star-yellow.png"/></a></li>
+						<li><a href="../about" title="About"><img width=25 alt="About" src="../img/glyphicons-color/user-red.png"/></a></li>
+					</ul>
+				</nav>
+			</header>
+			<section id="blog-article">
+				<h1>Article</h1>
+				<article class="span3">
+					<div>
+<h1>The Painter's Algorithm</h1>
+
+<p>This article is the first of a series aimed to describe and formalize the different methods and tricks used in my demos for the <a href="" title="JS1K 2013">JS1K Spring-2013 challenge</a>. I had much fun participating, and learnt a lot, so I will try to spread my enthousiasm.<br/>
+The main topics will therefore be 3D procedural generation, rendering, and how to get all this fit in 1024 bytes.</p>
+
+<p>Today, we will deal with &laquo; <em>how to easily render a 3D scene in a 2D canvas</em> &raquo;, presenting one of the simplest method for that: the <strong>Painter's Algorithm</strong>.</p>
+<p>Through a mix of maths and code, we should end with a simple example.</p>
+
+<h2>Rendering Process</h2>
+
+<p>You have at hand your various 3D meshes, nicely placed in a scene, and now you wonder how to render that into a static picture or a dynamic demo... The global process is relatively simple to express:</p>
+<ul>
+	<li><strong>Define</strong> your camera (position, orientation, field of view,...);</li>
+	<li><strong>Project</strong> the 3D meshes of the scene on its viewfinder 2D plane, and adapt the result to your canvas <small>(or whatever medium you use)</small> size/ratio;</li>
+	<li><strong>Draw</strong> the visible elements on.</li>
+</ul>
+<p>Basically, it's only maths, maths, and some more maths. So let's get started.</p>
+
+<h2>Open your third eye</h2>
+
+<p>First you have to decide <em>what</em> you want to see, and <em>how</em>.</p>
+<p class="quote">Where will be positioned your camera? Which direction will it be aiming? How far/near can it see? With which ratio? With a realistic perspective projection, an orthographic one or something more exotic?</em> ...</p>
+<p>There are many parameters with barbaric names (try to place &laquo; frustum &raquo; in a conversation...) to take into account. We won't address all of them right now, so for now, let's only deal with:</p>
+<ul>
+	<li><img src="img/cam-yaw-pitch-roll.png" width=150 alt="The Tait–Bryan angles" title="The Tait–Bryan angles"/>A <strong>perspective projection</strong> (the furthest, the smallest on screen);</li>
+	<li>A <strong>camera positioned at $(c_x, c_y, c_z)$</strong> in the cartesian space, with <strong>its orientation defined as $({\theta}_{yaw}, {\theta}_{pitch}, {\theta}_{roll})$</strong>, the Tait–Bryan angles;</li>
+	<li>The screen ratio, while <strong>preserving the proportions</strong> in our scene. We call $W$ the screen's width and $H$ its height.</li>
+</ul>
+
+<h2>Flatten the world</h2>
+
+<p>The projection step is quite straightforward <small>(as long as you don't try to find the formula by yourself)</small>. <a class="refing" id="refing-1" href="#refed-1" title="Ref - Wikipedia - 3D Projection">[1]</a></p>
+
+<p>For a vertex at the position $(a_x, a_y, a_z)$, its projection would be:</p>
+<div class="mathjax-formula">
+<!-- From Wikipedia (https://en.wikipedia.org/wiki/3D_projection) -->
+$$\begin{bmatrix}
+   \mathbf{d}_x \\
+   \mathbf{d}_y \\
+   \mathbf{d}_z \\
+\end{bmatrix}=\begin{bmatrix}
+   1 & 0 & 0  \\
+   0 & {\cos \mathbf{\theta}_{pitch} } & { - \sin \mathbf{\theta}_{pitch} }  \\
+   0 & { \sin \mathbf{\theta}_{pitch} } & { \cos \mathbf{\theta}_{pitch} }  \\
+\end{bmatrix}\begin{bmatrix}
+   { \cos \mathbf{\theta}_{roll} } & 0 & { \sin \mathbf{\theta}_{roll} }  \\
+   0 & 1 & 0  \\
+   { - \sin \mathbf{\theta}_{roll} } & 0 & { \cos \mathbf{\theta}_{roll} }  \\
+\end{bmatrix}\begin{bmatrix}
+   { \cos \mathbf{\theta}_{yaw} } & { - \sin \mathbf{\theta}_{yaw} } & 0  \\
+   { \sin \mathbf{\theta}_{yaw} } & { \cos \mathbf{\theta}_{yaw} } & 0  \\
+   0 & 0 & 1  \\
+\end{bmatrix}\left( {\begin{bmatrix}
+   \mathbf{a}_x  \\
+   \mathbf{a}_y  \\
+   \mathbf{a}_z  \\
+\end{bmatrix} - \begin{bmatrix}
+   \mathbf{c}_x  \\
+   \mathbf{c}_y  \\
+   \mathbf{c}_z  \\
+\end{bmatrix}} \right)$$
+</div>
+<p>We can notice the three rotation matrices, one for each of our Tait–Bryan angles.</p>
+<p>This matrix formula looks good, but can be laborious to use if you can't afford to include a library dealing with matrix operations. If we <em>linearize</em> it <small>(thanks Wikipedia for saving me from this burden)</small>, we get:</p>
+
+<div class="mathjax-formula">
+<!-- From Wikipedia (https://en.wikipedia.org/wiki/3D_projection) -->
+$$\begin{bmatrix}
+	d_x \\
+	d_y \\
+	d_z
+\end{bmatrix}=\begin{bmatrix}
+	\cos {\theta}_{roll}\cdot(\sin {\theta}_{yaw}\cdot(a_y-c_y)+\cos {\theta}_{yaw}\cdot(a_x-c_x))-\sin {\theta}_{roll}\cdot(a_z-c_z) \\
+	\sin {\theta}_{pitch}\cdot(\cos {\theta}_{roll}\cdot(a_z-c_z)+\sin {\theta}_{roll}\cdot(\sin {\theta}_{yaw}\cdot(a_y-c_y)+\cos {\theta}_{yaw}\cdot(a_x-c_x)))+\cos {\theta}_{pitch}\cdot(\cos {\theta}_{yaw}\cdot(a_y-c_y)-\sin {\theta}_{yaw}\cdot(a_x-c_x)) \\
+	\cos {\theta}_{pitch}\cdot(\cos {\theta}_{roll}\cdot(a_z-c_z)+\sin {\theta}_{roll}\cdot(\sin {\theta}_{yaw}\cdot(a_y-c_y)+\cos {\theta}_{yaw}\cdot(a_x-c_x)))-\sin {\theta}_{pitch}\cdot(\cos {\theta}_{yaw}\cdot(a_y-c_y)-\sin {\theta}_{yaw}\cdot(a_x-c_x))
+\end{bmatrix}$$
+</div>
+<p>Nothing we can't implement here. Moreover, you can observe some recurrences in it, which means it is possible to <em>refactore</em> it to save some operations and bytes:</p>
+<div class="mathjax-formula">
+<!-- From Wikipedia (https://en.wikipedia.org/wiki/3D_projection) -->
+$$\begin{array}{lcl}
+temp_1 &= &\cos {\theta}_{yaw}\cdot(a_y-c_y)-\sin {\theta}_{yaw}\cdot(a_x-c_x) \\
+temp_2 &= &\cos {\theta}_{roll}\cdot(a_z-c_z)+\sin {\theta}_{roll}\cdot(\sin {\theta}_{yaw}\cdot(a_y-c_y)+\cos {\theta}_{yaw}\cdot(a_x-c_x)) \\
+\end{array}$$
+$$
+\begin{bmatrix}
+	d_x \\
+	d_y \\
+	d_z
+\end{bmatrix}=\begin{bmatrix}
+	\cos {\theta}_{roll}\cdot(\sin {\theta}_{yaw}\cdot(a_y-c_y)+\cos {\theta}_{yaw}\cdot(a_x-c_x))-\sin {\theta}_{roll}\cdot(a_z-c_z) \\
+	\sin {\theta}_{pitch}\cdot temp_2+\cos {\theta}_{pitch}\cdot temp_1 \\
+	\cos {\theta}_{pitch}\cdot temp_2-\sin {\theta}_{pitch}\cdot temp_1
+\end{bmatrix}$$
+</div>
+<p>We now can compute the positions of 3D elements with respect to the coordinates system defined by our camera (with $d_x$ and $d_y$ the projection position on the viewfinder and $d_z$ the perspective/depth seen from the camera). But it is not over yet: our final medium is the screen/canvas we want to display our scene on, not the camera's viewfinder. We thus have to apply a <strong>last transform to get the pixels positions $(b_x, b_y)$</strong> on it:</p>
+$$\begin{bmatrix}
+	b_x \\
+	b_y
+\end{bmatrix}=\begin{bmatrix}
+	\frac{d_x}{d_z}\cdot min(H,W)+\frac{W}{2}\\
+	\frac{d_y}{d_z}\cdot min(H,W)+\frac{H}{2}
+\end{bmatrix}$$
+<p>The division by $d_z$ is the key for the perspective effect (the furthest from the camera, the bigger $d_z$, and thus the smallest the element).</br>
+Through the multiplication of $d_z$ and $d_y$ by $min(H,W)$, we apply the chosen ratio while preserving the proportions (try to use $max(H,W)$ or to use $W$ with $d_x$ and $H$ with $d_y$ to see how it influences the result).</br>
+Finally, the addition of half the screen's dimensions centers the elements.</p>
+
+<p>So here is our <strong>final projection function</strong>, to be applied to every vertex of our scene:</p>
+<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+/**
+ * ===Project===
+ * Computes the perspective projection for each vertex of an array of 3D faces.
+ * Parameters:
+ *	- sceneFaces 	(Array<Array<Vertex>>):	Array of faces, defined by their vertices
+ *	- camPosition 	(Vector3): 				Position of the camera
+ *	- camOrientation(Vector3): 				Orientation of the camera - Tait-Bryan angles [yaw, pitch, roll]
+ *	- canvasWidth 	(Int): 					Width of the canvas to project on
+ *	- canvasHeight 	(Int): 					Height of the canvas to project on
+ * Return: Array of projected faces (Array<Array<Vertex>>)
+ */
+function Project(sceneFaces, camPosition, camOrientation, canvasWidth, canvasHeight) {
+	var cosYaw = Math.cos(camOrientation[0]),
+		sinYaw = Math.sin(camOrientation[0]),
+		cosPitch = Math.cos(camOrientation[1]),
+		sinPitch = Math.sin(camOrientation[1]),
+		cosRoll = Math.cos(camOrientation[2]),
+		sinRoll = Math.sin(camOrientation[2]),
+		minDim = (canvasWidth < canvasHeight) ? canvasWidth : canvasHeight; // To avoid repeating the callings.
+
+	var projectedFaces = [];
+	var nbVertices;
+	
+	for (id in sceneFaces) {
+		projectedFaces[id] = [];
+		
+		for (j = 0; j < (nbVertices = sceneFaces[id].length) ; j++) { // For each vertex of the face:
+			// 3D Projection:
+			var temp1 = cosYaw*(sceneFaces[id][j][1] - camPosition[1]) - sinYaw*(sceneFaces[id][j][0] - camPosition[0]),
+				temp2 = cosRoll*(sceneFaces[id][j][2] - camPosition[2]) + sinRoll*(sinYaw*(sceneFaces[id][j][1] - camPosition[1]) + cosYaw*(sceneFaces[id][j][0] - camPosition[0])),
+				
+				dX = cosRoll*(sinYaw*(sceneFaces[id][j][1] - camPosition[1]) + cosYaw*(sceneFaces[id][j][0] - camPosition[0])) - sinRoll*(sceneFaces[id][j][2] - camPosition[2]),
+				dY = sinPitch*temp2 + cosPitch*temp1,
+				dZ = cosPitch*temp2 - sinPitch*temp1;
+			
+			// Transform to project on the screen:
+			projectedFaces[id].push([dX / dZ * minDim + canvasWidth/2,
+									dY / dZ * minDim + canvasHeight/2,
+									dZ]); 
+		}
+	}
+	
+	return projectedFaces;
+}
+]]></script>
+
+<p>There is one important thing I haven't addressed yet : the <strong>clipping</strong> step. When you look at something with your own eyes or a camera, you don't see the <i>whole scene</i>, e.g. you can't see behind you. Your field of view, your <em>frustum</em>, is limited to a specific cone or pyramid <small>(truncated, if you take into account the near plane and the far plane. Some cameras can't see objects too close or too far: the planes represent those limits)</small>.</p>
+
+<p>In the above method, we project every element, without disgarding the ones out of view. We need to get rid of them, to <em>clip</em> them.
+In my examples, to do that, I simply rely on a property of the HTML canvas: its limits, and its <i>pliability</i> when it comes to draw out of them:<br/>
+With our transforms, pixels of elements out of the frustum will have their position $(b_x, b_y)$ out of the canvas field, and when I blindly ask to draw them, the canvas API doesn't complain: they will just not appear.</p>
+
+<p>It is <em>far</em> from an efficient solution, and easy improvements can be done (for instance by checking by yourself the values of $b_x$ and $b_y$ before drawing).<br/>
+The best solution would be to clip the scene before the projection, in the 3D space, but here things get a bit more tricky.</p>
+
+<p>Finally, if you want to truncate your field of view to a certain depth range (delimited by the near and far planes), you can simply discard the faces with a $d_z$ out of it.</p>
+
+<h2>Painter's Stroke</h2>
+
+<p><img src="../img/blog/articles/importance-of-sorting-by-depth.png" width=250 alt="Importance of sorting by depth" title="Well, it can also be modern Art..."/>Objects beyond our perepheral vision are not the only on which are hidden.<br/>Some can be totally or partially covered by others.
+So we don't want to draw our elements higgledy-piggledy, displaying faces which should be hidden under others. We want to preserve the depth order while rendering.</p>
+<p><em>And that's exactly what the Painter's algorithm is for.</em></p>
+
+<p>The idea is quite simple: before displaying our elements, we just sort them by decreasing depth (so from the furthest from the camera position to the closest).</br>
+By drawing them in this order, the front elements will naturally cover/overlay the ones behind. Like most painters would do.</p>
+
+<p>Luckily for us, we've already computed the depth of the vertices, $d_z$, making the implementation of the rendering function really straightforward:</p>
+<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+
+//	ComputeBarycentersDepths() is supposed to be called right after the projection step and
+//	before Paint(), to set the Z-bar values of each vertex. I make the supposition that these
+//	values can be used in other part of your rendering method (for instance to set the colors),
+//	that's why I separated it from Paint().
+
+
+/**
+ * ===ComputeBarycentersDepths===
+ * Computes the Z value of the given faces, pushing it into the array defining each face.
+ * Parameter:
+ *	- faces	(Array<Vertex>):	Array of faces
+ */
+function ComputeBarycentersDepths(faces) {
+	for (id in faces) {
+		var barDepth = 0;
+		for (j = 0; j < (nbVertices = faces[id].length) ; j++) { // For each vertex of the face.
+			barDepth += faces[id][j][2];
+		}
+		
+		barDepth /= nbVertices;
+		faces[id].push(barDepth);
+	}
+}
+
+/**
+ * ===Paint===
+ * Computes the Z value of the given faces, pushing it into the array defining each face.
+ * Parameter:
+ *	- projectedFaces	(Array<Object>):	Array of faces, defined by their vertices, their
+ *											average Z-value and their color ( face = [ 
+ *											[X1, Y1, Z1], ..., [X2, Y2, Z2], Z_bar, color ] )
+ *	- context			(CanvasContext):	Context of the output canvas
+ */
+function Paint(projectedFaces, context) {
+	projectedFaces.sort(function(face1, face2) {
+		return (face1[face1.length-2]-face2[face2.length-2]); // Sorting by desc Z_bar
+	}); 			
+	for (id in projectedFaces) {
+		// Setting the color:
+		context.fillStyle = context.strokeStyle =
+			projectedFaces[id][projectedFaces[id].length-1];
+		
+		// Tracing the 2D shape:
+		context.beginPath();
+		context.moveTo(projectedFaces[id][0][0], projectedFaces[id][0][1]);
+		for (j = 1; j < (nbVertices = projectedFaces[id].length-2) ; j++) {
+			context.lineTo(projectedFaces[id][j][0], projectedFaces[id][j][1]);
+		}
+		context.closePath();
+		
+		// Drawing it:
+		context.fill(); context.stroke();
+	}
+}
+]]></script>
+<p> Now you only need to wrap everything in a <i>Render()</i> method such as the one bellow, and you're done.</p>
+<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+/**
+ * ===Render===
+ * Example - Render a 3D scene in a canvas using the Painter's Algorithm.
+ * Parameter:
+ *	- sceneFaces 		(Array<Vertex>):	Faces defining the scene to render
+ *	- context 			(CanvasContext): 	Context of the output canvas
+ *	- camPosition 		(Vector3): 			Position of the camera
+ *	- camOrientation	(Vector3): 			Orientation of the camera
+ *												- Tait-Bryan angles [yaw, pitch, roll]
+ *	- canvasWidth 		(Int):				Width of the canvas to project on
+ *	- canvasHeight 		(Int):				Height of the canvas to project on
+ *	- colorFunction 	(Function): 		Function which attributes a color to each face,
+ *											depending on some given parameters
+ *											(define your own signature and edit under)
+ */
+function Render(sceneFaces,
+				context,
+				camPosition, camOrientation,
+				canvasWidth, canvasHeight,
+				colorFunction) {
+	// Projection:
+	var projectedFaces =
+		Project(sceneFaces, camPosition, camOrientation, canvasWidth, canvasHeight);
+	
+	// Preparing to sort the faces (we will use their barycenter for that - this isn't perfect,
+	// and we can have some glitches, but let's keep it simple):
+	ComputeBarycentersDepths(projectedFaces);
+	// These values can maybe be useful for the color function, that's why we (can) save them.
+	
+	// Defining the color of each face (pass the parameters you need and do your own business
+	// here - this is just an example):
+	colorFunction(projectedFaces, sceneFaces);
+	
+	// Applying the Painter's Algo & Drawing:
+	Paint(projectedFaces, context);	
+}
+]]></script>
+
+<h2>Conclusion</h2>
+<p>That's all. We just implemented <strong>a really simple 3D renderer</strong>. You can find bellow a direct example using the exact functions described above:</p>
+
+<div class="syntaxhighlighter-compacted"><script type="syntaxhighlighter" class="brush: js"><![CDATA[
+/**
+ * The rendering functions should be added here.
+ */
+
+// Shim layer with setTimeout fallback
+// Thank to Paul Irish (http://paulirish.com/2011/requestanimationframe-for-smart-animating)
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
+// We define a simple 2x2x2 cube, made of quad faces
+// (building the mesh procedurally isn't complicated, but not the subject of this article):
+var cubeVertices = [[-1,  1,  1], [ 1,  1,  1], [ 1, -1,  1], [-1, -1,  1],
+					[-1,  1, -1], [ 1,  1, -1], [ 1, -1, -1], [-1, -1, -1]];
+var cubesQuadriFaces = [[cubeVertices[0], cubeVertices[1], cubeVertices[2], cubeVertices[3]],
+						[cubeVertices[4], cubeVertices[5], cubeVertices[6], cubeVertices[7]],
+						[cubeVertices[1], cubeVertices[5], cubeVertices[6], cubeVertices[2]],
+						[cubeVertices[4], cubeVertices[0], cubeVertices[3], cubeVertices[7]],
+						[cubeVertices[4], cubeVertices[5], cubeVertices[1], cubeVertices[0]],
+						[cubeVertices[3], cubeVertices[2], cubeVertices[6], cubeVertices[7]]]; 
+
+// And we display it:
+var canvas = document.getElementsByTagName("canvas")[0];
+canvas.width = canvas.height = 200;
+var context = canvas.getContext("2d");
+var timer = 0;
+
+(function animloop(){
+	// We request the next frame first to assure ~60fps:
+	requestAnimFrame(animloop);
+	
+	// We compute the new state: 
+	//	- we make the camera turn and roll around the cube while still focusing on its center:
+	var camPosition = 	[	10*Math.cos(timer/87)*Math.sin(timer/57),
+							10*Math.sin(timer/87)*Math.sin(timer/57),
+							10*Math.cos(timer/57)];
+	var camOrientation =[	-Math.PI/2+timer%(Math.PI*87*2)/87,
+							-timer%(Math.PI*57*2)/57,
+							Math.cos(timer/33)/3];
+	
+	//	- we set the colors over time:
+	var colorFunction = function colorFuncT(projectedFaces, originalFaces) {
+		var cosLum = Math.cos(timer/37), sinLum = Math.sin(timer/23);
+		for (id in projectedFaces) {
+			var hue = (timer/5)%360,
+				saturation = 75+3*projectedFaces[id][0][2],
+				luminosity = 50+(id-projectedFaces.length/2)/projectedFaces.length*20;
+			
+			projectedFaces[id].push("hsl("+hue+","+saturation+"%,"+luminosity+"%)");	
+		}
+	}
+	
+	// We clear the previous frame:
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	
+	// We render the new one:
+	Render(cubesQuadriFaces, context, camPosition, camOrientation,
+			canvas.width, canvas.height, colorFunction);
+	
+	timer++;
+})();
+]]></script></div>
+
+<iframe width=320 height=230 class="demo" src="../js/examples/painters-algo-demo.html"></iframe>
+
+<p>You can also check my two 1Kb demo using this algorithm, to see it live: <a href="/demo#js1k-2013-morphose" title="&laquo; Morphose &raquo;, playing around with Tesselation">Morphose</a> and  <a href="/demo#js1k-2013-loom" title="&laquo; Loom &raquo;, the landscape generator">Loom</a>.</p>
+<p>But don't be fooled: when I say &laquo; <i>simple renderer</i> &raquo;, I especially mean &laquo; <i>too simple</i> &raquo;. The Painter's algorithm has many drawbacks, such as:</p>
+<ul>
+	<li><strong>It draws stuff which finally won't be displayed</strong> (hidden under). Far from optimal... (unless you have semi-transparent objects in your scene: this flaw becomes a <em>cheap way to automatically manage the transparency</em>);</li>
+	<li>It is <em>face-wise</em>, ie. it draws face per face, and not pixel per pixel like some other methods. <strong>We thus lose in precision</strong> (the pixel-wise solutions give you the possibility to compute textures more precisely - pixel per pixel), and we can also face some rendering glitches, for instance in the case of <strong>overlapping or piercing polygons</strong> (<i>how to order thoses faces?</i>);</li>
+	<li>As implemented here, <strong>we don't know which element is above/under which one</strong>. This information could be useful to apply some effects, such as <em>shadows</em> <small>(see for instance the Shadow Z-buffer algorithm <a class="refing" id="refing-2" href="#refed-2" title="Chris Bentley: &laquo; Two Shadow Rendering Algorithms &raquo;">[2]</a>)</small>.</li>
+</ul>
+<p>That being said, this method can still be applied to many cases. It is easy to implement and only needs a 2D drawing library.</p>
+<p><em>Who needs performance?</em></p>
+
+<h2>References</h2>
+<ol>
+	<li id="refed-1"><a class="refed" href="#refing-1">^</a> Wikipedia: 3D projection - <a href="http://en.wikipedia.org/wiki/3D_projection" title="Wikipedia: 3D projection">en.wikipedia.org/wiki/3D_projection</a></li>
+	<li id="refed-2"><a class="refed" href="#refing-2">^</a> Chris Bentley: &laquo; Two Shadow Rendering Algorithms &raquo; - <a href="http://web.cs.wpi.edu/~matt/courses/cs563/talks/shadow/shadow.html" title="Chris Bentley: &laquo; Two Shadow Rendering Algorithms &raquo;">web.cs.wpi.edu/~matt/courses/cs563/talks/shadow/shadow.html</a></li>
+</ol>
+						<footer>
+							<time datetime="2013-04-13">2013-04-13</time>
+							<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://aldream.net/article/2013-04-11-painter_s_algorithm" data-text="The Painter'S Algorithm" data-via="b_aldream" data-lang="en">Tweet</a>
+						</footer>
+						<div id="disqus_thread"></div>
+						<script type="text/javascript">
+							/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+							var disqus_shortname = 'aldream'; // required: replace example with your forum shortname
+
+							/* * * DON'T EDIT BELOW THIS LINE * * */
+							(function() {
+								var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+								dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+								(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+							})();
+						</script>
+						<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+							<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+							
+					</div>
+				</article>
+			</section>
+			<footer id="page-footer">&copy; Aldream 2013 - <a href="#blog-article" title="Up">Fly high</a></footer>
+
+
+        <script src="..//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({
+				TeX: { extensions: ["autobold.js"] },
+				tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+			});
+		</script>
+		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+		<script type="text/javascript" src="../js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
+		<script type="text/javascript" src="../js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
+		<script>
+			// Syntax Highlighting:
+			SyntaxHighlighter.all()
+			
+			// Twitter buttons:
+			!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+			
+			function AdaptImageToScreenSize() {
+				if (innerWidth > 690) {
+					if (!this.alreadyWide) {
+						$('.wideImg').each(function(){
+							var src = $(this).attr('src');
+							var srcArray = src.split('.');
+							src = srcArray.pop();
+							src = srcArray.join('.') + '-wide.' + src;
+							$(this).attr('src', src);
+							$(this).attr('width', 620);
+						});
+						this.alreadyWide = true;
+					}
+				}
+				else {
+					if (this.alreadyWide) {
+						$('.wideImg').each(function(){
+							var src = $(this).attr('src').split('-wide').join('');
+							$(this).attr('src', src);
+							$(this).attr('width', 280);
+						});
+						this.alreadyWide = false;
+					}
+				}
+			}
+			AdaptImageToScreenSize.alreadyWide = innerWidth > 690;
+			if (AdaptImageToScreenSize.alreadyWide) {
+				AdaptImageToScreenSize();
+			}
+			$(window).resize(AdaptImageToScreenSize);
+		</script>
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <!--<script>
+            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>-->
+    </body>
+</html>
