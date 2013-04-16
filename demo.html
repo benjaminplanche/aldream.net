@@ -42,6 +42,57 @@
 				<nav id="demo-menu">
 					<ul>
 						<li>
+							<a class="sandBoxLink" href="demo/js1k-2013-pointillism.html">●</a>
+							<div class="desc">
+								<img src="img/demo/js1k-2013-pointillism.jpg" />
+								<h2><a class="sandBoxLink" href="demo/js1k-2013-pointillism.html">Pointillism</a></h2>
+								<p>1024B landscape generator (JS1K submission)</p>
+								<details>procedural generation, stochastic interpolation, painter algorithm</details>
+							</div>
+							<div class="info">
+								<p><em>Pointillist representation of an animated landscape: watch Spring comes and passes, and moving shadows casted by clouds.</em></p>
+								<h3>Controls</h3>
+								<ul>
+									<li>Move the mouse to fly around.</li>
+									<li>Drag (keep left click down and move) to fly around, observing a lighter version of the landscape</li>
+									<li>Use the wheel while dragging to draw near or observe from afar.</li>
+									<li>F5 / Actualize the page to generate a different landscape.</li>
+									<li>Change the ratio of the window if you find the relief too flat or too steep (it should look fine with a landscape ratio, but you can have different tastes...)</li>
+								</ul>
+								<p>If you let go the click while moving too fast,you will probably get some glitches: wait a tenth of second after dragging to prevent it. ;-)<br/>
+								Also, if you keep zooming, you will eventually reach a negative distance, inverting the controls.</p>
+								<p>The canvas is regularly reset (~40s), to prevent the page to crash because of the growing memory size of the more and more detailed display.</p>
+								
+								<h3>Description</h3>
+								<p>Final entry for <a href="http://js1k.com/2013-spring/" title="JS1k Spring'13">JS1K Spring'13</a> edition. (see it <a href="http://js1k.com/2013-spring/demo/1507" title="JS1k Spring'13 - Pointillism">here</a>)</p>
+								<p>This time I use the same landscape generation method than in my previous demo, but with a totally different rendering algo, inspired by romancortes' 2012 demo (<a href="http://romancortes.com/blog/1k-rose/" title="Roman Cortes' Website">romancortes.com/blog/1k-rose/</a>).</p>
+								<p>This <em>pointillist</em> method gives a result a bit less "clean" than with the Painter's algo, but is much lighter, in terms of processing time and bytes. And that's how I've been able to add some animations...</p>
+								<p>This demo features:</p>
+								<ul>
+									<li>A detailed, kinda-realistic, random landscape (moutains, islands, beaches, etc)</li>
+									<li>Lightning (fixed sun - no shadows or reflects)</li>
+									<li>Vegetation (sun-bathed hills, forests in the coombs, alpines above, etc - imagination can be required)</li>
+									<li>Snow, found on the peaks or in the shady coombs, covering most of the landscape when Winter reigns and melting away with the coming of Spring (so influenced by altitude, lighting and time)</li>
+									<li>Shadows casted by (unseen) moving clouds on the landscape</li>
+									<li>Some pseudo-random effects to try to make the water texture less uniform</li>
+									<li>Controls</li>
+								</ul>
+
+								<h3>Thanks</h3>
+								<ul>
+									<li><a href="https://twitter.com/aivopaas" title="Twitter - @aivopaas">@aivopaas</a> for JSCrusher</li>
+									<li><a href="https://twitter.com/romancortes" title="Twitter - @romancortes">@romancortes</a> for the inspiration and nice articles</li>
+									<li><a href="https://twitter.com/njbenji" title="Twitter - @njbenji">@njbenji</a> & <a href="http://jonasbru.github.io/" title="Github - jonasbru">jonasbru</a> for their remarks</li>
+									<li><a href="https://twitter.com/kuvos" title="Twitter - @kuvos">@kuvos</a> for this challenge</li>
+								</ul>
+								
+								<h3>Source <small>1024B - works with the <a href="http://js1k.com/2013-spring/shim.html" title="JS1K shim">provided shim</a></small></h3>
+								<pre>_='dgX=R=r2;Y=.6;JL=l=0&[TN,5,Z=9,h=8];(D9>l;){i=p*oO;dh/;(++l]i)(j=p;jv=	N@iP|0jP|0],w=i*p+j,l][w&&(i%2?*2++p]+/4:(v+	+oP:+	P:vh@Y-&6>]?6:;o=i=pir/}g;setInterval(m=-Zw=-KZz=Yx=KYb=J;J%290*Tg=[],); (j=1e4;jtw,k=@R-2*ri=l,lL/r+.5|0,p=h,hL/r%1,F=h>p,F=N*i+l]+(C(!Cv=F-X*z-3,Um,f=z*v+(I=m*U+w*t)*x,v=(v*x-z*I^H+H,I=(w*U-m*t^W+W,f<p=v*2*W+I]p&f,p=],F-=t+(p-h*]-(1-h)**52,Style="hsla("+[p?25Q+bQ*4:7pA*3Q:FG(u=F-bA:5.2&lt;FA*t/5:6.05&lt;pAQ*2:6&lt;pA:1.6+*.8b*l*i/47*f/3J/13)*17G.6]+")",$I,v,t=u/50+3-T,t)));++J},16)down=0}up}moveZ*X/W,Y=Y/H)}NnX+=f.dE|-f.DE}$0,0,W=c.wV#WVO8,H=c.hB#HB-21W/function(f){Math.;onmousecos(+orandom()=[];	lO][u]-*F-F@d[wa.fill25@6&lt;=2),--;wheelLO1-X*f.client)+for||(d[u=T/87)g[+1])j%2?(v#=inner$Rect(&]=@*(A?tBeightCF?p:hEeltaYG"%",Ksin(L=kN=oO-1P/2Q/pVidth^)/f*';for(Y in $='^VQPONLKGECBA@&$#	')with(_.split($[Y]))_=join(pop());eval(_)</pre>
+								<p>Take a look at the comments in the running script, or at my <a href="http://js1k.com/2013-spring/demo/1507" title="JS1k Spring'13 - Pointillism">JS1K submission</a>, to see the <em>beautified</em> source and get more technical explanations.</p>
+
+							</div>
+						</li>
+						<li>
 							<a class="sandBoxLink" href="demo/js1k-2013-loom.html">●</a>
 							<div class="desc">
 								<img src="img/demo/js1k-2013-loom.jpg" />
@@ -53,22 +104,33 @@
 								<p><em>Spring is coming, The mountains take off their white mantle, Random mesh of life and ice, lakes and rocks.</em></p>
 								<h3>Controls</h3>
 								<ul>
-								  <li>Move the mouse to fly around.</li>
-									<li>Use the wheel to draw near or observe from afar.</li>
-									<li>Click to enjoy the view (may take ~1-3s to display) or resume your journey.</li>
-									<li>Actualize the page to generate a different landscape.</li>
+									<li>Move the mouse to fly around.</li>
+									<li>Drag (keep left click down and move) to fly around, observing a lighter version of the landscape</li>
+									<li>Use the wheel while dragging to draw near or observe from afar.</li>
+									<li>F5 / Actualize the page to generate a different landscape.</li>
 									<li>Change the ratio of the window if you find the relief too flat or too steep (it should look fine with a landscape ratio, but you can have different tastes...)</li>
 								</ul>
+								<p>If you let go the click while moving too fast,you will probably get some glitches: wait a tenth of second after dragging to prevent it. ;-)<br/>
+								Also, if you keep zooming, you will eventually reach a negative distance, inverting the controls.</p>
+								
 								<h3>Description</h3>
-								<p>Final JS1K entry for the <a href="http://js1k.com/2013-spring/" title="JS1k Spring'13">Spring'13</a> edition.</p>
-								<p>This demo uses the same rendering method as my other submission (see <a class="sandBoxLink" href="demo/js1k-2013-morphose.html" title="Morphose Demo">here</a> too), the <a href="https://en.wikipedia.org/wiki/Painter%27s_algorithm" title="Wikipedia Article - Painter's algorithm">Painter's algorithm</a>, simplistic but quite light.</p>
+								<p>Made for JS1K <a href="http://js1k.com/2013-spring/" title="JS1k Spring'13">Spring'13</a> edition, this demo didn't make it to the board, being replaced by my final one.</p>
+								<p>It uses the same rendering method as my other submission (see <a class="sandBoxLink" href="demo/js1k-2013-morphose.html" title="Morphose Demo">here</a> too), the <a href="https://en.wikipedia.org/wiki/Painter%27s_algorithm" title="Wikipedia Article - Painter's algorithm">Painter's algorithm</a>, simplistic but quite light.</p>
 								<p>The landscape is generated using a mix between the <a href="https://en.wikipedia.org/wiki/Diamond-square_algorithm" title="Wikipedia Article - Diamond-square algorithm"> Midpoint displacement and the Diamond-square algorithms</a>, starting with a 2x2 matrix to get a detailed 257x257 heightmap, which is then used to build the 3D mesh.</p>
 								<p>Colors are applied taking into account the height (water < beach < vegetation < snow) and an rough estimation of the incline for the luminosity. By playing with those parameters and using the flexibility of the HSL color system, it is thus possible to create various nuances of vegetation (meadows for the sun-bathed hills, forests in the coombs, alpines above <small>- imagination can be required here</small>) or to simulate the effect of the sun on the snow (only found in the shadows for the lower altitudes).</p>
 								<p><small>By the way, don't fly to close to the surface or you might get entangled in the mesh and unravel the whole world (well, you will actually just get some threads spoiling the view)... Also, if you keep zooming, you will eventually reach a <em>negative distance</em>, inverting the controls. Both are harmless, but now you won't be surprised. I hadn't enough bytes left to better handle the zoom, sorry.<br/>
 								As for "why only stroking and not filling the faces?", the answer is simple: I couldn't afford to do both. I found the gaps left by stroking interesting, like a reminder of the "substantial" part of emptiness in the universe fabric. ;-)</small></p>
+								
+								<h3>Thanks</h3>
+								<ul>
+									<li><a href="https://twitter.com/aivopaas" title="Twitter - @aivopaas">@aivopaas</a> for JSCrusher</li>
+									<li><a href="https://twitter.com/njbenji" title="Twitter - @njbenji">@njbenji</a> & <a href="http://jonasbru.github.io/" title="Github - jonasbru">jonasbru</a> for their remarks</li>
+									<li><a href="https://twitter.com/kuvos" title="Twitter - @kuvos">@kuvos</a> for this challenge</li>
+								</ul>
+								
 								<h3>Source <small>1023B - works with the <a href="http://js1k.com/2013-spring/shim.html" title="JS1K shim">provided shim</a></small></h3>
-								<pre>_='dgr1,R5;Y=.6;g[T=Z=l=0K[o,4,9,h=8];D8>l;Li=p*o-1;d[++l]hgv==o&iU)+jUw=i*p+j,gwK=(i%2?#*2+	w+p]+	w@]4:(v++oV#+@Vv)+h&Y!=6>?6:Bi=pirDL;k;kDZ++K[m=iq=j	u=o*i+j(i+k)(j@-k)z=	u@+k*pmCqCy=	u+o@x+(z-yr,"hsl("+[99&7<(y-=x)?1:67/z:2!32&6x*2/y:y)+"%",40&7&lt;y?x:6.04x/3:6x:1/5)]+"%)"]}}eNAfillRect(0,0,h=c.widOEWidO-17,r=c.hFEHF-21m=-GZw=-_ZBGYx=_Ydh`Ldj=9;j;vo,um,tw,d.push(z=o*v+(k=m*u+w*t)*x,(v*x-o*kz*rC(w*u-m*tz*h+h)	9K10]}d.sort(return f[3]-n[3]}`d)Style=	9AbegPaO(!AmovI8Q75Q42Q18Q7]!(BT?sete,16):0clickNclearo!$moveNZX/h;YY/r$=b.onNR+=f.dJ|-f.DJ/40};[function(f,nL=--j]-R*]!AlIfor(=[];MaO.i)j=p;j	dg[l-1][u*r-9,=2D[8-T]};b.on);-random()*f.client],--;wheelinAstrokeTimeout(	w]&lt;z?[l]/;e(T^=3))/!),#j%2?(v$mouse&*(@+1Aa.Bo=C+r,E=nerFeightGcos(IeTo(	JeltaYK]=L){N=OthQ	U/2|0V]2:_s(`l  ';for(Y in $='`_VUQONLKJIGFECBA@&$#!	')with(_.split($[Y]))_=join(pop());eval(_)</pre>
-								<p>Take a look at the comments in the running script, or at my JS1K submission, to see the <em>beautified</em> source and get more technical explanations.</p>
+								<pre>_='d	g	R=r2;Y=.6;=0[o,5,Z=9,T=h=8];D	8>l;){i=p*o@;d	hg[++v=CQ_)+j_Aw=i*p+j,$wQ%2?&*2++p]+]!4:(v++o`&+`v)+h*(Y#6>]?6:]o=i=pirD[)k;kDZ++[ijECi+jAQ+kO-k)z=E+k*pAQO)y=E+oAy-=x+(z-y!r,"hsla("+[z?R/z:6#F*2/y:y)+"%",y@?x/Y:6.05&lt;F*x/7:6&lt;F:2/3)]+"%,"]}e^BfillRect(0,0,h=c.widUKWidU@8,r=c.hGKHG-21m=-LZw=-~Zo=LYx=~Yg	hq){]	j=9;j;vo,um,tw,].push(pCv+(k=m*u+w*t)*x,(v*x-o*k!p*r+r,(w*u-m*t!p*h+h)$910]}p=-l*p/40;g.sort(return f[3]-n[3]}qg)Style=$9]+l/p+")",BbegPaU(#BmovN87215487]#Vdown5,i=sete,9)up8,eVmove^ZX/h;YY/r=on^R+=f.dJ|-f.DJ/80};eVfunction(f,n){[l][-randomV]#BlN*r@1,for(};onmouse=--j]-R*	=[];^cleari#T=MaU.l]	i)j=p;j@][ud[w32*(6&lt;A$);--;wheel/;Interval(=f.clientinBstroke+1g[lD[T]=2]=!)/#),$g&j%2?(v@-1A],Ba.C=o*Ed[uFz?xGeightJeltaYK=nerLcos(NeTo($O)(jQ(iUthV()^=_/2|0`]!2:ql  ~s(';for(Y in $='~q`_^VUQONLKJGFECBA@&$#!	')with(_.split($[Y]))_=join(pop());eval(_)</pre>
+								<p>Take a look at the comments in the running script to see the <em>beautified</em> source and get more technical explanations.</p>
 
 							</div>
 						</li>
@@ -91,12 +153,19 @@
 								</ul>
 
 								<h3>Description</h3>
-								<p>First JS1K entry for the <a href="http://js1k.com/2013-spring/" title="JS1k Spring'13">Spring'13</a> edition.</p>
+								<p>First JS1K entry for the <a href="http://js1k.com/2013-spring/" title="JS1k Spring'13">Spring'13</a> edition. (see it <a href="http://js1k.com/2013-spring/demo/1442" title="JS1k Spring'13 - Pointillism">here</a>)</p>
 								<p>This demo uses the <a href="https://en.wikipedia.org/wiki/Painter%27s_algorithm" title="Wikipedia Article - Painter's algorithm">Painter's algorithm</a> to render the 3D mesh: after projecting each face on the coordinate system defined by the camera, we sort them by decreasing depth to get the painting order. Simple, but quite light (and it is possible to use this painting order to apply effects such as a depth fog).</p>
 								<p>The displayed shape is the result of a chaotic tweening between two pre-generated meshes, a cube and a sphere. To get a smooth tweening for the faces, the sphere geometry is created by mapping each vertex of the cube (cube-mapping method).</p>
 								<p>To reduce the "collision" effect when the camera enters the shape and to make the whole demo looks more "unreal", I decided to invert the depth order during the rendering process. You can still observe the original order by pressing any keys.</p>
 								<p>Alas, this demo wasn't running as smoothly with Firefox and Opera as with Chrome (and I couldn't apply most of the optimization tricks because of the specificity of this scene or the lack of bytes). So I decided to add a simple browser detector, to reduce the shape details for Firefox and Opera. I'm not fond of this exception, but I found the render lags even worse (and it was interesting to search a trick to detect the browsers in a minimal number of bytes...). Now that you're aware of the difference, I just invite you to give it a try on Chrome, if you want more details.</p>
 
+								<h3>Thanks</h3>
+								<ul>
+									<li><a href="https://twitter.com/aivopaas" title="Twitter - @aivopaas">@aivopaas</a> for JSCrusher</li>
+									<li><a href="https://twitter.com/njbenji" title="Twitter - @njbenji">@njbenji</a> & <a href="http://jonasbru.github.io/" title="Github - jonasbru">jonasbru</a> for their remarks</li>
+									<li><a href="https://twitter.com/kuvos" title="Twitter - @kuvos">@kuvos</a> for this challenge</li>
+								</ul>
+								
 								<h3>Source <small>1020B - works with the <a href="http://js1k.com/2013-spring/shim.html" title="JS1K shim">provided shim</a></small></h3>
 								<pre>_='X=navigatK.vendK?1:2;SCTt=Z=Y=F=U=4,Vv=[eg2-4f%2)x=v[fBy$1)Bz$2)BC	x,y,zd=sqrLx*x+y!+z*zS	x/d,y/d,z/d)Of=6;fi&ij&jkQ;kS	C	E,jE+1,j+1E+k,j+^k_=d,F++;V*eR-`97*g*2^(R)},Py=abs(g-e)/g;1<y?0:^(3-2!)!!OMRecL0,0,W=c.widthGWidth-21,H=c.hJGHJ-21W/Q,H/Q,si=`23D=0T)D+=P(T	--,47T	||T.shifL);R=P(++t%263,97)/2,y=-w=-z=Y+x=Y+)C){s	e=U^+tan(_)*D))*_*R);f=9;f;vz,ux!,rx*w,s	N=z*v+xk=y*u+w*r(x*v-z*k)/N*H+H,(w*u-r!)/N*W+W));s=_}s.sKLe[6]-g[6]})s)>>"hsl("+[263i/s),"47%",F*X*X/77]+"%)",Abeg#Path(Amov@87542187](()clickT97)mousemoveZX/W,YY/HkeypressU=-UOsetInterval(M,16)function(e,g){	[Math.=V(C--fSf])+e*]Al#@fK(cos(=[	[F]),.push(+.5|0return ;F # 9]AfillOb.onQ*e.client],--;)`47s#(Astroke=+i)s/4*X-2,Z+`31*(!*y#in$=v[(f+&=16/X;>Style=@eTo(sAa.B%3EV(iG=#nerJeightKorLt(O};Q=2^1-_S`t/';for(Y in $='`_^QOLKJGEBA@>&$#!	')with(_.split($[Y]))_=join(pop());eval(_)</pre>
 								<p>Take a look at the comments in the running script, or at my JS1K submission, to see the <em>beautified</em> source and get more technical explanations.</p>
@@ -169,7 +238,7 @@
 			function AdjustDim() {
 				$('#scene').css('height', (window.innerHeight)+'px');
 				$('#scene').css('width', '100%');
-				$('#demo-menu').css('margin-top', (window.innerHeight/2-$('#demo-menu li').length*12)+'px');
+				$('#demo-menu').css('margin-top', (window.innerHeight/2-$('#demo-menu > ul > li').length*18)+'px');
 				$('#demo-info').css('max-height', (window.innerHeight - 40)+'px');
 			}
 			$(window).resize(AdjustDim);
