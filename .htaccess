@@ -344,6 +344,8 @@ FileETag None
 </IfModule>
 <IfModule mod_rewrite.c>
   RewriteRule ^(blog|index)/?$ index.html [NC,L]
+<IfModule mod_rewrite.c>
+  RewriteRule ^article/([A-Za-z0-9-]+)/?$ articles/$1.html [NC,L]
 </IfModule>
 <IfModule mod_rewrite.c>
   RewriteRule ^img/([A-Za-z0-9-]+/)(.+)$ img/$1/$2 [NC,L] 

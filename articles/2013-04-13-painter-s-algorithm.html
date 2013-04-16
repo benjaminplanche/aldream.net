@@ -14,11 +14,11 @@
         <meta name="viewport" content="width=device-width">
 
 		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="../css/normalize.css"/>
-        <link rel="stylesheet" href="../css/main.css"/>
-		<link href="../css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
-		<link href="../css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
-        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+        <link rel="stylesheet" href="/css/normalize.css"/>
+        <link rel="stylesheet" href="/css/main.css"/>
+		<link href="/css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
+		<link href="/css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
+        <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body id="blog">
 			<!--[if lt IE 7]>
@@ -27,21 +27,21 @@
 
 			<!-- Add your site or application content here -->
 			<header id="main-header">
-				<h1><a href="../">Aldream</a></h1>
+				<h1><a href="/">Aldream</a></h1>
 				<nav id="menu-top">
 					<ul>
-						<a href="../blog"><li>Blog</li></a>
-						<a href="../demo"><li>Demo</li></a>
-						<a href="../projects"><li>Projects</li></a>
-						<a href="../about"><li>About</li></a>
+						<a href="/blog"><li>Blog</li></a>
+						<a href="/demo"><li>Demo</li></a>
+						<a href="/projects"><li>Projects</li></a>
+						<a href="/about"><li>About</li></a>
 					</ul>
 				</nav>
 				<nav id="menu-top-mini">
 					<ul>
-						<li><a href="../blog" title="Blog"><img width=22 alt="Blog" src="../img/glyphicons-color/book-blue.png"/></a></li>
-						<li><a href="../demo" title="Demo"><img width=25 alt="Demo" src="../img/glyphicons-color/eye-green.png"/></a></li>
-						<li><a href="../projects" title="Projects"><img width=25 alt="Projects" src="../img/glyphicons-color/star-yellow.png"/></a></li>
-						<li><a href="../about" title="About"><img width=25 alt="About" src="../img/glyphicons-color/user-red.png"/></a></li>
+						<li><a href="/blog" title="Blog"><img width=22 alt="Blog" src="/img/glyphicons-color/book-blue.png"/></a></li>
+						<li><a href="/demo" title="Demo"><img width=25 alt="Demo" src="/img/glyphicons-color/eye-green.png"/></a></li>
+						<li><a href="/projects" title="Projects"><img width=25 alt="Projects" src="/img/glyphicons-color/star-yellow.png"/></a></li>
+						<li><a href="/about" title="About"><img width=25 alt="About" src="/img/glyphicons-color/user-red.png"/></a></li>
 					</ul>
 				</nav>
 			</header>
@@ -73,7 +73,7 @@ The main topics will therefore be 3D procedural generation, rendering, and how t
 <p class="quote">Where will be positioned your camera? Which direction will it be aiming? How far/near can it see? With which ratio? With a realistic perspective projection, an orthographic one or something more exotic?</em> ...</p>
 <p>There are many parameters with barbaric names (try to place &laquo; frustum &raquo; in a conversation...) to take into account. We won't address all of them right now, so for now, let's only deal with:</p>
 <ul>
-	<li><img src="img/cam-yaw-pitch-roll.png" width=150 alt="The Tait–Bryan angles" title="The Tait–Bryan angles"/>A <strong>perspective projection</strong> (the furthest, the smallest on screen);</li>
+	<li><img src="/img/blog/articles/cam-yaw-pitch-roll.png" width=150 alt="The Tait–Bryan angles" title="The Tait–Bryan angles"/>A <strong>perspective projection</strong> (the furthest, the smallest on screen);</li>
 	<li>A <strong>camera positioned at $(c_x, c_y, c_z)$</strong> in the cartesian space, with <strong>its orientation defined as $({\theta}_{yaw}, {\theta}_{pitch}, {\theta}_{roll})$</strong>, the Tait–Bryan angles;</li>
 	<li>The screen ratio, while <strong>preserving the proportions</strong> in our scene. We call $W$ the screen's width and $H$ its height.</li>
 </ul>
@@ -217,7 +217,7 @@ The best solution would be to clip the scene before the projection, in the 3D sp
 
 <h2>Painter's Stroke</h2>
 
-<p><img src="../img/blog/articles/importance-of-sorting-by-depth.png" width=250 alt="Importance of sorting by depth" title="Well, it can also be modern Art..."/>Objects beyond our perepheral vision are not the only on which are hidden.<br/>Some can be totally or partially covered by others.
+<p><img src="/img/blog/articles/importance-of-sorting-by-depth.png" width=250 alt="Importance of sorting by depth" title="Well, it can also be modern Art..."/>Objects beyond our perepheral vision are not the only on which are hidden.<br/>Some can be totally or partially covered by others.
 So we don't want to draw our elements higgledy-piggledy, displaying faces which should be hidden under others. We want to preserve the depth order while rendering.</p>
 <p><em>And that's exactly what the Painter's algorithm is for.</em></p>
 
@@ -394,7 +394,7 @@ var timer = 0;
 })();
 ]]></script></div>
 
-<iframe width=320 height=230 class="demo" src="../js/examples/painters-algo-demo.html"></iframe>
+<iframe width=320 height=230 class="demo" src="/examples/painters-algo-demo.html"></iframe>
 
 <p>You can also check my two 1Kb demo using this algorithm, to see it live: <a href="/demo#js1k-2013-morphose" title="&laquo; Morphose &raquo;, playing around with Tesselation">Morphose</a> and  <a href="/demo#js1k-2013-loom" title="&laquo; Loom &raquo;, the landscape generator">Loom</a>.</p>
 <p>But don't be fooled: when I say &laquo; <i>simple renderer</i> &raquo;, I especially mean &laquo; <i>too simple</i> &raquo;. The Painter's algorithm has many drawbacks, such as:</p>
@@ -413,7 +413,7 @@ var timer = 0;
 </ol>
 						<footer>
 							<time datetime="2013-04-13">2013-04-13</time>
-							<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://aldream.net/article/2013-04-11-painter_s_algorithm" data-text="The Painter'S Algorithm" data-via="b_aldream" data-lang="en">Tweet</a>
+							<a href="https://twitter.com/share" class="twitter-share-button" data-text="The Painter'S Algorithm" data-via="b_aldream" data-lang="en">Tweet</a>
 						</footer>
 						<div id="disqus_thread"></div>
 						<script type="text/javascript">
@@ -436,10 +436,10 @@ var timer = 0;
 			<footer id="page-footer">&copy; Aldream 2013 - <a href="#blog-article" title="Up">Fly high</a></footer>
 
 
-        <script src="..//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
-        <script src="../js/plugins.js"></script>
-        <script src="../js/main.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+        <script src="/js/plugins.js"></script>
+        <script src="/js/main.js"></script>
 		<script type="text/x-mathjax-config">
 			MathJax.Hub.Config({
 				TeX: { extensions: ["autobold.js"] },
@@ -447,8 +447,8 @@ var timer = 0;
 			});
 		</script>
 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-		<script type="text/javascript" src="../js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
-		<script type="text/javascript" src="../js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
+		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
+		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
 		<script>
 			// Syntax Highlighting:
 			SyntaxHighlighter.all()
