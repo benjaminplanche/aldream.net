@@ -1,0 +1,403 @@
+﻿<!doctype html>
+<html>
+	<head>
+		<title>JS1k, 1k demo submission [ID]</title>
+		<meta charset="utf-8" />
+		<style>
+			#c {
+				cursor:pointer;
+			}
+			#d, #f {
+				position: absolute;
+				top: 4em;
+				left: 1em;
+				border-radius: 10px;
+				z-index: 5;
+			}
+			div {
+				position: absolute;
+				top: 1em;
+				left: 1em;
+				z-index: 9;
+			}
+			label {
+				color: #fff;
+				font-size: .6em;
+			}
+			
+			select {
+				color: #222;
+				font-size: .6em;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="c"></canvas>
+		<canvas id="d"></canvas>
+		<canvas id="f"></canvas>
+		<div>
+			<label for="selTween">Tweening:</label>
+			<select id="selTween" onchange="tweenFlag=this.value; TweenSetting(); InitTweenPlotter();">
+				<option value=0>Linear</option>
+				<option value=1>Circular</option>
+				<option value=6>Rosace</option>
+				<option value=2>Bounded</option>
+				<option value=4>Demo v1</option>
+				<option value=5>Demo v2</option>
+			</select><br/>
+			<label for="selImplo">Unstability:</label>
+			<select id="selImplo" onchange="implodeFlag=this.value;">
+				<option value=0>None</option>
+				<option value=1>Pulse</option>
+				<option value=2>Cosine</option>
+			</select> 
+		</div>
+		<script>
+			var b = document.body;
+			var c = document.getElementsByTagName('canvas')[0];
+			var a = c.getContext('2d');
+			var d = document.getElementsByTagName('canvas')[1];
+			var e = d.getContext('2d');
+			var g = f.getContext('2d');
+			document.body.clientWidth; // fix bug in webkit: http://qfox.nl/weblog/218
+		</script>
+		<script>
+
+
+// Demo Var:
+var facesSphere=[], facesCube=[],	// Meshes
+	NB_DIV = 16,					// Number of rows and colums per cube's face, which means our meshes will be made of 6*16*16 vertices
+	SIZE = 4,						// Dimension of our meshes
+	RADIUS = SIZE/2,				// Mid-dim
+
+	wHeight, wWidth, wMinDim,		// Window dimensions.
+	camDist = 12,					// Camera distance to the origin
+	angleYaw = angleHeading = 4,	// Angles defining the camera orientation
+	X = navigator.vendor?1:2; 		// The demo is so slow with FF & Op that I decided to reduce the number of vertices for these browsers.
+	// navigator.vendor -> String which seems only defined / not empty for Chrome
+
+/// Plot Var:
+var p1 = [-5, -10], p2 = [5, 10],
+	prevP = [0, 0],
+	canvasWidth, canvasHeight, minDim;
+	
+var	T = 0,
+	tweenFlag = 0, implodeFlag = 0,
+	coefX, coefY, coefZ, tweenFunction, implodeCoef, pulseY, pulseZ;
+	
+///
+// Given the subdivision indices, generates the corresponding vertex for the cube and sphere meshes (centered on the origin), and gives it to the current triangle faces.
+// Parameters:
+//	- i : Row num
+//	- j : Col num
+//	- face : Face of the cube we are currently dealing with
+//	- trId : index of the current faces
+// Returns: the distance of the cube vertex from its origin.
+///
+function GenerateVertex (i, j, face, trId) {
+	// First we generate the cube vertex. Using some modulos on the face index, we can cover each case, by swapping the coordinates order or moving the vertex along the depth axis:
+	var coord = [i/NB_DIV*X*SIZE-RADIUS, j/NB_DIV*X*SIZE-RADIUS, RADIUS*(1-2*(face%2))], 
+		x = coord[face%3], y = coord[(face+1)%3], z = coord[(face+2)%3];
+	facesCube[trId].push(x,y,z);
+	
+	// Then the sphere vertex, by "cube-mapping" (the following formula speaks for itself):
+	var dist = Math.sqrt(x*x+y*y+z*z);
+	facesSphere[trId].push(x/dist*RADIUS, y/dist*RADIUS, z/dist*RADIUS);	
+	return dist;
+}
+
+///
+// Tweening...
+// Parameters:
+//	- A - 1st value
+//	- B - 2nd value
+//	- coef - Tweening coef
+// Returns: the "intermediate" value
+///
+function TweenLinear (A, B, coef) {
+	return A*coef + B*(1-coef);
+}
+function TweenWandering (A, B, coef1, coef2) {
+	return Math.sin(coef1/17)*A*(coef2+coef1)+Math.cos(coef1/11)*B*(1-(coef2+coef1));
+}
+function TweenDemo (A, B, coef1, coef2) {	
+	return Math.sin(T/43+coef1)*A*(coef2+coef1)+Math.cos(coef1)*B*(1-(coef2+coef1));
+}
+function Pulse(A,B) { var y=Math.abs(B-A)/B; return y>1?0:1-(3-2*y)*y*y;} 
+
+function TweenSetting() {
+	var nextP = [];
+	
+	if (tweenFlag == 0) { // Linear
+		coefX = coefY = coefZ =.5+Math.cos(T/49)/2;
+		tweenFunction = TweenLinear;
+	}
+	else if (tweenFlag == 1) { // Circular
+		coefX = .5+Math.sin(T/37)*Math.cos(T/37)/2;
+		coefY = .5+Math.sin(T/37)*Math.sin(T/37)/2;
+		coefZ = .5+Math.cos(T/37)/2;
+		tweenFunction = TweenLinear;
+	}
+	else if (tweenFlag == 6) { // Spiro
+		coefX = .5+Math.sin(T/17)*Math.cos(T/37)/2;
+		coefY = .5+Math.sin(T/17)*Math.sin(T/37)/2;
+		coefZ = .5+Math.sin(T/17)/2;
+		tweenFunction = TweenLinear;
+	}
+	else if (tweenFlag == 2) { // Bounded
+		coefX = 1-Math.cos(T/23);
+		coefY = 1-Math.cos(T/33);
+		coefZ = 1-Math.cos(T/23);
+		tweenFunction = TweenWandering;
+	}
+//	else if (tweenFlag == 3) { // Wandering + Pulse
+//		coefX = .5+Math.cos(T/23)/2;
+//		coefY = .5+Math.cos(T/33)/2;
+//		coefZ = .5+Math.cos(T/23)*Math.cos(T/33)/2;
+//		tweenFunction = TweenWandering;
+//		implodeCoef = Pulse(T%263,97)/2;
+//		pulseY = Pulse(T%157,97)/2;
+//		pulseZ = Pulse(T%203,97)/2;
+//	
+//	}
+	else if (tweenFlag == 4) { // Demo
+		coefX = Math.sin(T/27)*Math.cos(T/27);
+		coefY = Math.sin(T/27)*Math.sin(T/27);
+		coefZ = Math.cos(T/27);
+		tweenFunction = TweenDemo;
+	
+	}
+	else if (tweenFlag == 5) { // Demo 2
+		coefX = Math.cos(T/27)/2;
+		coefY = Math.sin(T/27)/2;
+		coefZ = coefX+coefY;
+		tweenFunction = TweenDemo;
+	}
+	
+	if (implodeFlag == 0) {
+		implodeCoef = 0;
+	}
+	else if (implodeFlag == 1) {
+		implodeCoef = Pulse(0+T%100,47)/2;
+	}
+	else if (implodeFlag == 2) {
+		implodeCoef = .5+Math.cos(T/47)/2;
+	}
+}
+///
+// Display the line/curve
+///
+function DrawTweening() {	
+	var nextP =[tweenFunction(p1[0], p2[0], coefX, implodeCoef),
+				tweenFunction(p1[1], p2[1], coefY, implodeCoef)];
+	
+	var npProj = [nextP[0]/10*minDim + canvasWidth, -nextP[1]/20*minDim + canvasHeight],
+		ppProj = [prevP[0]/10*minDim + canvasWidth, -prevP[1]/20*minDim + canvasHeight];
+			
+	// Drawing the segment
+	e.strokeStyle = 'hsl(100, 50%, '+(0+65*implodeCoef)+'%)';
+	e.beginPath();
+	e.moveTo(ppProj[0], ppProj[1]);
+	e.lineTo(npProj[0], npProj[1]);
+	e.stroke();
+	
+	// Drawing the current position:
+	f.width = f.width; g.clearRect(0, 0, f.width, f.height);
+	g.strokeStyle = '#000';
+	g.fillStyle = '#909';
+	g.beginPath();
+	g.arc(npProj[0], npProj[1], 2+3*implodeCoef, 0, 2*Math.PI);
+	g.stroke();
+	g.fill();
+	
+	// Drawing the original points:
+	npProj = [p1[0]/10*minDim + canvasWidth, -p1[1]/20*minDim + canvasHeight];
+	e.strokeStyle = '#000';
+	e.fillStyle = '#55f';
+	e.beginPath();
+	e.arc(npProj[0], npProj[1], 3, 0, 2*Math.PI);
+	e.stroke();
+	e.fill();
+	e.fillText('Cu', npProj[0]-18, npProj[1]+20);
+	npProj = [p2[0]/10*minDim + canvasWidth, -p2[1]/20*minDim + canvasHeight];
+	e.fillStyle = '#f55';
+	e.beginPath();
+	e.arc(npProj[0], npProj[1], 3, 0, 2*Math.PI);
+	e.stroke();
+	e.fill();
+	e.fillText('Sp', npProj[0]-3, npProj[1]-10);
+	
+	prevP = nextP;
+}
+
+///
+// Renders the scene.
+///
+function Paint () {
+	// Clearing the canvas:
+	a.fillRect(0, 0, wWidth=c.width=innerWidth-21,wHeight=c.height=innerHeight-21);
+	wMinDim = (wWidth < wHeight) ? wWidth : wHeight;
+	wWidth=wWidth/3*2; wHeight/=2;
+	var screenCoord = [], // Will contain the projection of the 3D vertices on the 2D screen.
+	
+	y=-Math.cos(angleYaw),w=-Math.sin(angleYaw),z=Math.cos(angleHeading),x=Math.sin(angleHeading); // To avoid repeating the callings.
+	
+	var addImplode = (implodeCoef!=0)*Math.cos(T/47);
+	for (l in facesCube) {  // Not optimal, but shorter.
+		screenCoord[l] = [];
+		var coef = 1-addImplode*facesSphere[l][9]*facesSphere[l][9]*implodeCoef/RADIUS; 
+		for (j = 9;j;) { // For each vertex of the face.
+			var v= tweenFunction(facesCube[l][--j], facesSphere[l][j], coefX, implodeCoef)*coef + camDist*z,
+			u= tweenFunction(facesCube[l][--j], facesSphere[l][j], coefY, implodeCoef)*coef + camDist*x*y,
+			r= tweenFunction(facesCube[l][--j], facesSphere[l][j], coefZ, implodeCoef)*coef + camDist*x*w;
+			
+			// For each face, we store its screen information into an array [P1.Z, P1.Y, P1.X, P2.Z, P2.Y, P2.X, P3.Z, P3.Y, P3.X, origDist], with Z the depth viewed from the camera:
+			var k = y*u+w*r, N = z*v+x*k;
+			screenCoord[l].push(N,(x*v-z*k)/N*wMinDim + wHeight +.5|0,(w*u-r*y)/N*wMinDim + wWidth +.5|0);
+		}
+		screenCoord[l][9] = facesSphere[l][9]
+	}
+	
+	// To draw the mesh, we use the simple Painter's algorithm (which works well in our case, since we don't have overlapping elements): we sort the faces by decreasing depth (we will simply use P3.dist instead of the average) and draw them it this order.
+	screenCoord.sort(function(H,S){return S[6]-H[6]}); // Sorting
+			
+	for (l in screenCoord) // Evaluating the face color and drawing it:
+		a.fillStyle = a.strokeStyle='hsl('+[
+			500*coefX/screenCoord[l][9],	// Hue - Function of the time and of the original distance to the origin.
+			'50%',							// Saturation - constant
+			l/75*X*X*Math.cos(implodeCoef/7)// Luminosity - Function of the periodic pulse + Cheap fog effect by using the sorted index
+		]+'%)',
+		a.beginPath(),
+		a.moveTo(screenCoord[l][8], screenCoord[l][7]),
+		a.lineTo(screenCoord[l][5], screenCoord[l][4]),
+		a.lineTo(screenCoord[l][2], screenCoord[l][1]),
+		a.closePath(),
+		a.stroke(),
+		a.fill()
+};
+
+
+// Shim layer with setTimeout fallback // Thank to Paul Irish (http://paulirish.com/2011/requestanimationframe-for-smart-animating)
+window.requestAnimFrame = (function(){
+  return window.requestAnimationFrame ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
+function Draw() {
+	TweenSetting();
+	Paint();
+	DrawTweening();
+	T++;
+}
+
+function InitTweenPlotter() {
+	canvasWidth=d.width=f.width=innerWidth/3; canvasHeight=d.height=f.height=innerHeight/3;
+	canvasWidth/=2; canvasHeight/=2;
+	minDim = (canvasWidth < canvasHeight) ? canvasWidth : canvasHeight;
+	e.font = "13pt sans-serif";
+	prevP =[tweenFunction(p1[0], p2[0], coefX, implodeCoef),
+			tweenFunction(p1[1], p2[1], coefY, pulseY)];
+	e.fillStyle = '#fff';
+	e.fillRect(0, 0, canvasWidth*2, canvasHeight*2);
+}
+
+onmousemove = function(H) {	// We tie the mouse position with the camera orientation.
+	angleYaw = 2*H.clientX/wWidth;
+	angleHeading = 2*H.clientY/wHeight;
+}
+
+// Shim layer with setTimeout fallback // Thank to Paul Irish (http://paulirish.com/2011/requestanimationframe-for-smart-animating)
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
+onmousemove = function(H) {	// We tie the mouse position with the camera orientation.
+	angleYaw = 2*H.clientX/canvasWidth;
+	anglePitch = 2*H.clientY/canvasHeight;
+}
+
+var run = true;
+
+function DrawLaunchUI() {
+	// Semi-transparent layer:
+	a.fillStyle = 'hsla(0, 0%, 100%, .5)';
+	a.fillRect(0, 0, c.width, c.height);
+  
+	// Rounded rect:
+	a.fillStyle = 'hsla(0, 0%, 75%, .7)';
+	a.beginPath();
+	var left = c.width/2-30, right = c.width/2+30, top = c.height/2-30, bottom = c.height/2+30, radius = 10;
+	a.beginPath();
+	a.moveTo(left + radius, top);
+	a.lineTo(right - radius, top);
+	a.quadraticCurveTo(right, top, right, top + radius);
+	a.lineTo(right, bottom - radius);
+	a.quadraticCurveTo(right, bottom, right - radius, bottom);
+	a.lineTo(left + radius, bottom);
+	a.quadraticCurveTo(left, bottom, left, bottom - radius);
+	a.lineTo(left, top + radius);
+	a.quadraticCurveTo(left, top, left + radius, top);
+	a.closePath();
+	a.fill();
+	
+	// Arrow:
+	a.fillStyle = 'hsl(0, 0%, 50%)';
+	a.beginPath();
+	a.moveTo(left + 15, top + 15);
+	a.lineTo(right - 13, c.height/2);
+	a.lineTo(left + 15, bottom - 15);
+	a.closePath();
+	a.fill();
+}
+
+function Run(){
+	// We request the next frame first to assure ~60fps:
+	if (run) {
+		requestAnimFrame(Run);
+		Draw();
+	}
+	else DrawLaunchUI();
+}
+
+c.onclick = function() {
+	run = !run;
+	if (run) Run();
+}
+
+var trId = 0;
+// To save some bytes, we iterate desc. The idea is that for each element we iterate on, we evaluate the triangles faces of the square which as for top-left corner this element:
+for (var face = 6; face--;)
+	for (var i=NB_DIV/X; i--;)
+		// X --- o	Schema representing the faces extracted from e square. X is the current element.
+		// |  \  |
+		// o --- o
+		for (j = NB_DIV/X; j--;) for (k=2;k--;) // We iterate 2 times for each square in order to generate the 2 corresponding triangle-faces.
+			// We store each face information into an array [V1.X, V1.Y, V1.Z, V2.X, V2.Y, V2.Z, V3.X, V3.Y, V3.Z, dist(V3, center)]:
+			facesSphere[trId] = [],
+			facesCube[trId] = [],
+			GenerateVertex(i,j, face, trId), 		// 1st vertex (top-left corner of the square)
+			GenerateVertex(i+1,j+1, face, trId),	// 2nd vertex (bottom-right)
+												// 3rd vertex - the one varying (either corresponding to the element on the next row, or the one on the next col). We use e modulo 2 on the face's id to select the good one.
+			// Byte saving trick:(faceId+1)%2 = k. And we don't mind which triangle we generate first, so k makes e cheaper way to distinguish them.
+			facesSphere[trId].push(GenerateVertex(i+k,j+1-k, face, trId)), // Will be useful to add some visual effects during the rendering.
+			trId++;
+
+TweenSetting();	
+InitTweenPlotter();
+
+// We generate an overview of the scene, then wait for the user to launch it:
+Run(); 
+run = false;
+
+		</script>
+	</body>
+</html>

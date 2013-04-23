@@ -1,0 +1,182 @@
+﻿<!doctype html>
+<html>
+	<head>
+		<title>JS1k, 1k demo submission [ID]</title>
+		<meta charset="utf-8" />
+		<style>
+			body {
+				cursor:pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="c"></canvas>
+		<script>
+			var b = document.body;
+			var c = document.getElementsByTagName('canvas')[0];
+			var a = c.getContext('2d');
+			document.body.clientWidth; // fix bug in webkit: http://qfox.nl/weblog/218
+		</script>
+		<script>
+// Maps:
+var linePoints = [], curvePoints = [],
+	NB_DIV = 9,
+	SIZE = 6,
+	RADIUS = SIZE/2,
+	T = 0,
+	canvasHeight, canvasWidth;
+
+// Generation of our points:
+for (var id = NB_DIV; id--;) {
+	var coord = [RADIUS, (id-(NB_DIV-1)/2)/NB_DIV*SIZE];
+	linePoints.push(coord); 
+	
+	var dist = Math.sqrt(coord[0]*coord[0] + coord[1]*coord[1]);
+	curvePoints.push([coord[0]/dist*RADIUS, coord[1]/dist*RADIUS]);
+}
+			
+///
+// Linear tweening...
+// Parameters:
+//	- cubeCoord - Coordinate from the 1st mesh
+//	- sphereCoord - Coordinate from the 2nd mesh
+// Returns: the "intermediate" value
+///
+function Tween (cubeCoord,sphereCoord, coef) {
+	return cubeCoord*coef + sphereCoord*(1-coef);
+	//return Math.cos(T/47+coef)*cubeCoord*(R+coef)-Math.sin(T/31+coef)*sphereCoord*(1-(R+coef));
+}
+
+//function Pulse(A,B) { y=Math.abs(B-A)/B; return y>1?0:1-(3-2*y)*y*y;} 
+
+///
+// Display the line/curve
+///
+function Paint () {
+	// Clearing the canvas:
+	canvasWidth=c.width=innerWidth-21; canvasHeight=c.height=innerHeight-21;
+	
+	canvasWidth/=2; canvasHeight/=2;
+	var minDim = (canvasWidth < canvasHeight) ? canvasWidth : canvasHeight; // To avoid repeating the callings.
+	var coefTween = .5+Math.cos(++T/40)/2;
+	//var coefTween = 2*Math.cos(++T/40);
+	//R = Pulse(T%263,97)/2;
+	var tweenedPoints = [];
+	for (var id = NB_DIV; id--;) {
+		// Tweened point:
+		var vX = Tween(linePoints[id][0], curvePoints[id][0], coefTween),
+			vY = Tween(linePoints[id][1], curvePoints[id][1], coefTween),
+			dist = vX*vX + vY*vY;
+		// Pixel position:
+		var pX = vX/3*minDim + canvasWidth/2,
+			pY = vY/3*minDim + canvasHeight;
+			
+		tweenedPoints.push([pX, pY, dist]);
+	}
+	
+	a.lineWidth = 2;
+	for (var id = NB_DIV-1; id--;) {
+		// Drawing the segments
+		a.strokeStyle = '#000';
+		a.beginPath();
+		a.moveTo(tweenedPoints[id+1][0], tweenedPoints[id+1][1]);
+		a.lineTo(tweenedPoints[id][0], tweenedPoints[id][1]);
+		a.closePath();
+		a.stroke();
+	}
+	a.lineWidth = 1;
+	for (var id = NB_DIV; id--;) {
+		// Drawing the vector:
+		a.strokeStyle = 'hsl('+[
+			0,									// Hue - constant
+			'80%',								// Saturation - constant
+			Math.pow(RADIUS/tweenedPoints[id][2],2)*500]+'%)';	// Luminosity - Showing the evolution of the distance
+		a.beginPath();
+		a.moveTo(canvasWidth/2, canvasHeight);
+		a.lineTo(tweenedPoints[id][0], tweenedPoints[id][1]);
+		a.closePath();
+		a.stroke();
+		
+		// Drawing the point:
+		a.strokeStyle = '#000';
+		a.fillStyle = '#f00';
+		a.beginPath();
+		a.arc(tweenedPoints[id][0], tweenedPoints[id][1], 4, 0, 2*Math.PI);
+		a.stroke();
+		a.fill();
+	}
+
+	// Drawing the center:
+	a.strokeStyle = '#f00';
+	a.fillStyle = '#fff';
+	a.beginPath();
+	a.arc(canvasWidth/2, canvasHeight, 5, 0, 2*Math.PI);
+	a.stroke();
+	a.fill();
+};
+
+// Shim layer with setTimeout fallback // Thank to Paul Irish (http://paulirish.com/2011/requestanimationframe-for-smart-animating)
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
+var run = true;
+
+function DrawLaunchUI() {
+	// Semi-transparent layer:
+	a.fillStyle = 'hsla(0, 0%, 100%, .5)';
+	a.fillRect(0, 0, c.width, c.height);
+  
+	// Rounded rect:
+	a.fillStyle = 'hsla(0, 0%, 75%, .7)';
+	a.beginPath();
+	var left = c.width/2-30, right = c.width/2+30, top = c.height/2-30, bottom = c.height/2+30, radius = 10;
+	a.beginPath();
+	a.moveTo(left + radius, top);
+	a.lineTo(right - radius, top);
+	a.quadraticCurveTo(right, top, right, top + radius);
+	a.lineTo(right, bottom - radius);
+	a.quadraticCurveTo(right, bottom, right - radius, bottom);
+	a.lineTo(left + radius, bottom);
+	a.quadraticCurveTo(left, bottom, left, bottom - radius);
+	a.lineTo(left, top + radius);
+	a.quadraticCurveTo(left, top, left + radius, top);
+	a.closePath();
+	a.fill();
+	
+	// Arrow:
+	a.fillStyle = 'hsl(0, 0%, 50%)';
+	a.beginPath();
+	a.moveTo(left + 15, top + 15);
+	a.lineTo(right - 13, c.height/2);
+	a.lineTo(left + 15, bottom - 15);
+	a.closePath();
+	a.fill();
+}
+
+function Run(){
+	// We request the next frame first to assure ~60fps:
+	if (run) {
+		requestAnimFrame(Run);
+		Paint();
+	}
+	else DrawLaunchUI();
+}
+
+window.onclick = function() {
+	run = !run;
+	if (run) Run();
+}
+
+// We generate an overview of the scene, then wait for the user to launch it:
+Run(); 
+run = false;
+
+		</script>
+	</body>
+</html>

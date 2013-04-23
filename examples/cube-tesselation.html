@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+	<head>
+		<title>JS1k, 1k demo submission [ID]</title>
+		<meta charset="utf-8" />
+		<style>
+			body {
+				cursor:pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="c"></canvas>
+		<script>
+			var b = document.body;
+			var c = document.getElementsByTagName('canvas')[0];
+			var a = c.getContext('2d');
+			document.body.clientWidth; // fix bug in webkit: http://qfox.nl/weblog/218
+		</script>
+		<script>
+// Maps:
+var facesCube=[],					// Mesh
+	NB_DIV = 16,					// Number of rows and colums per cube's face, which means our meshes will be made of 6*16*16 vertices
+	SIZE = 4,						// Dimension of our meshes
+	RADIUS = SIZE/2,				// Mid-dim
+	
+	T = 0, 							// Time
+
+	canvasHeight, canvasWidth, 		// Window dimensions.
+	camDist = 6,					// Camera distance to the origin
+	angleYaw = anglePitch = 4,		// Angles defining the camera orientation
+	skelMode = false;				// Flag for the rendering : fill / mesh
+
+///
+// Given the subdivision indices, generates the corresponding vertex for the cube mesh (centered on the origin), and gives it to the current triangle faces.
+// Parameters:
+//	- i : Row num
+//	- j : Col num
+//	- face : Face of the cube we are currently dealing with
+//	- trId : index of the current faces
+///
+function GenerateVertex (i, j, face, trId) {
+	// First we generate the cube vertex. Using some modulos on the face index, we can cover each case, by swapping the coordinates order or moving the vertex along the depth axis:
+	var coord = [i/NB_DIV*SIZE-RADIUS, j/NB_DIV*SIZE-RADIUS, RADIUS*(1-2*(face%2))], 
+		x = coord[face%3], y  = coord[(face+1)%3], z = coord[(face+2)%3];
+	facesCube[trId].push(x, y, z); 
+}
+
+var trId = 0;
+// To save some bytes, we iterate desc. The idea is that for each element we iterate on, we evaluate the triangles faces of the square which as for top-left corner this element:
+for (var f = 6; f--;)
+	for (var i=NB_DIV; i--;)
+		// X --- o	Schema representing the faces extracted from a square. X is the current element.
+		// |  \  |
+		// o --- o
+		for (j = NB_DIV; j--;) for (temp1=2;temp1--;) // We iterate 2 times for each square in order to generate the 2 corresponding triangle-faces.
+			// We store each face information into an array [V1.X, V1.Y, V1.Z, V2.X, V2.Y, V2.Z, V3.X, V3.Y, V3.Z, dist(V3, center)]:
+			facesCube[trId] = [],
+			GenerateVertex(i,j, f, trId), 					// 1st vertex (top-left corner of the square)
+			GenerateVertex(i+1,j+1, f, trId),				// 2nd vertex (bottom-right)
+			GenerateVertex(i+temp1,j+1-temp1, f, trId),// 3rd vertex - the one varying (either corresponding to the element on the next row, or the one on the next col). We use a modulo 2 on the face's id to select the good one.
+			// Byte saving trick:(faceId+1)%2 = temp1. And we don't mind which triangle we generate first, so temp1 makes a cheaper way to distinguish them.
+			
+			//facesSphere[trId].push(dist), // Will be useful to add some visual effects during the rendering.
+			facesCube[trId].push(f), // We also save the face number here, for the coloring.
+			trId++;
+
+
+///
+// Projects and renders the scene.
+// See the article about the Painter's Algo: aldream.net/article/2013-04-13-painter-s-algorithm
+///
+function Paint () {
+	// Clearing the canvas:
+	canvasWidth=c.width=innerWidth-21; canvasHeight=c.height=innerHeight-21;
+
+	// PROJECTION:
+	canvasWidth/=2; canvasHeight/=2;
+	var screenCoord = [], // Will contain the projection of the 3D vertices on the 2D screen.
+
+		cosYaw = -Math.cos(angleYaw),
+		sinYaw = -Math.sin(angleYaw),
+		cosPitch = Math.cos(anglePitch),
+		sinPitch = Math.sin(anglePitch), // No roll for this demo.
+		minDim = (canvasWidth < canvasHeight) ? canvasWidth : canvasHeight; // To avoid repeating the callings.
+	
+	for (l in facesCube) {  // Not optimal, but shorter.
+		screenCoord[l] = [];
+		var baryDepth = 0;
+		for (j = 9;j;) {
+			// We compute the tweened vertex and its projection:
+			var vX = facesCube[l][--j] + camDist*cosPitch,
+				vY = facesCube[l][--j] + camDist*sinPitch*cosYaw,
+				vZ = facesCube[l][--j] + camDist*sinPitch*sinYaw,
+			
+				temp1 = cosYaw*vY + sinYaw*vZ,
+				depth = cosPitch*vX + sinPitch*temp1;
+			screenCoord[l].push(depth, 															// Depth
+								(sinPitch*vX-cosPitch*temp1)/depth*minDim + canvasHeight +.5|0, // Pixel X
+								(sinYaw*vY-vZ*cosYaw)/depth*minDim + canvasWidth +.5|0);		// Pixel Y
+			baryDepth += depth;
+		}
+		screenCoord[l][9] = facesCube[l][9];
+		screenCoord[l][10] = baryDepth;
+	}
+	
+	// PAINTING:
+	screenCoord.sort(function(f1,f2){return f2[10]-f1[10]}); // Sorting
+	
+	if (skelMode) {
+		for (l in screenCoord) // Evaluating the mesh color and drawing it:
+			a.strokeStyle = 'hsl('+[
+				60*screenCoord[l][9],				// Hue - Function of the face.
+				'80%',								// Saturation - constant
+				100-l/screenCoord.length*50]+'%)',	// Luminosity - Cheap fog effect by using the sorted index
+			
+			a.beginPath(),
+			a.moveTo(screenCoord[l][8], screenCoord[l][7]),
+			a.lineTo(screenCoord[l][5], screenCoord[l][4]),
+			a.lineTo(screenCoord[l][2], screenCoord[l][1]),
+			a.closePath(),
+			a.stroke()
+	
+	}
+	else {
+		a.strokeStyle = '#aaa';
+		for (l in screenCoord) // Evaluating the face color and drawing it:
+			a.fillStyle = 'hsl('+[
+				60*screenCoord[l][9],				// Hue - Function of the face.
+				'70%',								// Saturation - constant
+				100-l/screenCoord.length*50]+'%)',	// Luminosity - Cheap fog effect by using the sorted index
+			
+			a.beginPath(),
+			a.moveTo(screenCoord[l][8], screenCoord[l][7]),
+			a.lineTo(screenCoord[l][5], screenCoord[l][4]),
+			a.lineTo(screenCoord[l][2], screenCoord[l][1]),
+			a.closePath(),
+			a.stroke(),
+			a.fill()
+	}
+};
+
+// Shim layer with setTimeout fallback // Thank to Paul Irish (http://paulirish.com/2011/requestanimationframe-for-smart-animating)
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
+onmousemove = function(H) {	// We tie the mouse position with the camera orientation.
+	angleYaw = 2*H.clientX/canvasWidth;
+	anglePitch = 2*H.clientY/canvasHeight;
+}
+
+var run = true;
+
+function DrawLaunchUI() {
+	// Semi-transparent layer:
+	a.fillStyle = 'hsla(0, 0%, 100%, .5)';
+	a.fillRect(0, 0, c.width, c.height);
+  
+	// Rounded rect:
+	a.fillStyle = 'hsla(0, 0%, 75%, .7)';
+	a.beginPath();
+	var left = c.width/2-30, right = c.width/2+30, top = c.height/2-30, bottom = c.height/2+30, radius = 10;
+	a.beginPath();
+	a.moveTo(left + radius, top);
+	a.lineTo(right - radius, top);
+	a.quadraticCurveTo(right, top, right, top + radius);
+	a.lineTo(right, bottom - radius);
+	a.quadraticCurveTo(right, bottom, right - radius, bottom);
+	a.lineTo(left + radius, bottom);
+	a.quadraticCurveTo(left, bottom, left, bottom - radius);
+	a.lineTo(left, top + radius);
+	a.quadraticCurveTo(left, top, left + radius, top);
+	a.closePath();
+	a.fill();
+	
+	// Arrow:
+	a.fillStyle = 'hsl(0, 0%, 50%)';
+	a.beginPath();
+	a.moveTo(left + 15, top + 15);
+	a.lineTo(right - 13, c.height/2);
+	a.lineTo(left + 15, bottom - 15);
+	a.closePath();
+	a.fill();
+}
+
+function Run(){
+	// We request the next frame first to assure ~60fps:
+	if (run) {
+		requestAnimFrame(Run);
+		Paint();
+	}
+	else DrawLaunchUI();
+}
+
+window.onclick = function() {
+	run = !run;
+	if (run) Run();
+}
+
+// We generate an overview of the scene, then wait for the user to launch it:
+Run(); 
+run = false;
+
+		</script>
+	</body>
+</html>
