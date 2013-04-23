@@ -1,0 +1,531 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+		<meta content="Benjamin Bill Planche" name="author">
+		<meta content="Portfolio of Benjamin (Bill) Planche, aka Aldream. About image processing, computer graphics, web experiments,..." name="description">
+		<meta content="aldream, benjamin, planche, bill, blog, web, image, graphics, mesh, tesselation, tween, cube, sphere" name="keywords">
+		<meta content="index,follow" name="robots">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Aldream - Mesh Breeding</title>
+        <meta name="viewport" content="width=device-width">
+
+		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/css/normalize.css"/>
+        <link rel="stylesheet" href="/css/main.css"/>
+		<link href="/css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
+		<link href="/css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
+        <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body id="blog">
+			<!--[if lt IE 7]>
+				<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+			<![endif]-->
+
+			<!-- Add your site or application content here -->
+			<header id="main-header">
+				<h1><a href="/">Aldream</a></h1>
+				<nav id="menu-top">
+					<ul>
+						<a href="/blog"><li>Blog</li></a>
+						<a href="/demo"><li>Demo</li></a>
+						<a href="/projects"><li>Projects</li></a>
+						<a href="/about"><li>About</li></a>
+					</ul>
+				</nav>
+				<nav id="menu-top-mini">
+					<ul>
+						<li><a href="/blog" title="Blog"><img width=22 alt="Blog" src="/img/glyphicons-color/book-blue.png"/></a></li>
+						<li><a href="/demo" title="Demo"><img width=25 alt="Demo" src="/img/glyphicons-color/eye-green.png"/></a></li>
+						<li><a href="/projects" title="Projects"><img width=25 alt="Projects" src="/img/glyphicons-color/star-yellow.png"/></a></li>
+						<li><a href="/about" title="About"><img width=25 alt="About" src="/img/glyphicons-color/user-red.png"/></a></li>
+					</ul>
+				</nav>
+			</header>
+			<section id="blog-article">
+				<h1>Article</h1>
+				<article class="span3">
+					<div>
+<h1>Mesh Breeding</h1>
+
+<p><a href="/demo#js1k-2013-morphose" title="&laquo; Morphose &raquo;, playing around with Tesselation">Morphose</a> was the first demo I posted for the <a href="http://js1k.com/2013-spring/" title="JS1K 2013">JS1K Spring-2013 challenge</a>. The idea came when I was trying to apply my <a href="/article/2013-04-13-painter-s-algorithm" href="Painter's Algorithm - Your own simple 3D renderer">simple 3D renderer</a> to different kind of scenes, while my head was buzzing with a resurgent interest in the demoscene. Morphose just <em>sprouted</em> out of this context, almost by accident.<br/>
+I was trying to tesselate a planet, discovered <em>cube-mapping</em>, and the next moment I was observing the strange offspring a cube and a sphere can generate when mixed. Some tweakings later, I had a new demo for js1k...</p>
+
+<p>Now in this article, I will try to formalize the whole process, covering the <strong>meshes generation</strong>, the <strong>tweening</strong>, the <strong>tweaking</strong>, etc. This demo is quite simple, but I found some results interesting, and I hope you will.</p>
+
+<h2>Manipulated structures</h2>
+
+<p>A mesh, the 3D representation of our object geometry, is a complex structure, usually defined by faces and vertices. There are many different ways to implement all this.</p>
+
+<p>For instance, in my article about the Painter's Algorithm, I've opted for something like $Mesh: Array&lt;Faces&gt;$ with $Faces: Array&lt;Vertex&gt;$ and $Vertex: Array&lt;float&gt;$ (the 3 cartesian coordinates). Thanks to the underlying use of pointers, this implementation was quite light.</p>
+
+<p>But in this demo, my main constraint was the code concision, so I opted for a different solution. Each face is directly an $Array&lt;float&gt;$, like this: $TriangularFace = [X_1, Y_1, Z_1, X_2, Y_2, Z_2, X_3, Y_3, Z_3]$ with $(X_n, Y_n, Z_n)$ the cartesian coordinates of each vertex.</p>
+	
+	
+<p>This structure is more compact, but heavier: every face has its vertices values <em>hard-coded</em>. Unlike the previous implementation where the faces shared pointers to the same common vertices, here each face is <strong>independant</strong> to the other ones (the vertices are duplicated). So we aren't exactly manipulating a coherent mesh, but a collection of faces we could explode at will (which is done in the demo).</p>
+
+<h2>Rendering</h2>
+
+<p>As it is better not to walk blind, let's deal first with the rendering of our yet-to-be-created scene. For that, we can use the simple renderer described in my previous article, so please <a href="/article/2013-04-13-painter-s-algorithm" title="Painter's Algorithm">read it</a> if you need the explanations.</p>
+<p>Only minor modifications are required to adapt it to the specificity of our mesh structure. However, as we are limited in the number of bytes, we should also condense the whole, even if it means losing in clarity or generality <small>(the code below is still much <em>crush-able</em>, by condensing some operations for instance)</small>:</p>
+
+<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+/**
+ * ===Render===
+ * Projects and renders the scene. - To be called every frame.
+ * Parameters:
+ *	- sceneFaces 	 (Array<Array<float>>):	Faces defining the scene to render
+ *	- canvas 		 (Canvas): 				Output canvas
+ *	- context 		 (CanvasContext): 		Context of the output canvas
+ *	- camPosition 	 (Vector3): 			Position of the camera
+ *	- camOrientation (Vector3): 			Orientation of the camera
+ */
+function Render (sceneFaces, canvas, context, camPosition, camOrientation) {
+	
+	// Clearing the canvas (not optimal, but short) and adapting its size to the screen:
+	var canvasWidth = canvas.width = innerWidth-21,
+		canvasHeight = canvas.height = innerHeight-21;
+	canvasWidth/=2; canvasHeight/=2;
+
+	// PROJECTION:
+	var cosYaw = Math.cos(camOrientation[0]),
+		sinYaw = Math.sin(camOrientation[0]),
+		cosPitch = Math.cos(camOrientation[1]),
+		sinPitch = Math.sin(camOrientation[1]),
+		cosRoll = Math.cos(camOrientation[2]),
+		sinRoll = Math.sin(camOrientation[2]),
+		minDim = (canvasWidth < canvasHeight) ? canvasWidth : canvasHeight;
+
+	var screenCoord = [];
+	
+	for (l in sceneFaces) {  // Not optimal, but shorter.
+		screenCoord[l] = [];
+		
+		for (j = 9;j;) {
+			// 3D Projection:
+			var relZ = sceneFaces[l][--j] - camPosition[2],
+				relY = sceneFaces[l][--j] - camPosition[1],
+				relX = sceneFaces[l][--j] - camPosition[0],
+				
+				temp1 = cosYaw*relY - sinYaw*relX,
+				temp2 = cosRoll*relZ + sinRoll*(sinYaw*relY + cosYaw*relX),
+				
+				dX = cosRoll*(sinYaw*relY + cosYaw*relX) - sinRoll*relZ,
+				dY = sinPitch*temp2 + cosPitch*temp1,
+				dZ = cosPitch*temp2 - sinPitch*temp1;
+			
+			// Transform to project on the screen:
+			screenCoord[l].push(dZ
+								dX / dZ * minDim + canvasWidth,
+								dY / dZ * minDim + canvasHeight); 					
+		}
+		// If we have other pieces of info we want to pass to the projected face:
+		screenCoord[l][9] = sceneFaces[l][9]; // Here it is the distance to the center of the mesh.
+	}
+	
+	// PAINTING:
+	screenCoord.sort(function(f1,f2){return f2[10]-f1[10]}); // Sorting
+	
+	for (l in screenCoord) // Evaluating the face color and drawing it  (to adapt):
+		context.strokeStyle = context.fillStyle = 'hsl('+[
+			60*screenCoord[l][9],				// Hue - Function of the distance.
+			'70%',								// Saturation - constant
+			100-l/screenCoord.length*50]+'%)',	// Luminosity - Cheap fog effect by using the index
+		
+		context.beginPath(),
+		context.moveTo(screenCoord[l][8], screenCoord[l][7]),
+		context.lineTo(screenCoord[l][5], screenCoord[l][4]),
+		context.lineTo(screenCoord[l][2], screenCoord[l][1]),
+		context.closePath(),
+		context.stroke(),
+		context.fill();
+};
+
+]]></script>
+	
+	
+<h2>Mesh weaving</h2>
+
+<p>To get the shape-shifting object, the idea is the following: we generate two meshes, a cube and a sphere, with the <strong>same</strong> number of vertices/faces (each one is associated with an other one of the 2nd mesh). Then every frame, we compute an intermediate mesh from a <em>pseudo-tweening</em> between the geometries of the two original ones, and display it.</p>
+
+<p>In this section, we will cover the creation of our two primitive meshes with as few bytes as possible.</p>
+
+<h3>Cube</h3>
+<p>The objective is to define a cube of size $D$, centered on the origin (to simplify the generation), and made of $6 \cdot N^2$ triangular faces ($N^2$ per side).
+We could just statically define its structure, like I did in an example for the rendering:</p>
+<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+// Definition of a simple 2x2x2 cube, made of quad faces
+// (building the mesh procedurally isn't complicated, but not the subject of this article):
+var cubeVertices = [[-1,  1,  1], [ 1,  1,  1], [ 1, -1,  1], [-1, -1,  1],
+					[-1,  1, -1], [ 1,  1, -1], [ 1, -1, -1], [-1, -1, -1]];
+var cubesQuadriFaces = [[cubeVertices[0], cubeVertices[1], cubeVertices[2], cubeVertices[3]],
+						[cubeVertices[4], cubeVertices[5], cubeVertices[6], cubeVertices[7]],
+						[cubeVertices[1], cubeVertices[5], cubeVertices[6], cubeVertices[2]],
+						[cubeVertices[4], cubeVertices[0], cubeVertices[3], cubeVertices[7]],
+						[cubeVertices[4], cubeVertices[5], cubeVertices[1], cubeVertices[0]],
+						[cubeVertices[3], cubeVertices[2], cubeVertices[6], cubeVertices[7]]];
+]]></script>
+<p>But we want a more refined mesh, with more vertices to play with later, and writing down the coordinates of our $3 \cdot 6 \cdot N^2$ vertices would be as painful as long.
+So... how can we <strong>procedurally</strong> define our cube? Here is a first possibility:</p>
+<div class="mathjax-formula">
+$$
+C = \{S_0, S_1, S_2, S_3, S_4, S_5\}$$
+</div>
+<p>with each side defined as:</p>
+<div class="mathjax-formula">
+$$\begin{matrix}
+	- S_0 :& \{& (x, y, z) \in S_0  &|&  \forall (x, y) \in [\frac{-D}{2}, \frac{D}{2}]^2& and& z = +\frac{D}{2}& \}\\
+	- S_1 :& \{& (x, y, z) \in S_1  &|&  \forall (y, z) \in [\frac{-D}{2}, \frac{D}{2}]^2& and& z = -\frac{D}{2}& \}\\
+	- S_2 :& \{& (x, y, z) \in S_2  &|&  \forall (z, x) \in [\frac{-D}{2}, \frac{D}{2}]^2& and& y = +\frac{D}{2}& \}\\
+	- S_3 :& \{& (x, y, z) \in S_3  &|&  \forall (x, y) \in [\frac{-D}{2}, \frac{D}{2}]^2& and& z = -\frac{D}{2}& \}\\
+	- S_4 :& \{& (x, y, z) \in S_4  &|&  \forall (y, z) \in [\frac{-D}{2}, \frac{D}{2}]^2& and& x = +\frac{D}{2}& \}\\
+	- S_5 :& \{& (x, y, z) \in S_5  &|&  \forall (z, x) \in [\frac{-D}{2}, \frac{D}{2}]^2& and& z = -\frac{D}{2}& \}
+\end{matrix}
+$$
+</div>
+<p>Do you see the pattern? Here is a condensed definition, for $n \in \{0,\dots,5\}$:</p>
+<div class="mathjax-formula">
+$$\begin{matrix}
+	- S_n : \{&v = (x , y, z),&(v[n \bmod 3], v[(n+1) \bmod 3], v[(n+2) \bmod 3)]) \in S_n &|& \forall (x, y) \in [-\frac{D}{2}, \frac{D}{2}]^2& and& z = \frac{D}{2} - D \cdot (n \bmod 2)& \}
+\end{matrix}
+$$
+</div>
+<p>We use a <i>modulo 3</i> operation to express the cyclic permutation of the coordinates (the two varrying and the one fixed), and a <i>modulo 2</i> operation to define the value of the fixed coordinate. With this, we cover the 6 cases...</p>
+
+<p>The only thing left is to split the sides into triangular faces <small>(if you want to use quadfaces, the modifications are minor)</small>, which can be easily achieved with loops to sample a regular repartition of vertices and the faces:</p>
+<ul>
+	<li>One loop to iterate over the <strong>6 sides</strong>;</li>
+	<li>Two loops to iterate over our subdivisions of our sides into <strong>N² rectangles</strong>;</li>
+	<li>One loop of 2 iterations to divide each rectangle into the <strong>2 triangular faces</strong>.</li>
+</ul>
+<p>The final generation method is:</p>
+<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+/**
+ * ===GenerateVertexForCube===
+ * Given the subdivision indices, generates the corresponding vertex for the cube mesh
+ *(centered on the origin), and gives it to the current triangle faces.
+ * Parameters:
+ *	- i 	(Int):			Row num
+ *	- j 	(Int): 			Col num
+ *	- n 	(Int): 			Side of the cube we are currently dealing with
+ *	- face 	(Array<float>): Face the vertex will belong to
+ */
+function GenerateVertexForCube (i, j, n, face) {
+	// First we generate the cube vertex. Using some modulos on the side index,
+	// we can cover each case, by swapping the coordinates order or moving the vertex along the depth axis:
+	var v = [i/NB_DIV*SIZE-RADIUS, j/NB_DIV*SIZE-RADIUS, RADIUS*(1-2*(n%2))], 
+		x = v[n%3],
+		y  = v[(n+1)%3],
+		z = v[(n+2)%3];
+	face.push(x, y, z);
+}
+
+var facesCube=[],	// Mesh
+	NB_DIV = 16,	// Number of rows and colums per cube's side, which means our meshes will be made of 6*16*16 vertices
+	SIZE = 4,		// Dimension of our meshes
+	RADIUS = SIZE/2,// Mid-dim
+	trId = 0;
+	
+// To save some bytes, we iterate desc. The idea is that for each element we iterate on,
+// we evaluate the triangles faces of the square which as for top-left corner this element:
+for (var n = 6; n--;)
+	for (var i=NB_DIV; i--;)
+		// X --- o	Schema representing the faces extracted from a square. X is the current element.
+		// |  \  |
+		// o --- o
+		for (j = NB_DIV; j--;) for (k=2;k--;) // We iterate 2 times for each square in order to generate the 2 corresponding triangle-faces.
+			// We store each face information into an array [V1.X, V1.Y, V1.Z, V2.X, V2.Y, V2.Z, V3.X, V3.Y, V3.Z, dist(V3, center)]:
+			facesCube[trId] = [],
+			GenerateVertexForCube(i,j, n, facesCube[trId]), 		// 1st vertex (top-left corner of the square)
+			GenerateVertexForCube(i+1,j+1, n, facesCube[trId]),		// 2nd vertex (bottom-right)
+			GenerateVertexForCube(i+k, j+1-k, n, facesCube[trId]),	// 3rd vertex - the one varying (either corresponding to the element on the next row,
+																// or the one on the next col). We use a modulo 2 on the face's id to select the good one.
+			// Byte saving trick:(faceId+1)%2 = k. And we don't mind which triangle we generate first, so k makes a cheaper way to distinguish them
+			trId++;
+]]></script>
+
+<div class="example">
+	<iframe width=320 height=230 class="demo" src="/examples/cube-tesselation.html"></iframe>
+	<p>Resulting cube</p>
+</div>
+
+<h3>Sphere</h3>
+<p>Now we want a sphere of diameter $D$, made of the same number $6 \cdot N^2$ of faces.</p>
+<p>There are many possible ways to tesselate a sphere, but we have one condition we wish to fulfill: to get a <em>smooth transition when tweening</em> the geometries of our cube and sphere. So we are looking for a <em>similar</em> repartition of the vertices.</p>
+
+<p>The <strong>quadcube tesselation</strong> (or <em>cubic sphere tesselation</em>) is what we want for our sphere. This method is commonly used to map flat textures to spheres, but can also be adapted to generate their mesh.<a class="refing" id="refing-1" href="#refed-1" title="Ref - Acko.net - Making Worlds 1 - Of Spheres and Cubes">[1]</a></p>
+<p>The idea is to take a regular cube mesh (so like the one we generated), and to project every vertex on the spherical surface, by normalizing the length of the vector to the center of the mesh, to the value we want as radius.</p>
+<p>In other words, for every vertex, we compute their distance to the center, divide their coordinates by the obtained value, and multiplie them back with the radius value.</p>
+
+<div class="example">
+	<iframe width=320 height=230 class="demo" src="/examples/cube-sphere-linear-tweening-2D.html"></iframe>
+	<p>2D example - Gradual normalization of the vectors length</p>
+</div>
+
+<p>Thus, by just adding these two operations to our previous tesselation function, we can return a sphere instead of a cube (or both):</p>
+
+<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+/**
+ * ===GenerateVertexForCube===
+ * Given the subdivision indices, generates the corresponding vertex for the cube mesh
+ *(centered on the origin), and gives it to the current triangle faces.
+ * Parameters:
+ *	- i 	(Int):			Row num
+ *	- j 	(Int): 			Col num
+ *	- n 	(Int): 			Side of the cube we are currently dealing with
+ *	- faceC (Array<float>): Face of the cube the vertex will belong to
+ *	- faceS (Array<float>): Face of the sphere the vertex will belong to
+ */
+function GenerateVertexForCubeAndSphere (i, j, n, faceC, faceS) {
+	// First we generate the cube vertex. Using some modulos on the side index,
+	// we can cover each case, by swapping the coordinates order or moving the vertex along the depth axis:
+	var v = [i/NB_DIV*SIZE-RADIUS, j/NB_DIV*SIZE-RADIUS, RADIUS*(1-2*(n%2))], 
+		x = v[n%3],
+		y  = v[(n+1)%3],
+		z = v[(n+2)%3];
+	faceC.push(x, y, z);
+	
+	// Then the sphere vertex, by "cube-mapping" (the following formula speaks for itself):
+	var dist = Math.sqrt(x*x + y*y + z*z);
+	faceS.push(x/dist*RADIUS, y/dist*RADIUS, z/dist*RADIUS);
+	
+	// return dist; // Value used in the demo to define the color of each face.
+}
+
+var facesCube=[],	// Cube Mesh
+	facesSphere=[],	// Sphere Mesh
+	NB_DIV = 16,	// Number of rows and colums per cube's side, which means our meshes will be made of 6*16*16 vertices
+	SIZE = 4,		// Dimension of our meshes
+	RADIUS = SIZE/2,// Mid-dim
+	trId = 0;
+	
+for (var n = 6; n--;)
+	for (var i=NB_DIV; i--;)
+		// X --- o	Schema representing the faces extracted from a square. X is the current element.
+		// |  \  |
+		// o --- o
+		for (j = NB_DIV; j--;) for (k=2;k--;) // We iterate 2 times for each square in order to generate the 2 corresponding triangle-faces.
+			facesCube[trId] = [],
+			facesSphere[trId] = [],
+			GenerateVertexForCube(i,j, n, facesCube[trId], facesSphere[trId]), 			// 1st vertex (top-left corner of the square)
+			GenerateVertexForCube(i+1,j+1, n, facesCube[trId], facesSphere[trId]),		// 2nd vertex (bottom-right)
+			GenerateVertexForCube(i+k, j+1-k, n, facesCube[trId], facesSphere[trId]),	// 3rd vertex - the one varying
+			trId++;
+]]></script>
+
+
+
+<div class="example">
+	<iframe width=320 height=230 class="demo" src="/examples/sphere-tesselation.html"></iframe>
+	<p>Resulting sphere</p>
+</div>
+	
+<h2>Mingle Mingle Little Mesh</h2>
+
+<p>The next step is the <strong>dynamic generation of our <em>metis</em> shape</strong>. For every couple of vertices from the cube and sphere, we simply want to calculate an intermediate one.</p>
+
+<div class="example">
+	<iframe width=320 height=230 class="demo" src="/examples/cube-sphere-linear-tweening-3D.html"></iframe>
+	<p>3D example - Linear tweening between the 2 meshes</p>
+</div>
+
+<p>We could use a linear tweening over time, like in the example above... or go for something <em>crazier</em>.
+Basically, you can use any function you want, taking as parameters, among others, your two vertices, and returning a new, more-or-less correlated, one.</p>
+<p>I spent much time time tweaking around such a function to get something visually interesting. Here are some observations I made which could help you create your own:</p>
+<ul>
+	<li><strong>Parameters</strong>
+		<ul>
+			<li>Taking <strong>time</strong> into consideration seemed evident in my case.</li>
+			<li>I also adopted the <strong>distance of the corresponding face to the center of the mesh</strong>. It allowed me to apply transforms per face: combined with the <em>looseness</em> of our structure (see first section), it's how I get the implosive-kaleidoscopic result.</li>
+			<li><strong>Interactivity is always nice</strong>: I take the user's clicks into account, but you can think of other inputs.</li>
+			<li>An idea I couldn't integrate to my demo was the use of an <strong>external signal</strong> as main parameter. You could easily make your object <strong>dance</strong> to the music of your liking...</li>
+		</ul>
+	</li>	
+	<li><strong>Functions</strong>
+		<ul>
+			<li>Compute the <strong>cosine</strong> values of the smoothly-varying parameters to get some periodicity.</li>
+			<li>Use different <strong>prime numbers as coefficients</strong> (periods) to make the global periodicity less obvious.</li>
+			<li>Why restricting ourselves to the segment between our two original vertices? Go beyond (ie try to apply <strong>coefficients beyond [0, 1]</strong> to thstrong).</li>
+			<li><strong>Cubic pulsations</strong> is an interesting effect I abused to deal with the sudden inputs (clicks) (learn more about at the source of the idea, Iñigo Quílez's website <a class="refing" id="refing-2" href="#refed-2" title="Ref - Iñigo Quílez - Article - Useful Little Functions">[2]</a> <small>- this website is full of coding and maths gems</small>)</li>
+		</ul>
+	</li>
+</ul>
+		
+<p>Once you got the wanted effect, just wrap it all in a function you'll call in your rendering method:</p>
+
+<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+///
+// Linear tweening...
+// Parameters:
+//	- cubeCoord - Coordinate from the 1st mesh
+//	- sphereCoord - Coordinate from the 2nd mesh
+// Returns: the "intermediate" value
+///
+function Tween (cubeCoord,sphereCoord, coef) {
+	return cubeCoord*coef + sphereCoord*(1-coef); // Replace with your funky mingling effect.
+}
+
+///
+// Projects and renders the scene with mingling.
+///
+function Paint (facesCube, facesSphere) {
+	// PROJECTION:
+	/** ...
+	 *	Usual initialization here
+	 * 	... */
+	
+	for (l in facesCube) {  // Not optimal, but shorter.
+		screenCoord[l] = [];
+		var baryDepth = 0;
+		for (j = 9;j;) {
+			// We compute the tweened vertex and its projection:
+			var vX = Tween(facesCube[l][--j], facesSphere[l][j], coefTween) + camDist*cosPitch,
+				vY = Tween(facesCube[l][--j], facesSphere[l][j], coefTween) + camDist*sinPitch*cosYaw,
+				vZ = Tween(facesCube[l][--j], facesSphere[l][j], coefTween) + camDist*sinPitch*sinYaw,
+					
+			/** ...
+			 *	Usual projection here, using vX, vY, vZ instead of the original coordinates.
+			 * 	... */
+		}
+	}
+	
+	// PAINTING:
+	/** ...
+	 *	Usual rendering here
+	 * 	... */
+}
+]]></script>
+
+<p>Below a small application displaying the outcome of some effects:</p>
+
+<div class="example">
+	<iframe width=600 height=300 class="demo" src="/examples/cube-sphere-various-tweenings.html"></iframe>
+	<p>Various examples of mingling</p>
+</div>
+
+<h2>Polishing: Colors and movements</h2>
+
+<p>Here again, it's all about personal tastes.</p>
+<p>For the coloring, I opted for a dynamic solution: the color of each face is computed just before drawing it. I use this dynamism to <strong>vary the hue over time</strong>, but also to apply a <strong>pseudo depth fog</strong>.</p>
+<p>This effect is obtained by using the <em>index of the sorted faces</em> as coefficient for the luminosity (here, the further from the camera, the smaller its index, the smaller the coefficient for luminosity and thus the darker).</p>
+<p>By the way, I now only swear by the <strong>HSL color system</strong>. If it is not the case yet, I highly recommend you to consider it, at least when it comes to represent complex scenes.</p>
+
+<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+	// Method used in the demo to compute the colors - called in the painting loop.
+	a.fillStyle = a.strokeStyle='hsl('+[
+		500*timeCos/screenCoord[l][9],	// Hue - Function of the time and of the original distance
+										//		to the origin.
+		'50%',							// Saturation - constant
+		l/75*Math.cos(pulseCoef/7)		// Luminosity - Function of the periodic pulse + Cheap fog
+										//		effect by using the sorted index
+	]+'%)',
+]]></script>
+
+<p>As for the camera's movements, the shape-shifting function was already inducing <em>momentum</em>, inflating or deflating the mesh's dimensions.</p>
+<p>Indeed, one consequence of having a scene containing a single element is the <strong>absence of landmarks</strong>. Without looking at the source, it is left to the viewer's appreciation to conclude if it is the camera which is nearing or the object which is growing.</p>
+<p>I decided to only add rotations around the center of the scene (over time + binded to the mouse position), to emphasize the 3D nature of the demo.</p>
+
+<p>At that point, I was kind of satisfied with the result. Only one effect was somehow hurting my sensibility, literally speaking: the <em>collision between the inflated shape and the camera</em>.</p>
+<p>As much as I wanted to preserve the eye-catching unpredictability of the morphose, I found unaesthetic the obstructed effect of some collisions, when the object was imploding or stretched to its limit.</p>
+<p>While trying to adapt the rendering method to ignore the colliding faces, I inadvertently altered my Painter's method, <strong>inverting the depth sorting</strong>... and enjoyed the resulting sight.</p>
+<p>The solid, material, aspect of the object was lost, but that nicely solved my problem: the too-near faces which the camera was colliding with were now painted under the further ones. Instead of hitting the object's surface, we were now observing it as if inside.</p>
+	
+<h2>Conclusion</h2>
+
+<p>Even if most of those methods are already covered by 3D libraries, it may come handy to know the maths or logic under. This knowledge is one of the main reasons why I enjoyed working on those small applications.</p>
+<p>After all, &laquo; <em>Don't Reinvent The Wheel, Unless You Plan on Learning More About Wheels</em> &raquo;... <a class="refing" id="refing-3" href="#refed-3" title="Ref - CodingHorror.com - Don't Reinvent The Wheel, Unless You Plan on Learning More About Wheels">[3]</a></p>
+
+<h3>References</h3>
+<ol>
+	<li id="refed-1"><a class="refed" href="#refing-1">^</a> Steven Wittens - Article - &laquo; Making Worlds 1 - Of Spheres and Cubes &raquo; - <a href="http://acko.net/blog/making-worlds-1-of-spheres-and-cubes/" title="Steven Wittens - Article - &laquo; Making Worlds 1 - Of Spheres and Cubes &raquo;">acko.net/blog/making-worlds-1-of-spheres-and-cubes</a></li>
+	<li id="refed-2"><a class="refed" href="#refing-2">^</a> Iñigo Quílez - Article - &laquo; Useful Little Functions &raquo; - <a href="http://www.iquilezles.org/www/articles/functions/functions.htm" title="Iñigo Quílez - Article - &laquo; Useful Little Functions &raquo;">iquilezles.org/www/articles/functions/functions.htm</a></li>
+	<li id="refed-4"><a class="refed" href="#refing-'">^</a> Jeff Atwood: &laquo; Don't Reinvent The Wheel, Unless You Plan on Learning More About Wheels &raquo; - <a href="http://www.codinghorror.com/blog/2009/02/dont-reinvent-the-wheel-unless-you-plan-on-learning-more-about-wheels.html" title="Jeff Atwood: &laquo; Don't Reinvent The Wheel, Unless You Plan on Learning More About Wheels &raquo;">codinghorror.com/blog/2009/02/dont-reinvent-the-wheel-unless-you-plan-on-learning-more-about-wheels.html</a></li>
+</ol>
+						<footer>
+							<time datetime="2013-04-13">2013-04-23</time>
+							<a href="https://twitter.com/share" class="twitter-share-button" data-text="The Painter'S Algorithm" data-via="b_aldream" data-lang="en">Tweet</a>
+						</footer>
+						<div id="disqus_thread"></div>
+						<script type="text/javascript">
+							/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+							var disqus_shortname = 'aldream'; // required: replace example with your forum shortname
+
+							/* * * DON'T EDIT BELOW THIS LINE * * */
+							(function() {
+								var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+								dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+								(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+							})();
+						</script>
+						<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+							<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+							
+					</div>
+				</article>
+			</section>
+			<footer id="page-footer">&copy; Aldream 2013 - <a href="#blog-article" title="Up">Fly high</a></footer>
+
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+        <script src="/js/plugins.js"></script>
+        <script src="/js/main.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({
+				TeX: { extensions: ["autobold.js"] },
+				tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+			});
+		</script>
+		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
+		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
+		<script>
+			// Syntax Highlighting:
+			SyntaxHighlighter.all()
+			
+			// Twitter buttons:
+			!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+			
+			function AdaptImageToScreenSize() {
+				if (innerWidth > 690) {
+					if (!this.alreadyWide) {
+						$('.wideImg').each(function(){
+							var src = $(this).attr('src');
+							var srcArray = src.split('.');
+							src = srcArray.pop();
+							src = srcArray.join('.') + '-wide.' + src;
+							$(this).attr('src', src);
+							$(this).attr('width', 620);
+						});
+						this.alreadyWide = true;
+					}
+				}
+				else {
+					if (this.alreadyWide) {
+						$('.wideImg').each(function(){
+							var src = $(this).attr('src').split('-wide').join('');
+							$(this).attr('src', src);
+							$(this).attr('width', 280);
+						});
+						this.alreadyWide = false;
+					}
+				}
+			}
+			AdaptImageToScreenSize.alreadyWide = innerWidth > 690;
+			if (AdaptImageToScreenSize.alreadyWide) {
+				AdaptImageToScreenSize();
+			}
+			$(window).resize(AdaptImageToScreenSize);
+		</script>
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <!--<script>
+            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>-->
+    </body>
+</html>
