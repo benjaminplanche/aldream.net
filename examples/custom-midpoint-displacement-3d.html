@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+  <head>
+		<title>Procedural generation of landscapes - 3D example (trying to fix artefacts)</title>
+		<meta charset="utf-8" />
+		</style>
+	</head>
+	<body>
+		<canvas id="c"></canvas>
+		<script>
+			var b = document.body;
+			var c = document.getElementsByTagName('canvas')[0];
+			var a = c.getContext('2d');
+			document.body.clientWidth; // fix bug in webkit: http://qfox.nl/weblog/218
+		</script>
+		<script>
+
+
+// Demo Var:
+var heightMap=[],					// Map
+	originalH = .8,					// Original alterations amplitude
+	h = originalH,					// Alterations amplitude. As h is divided by 2 every iteration, so is this coefficient. The first iterations thus generates the "rough geography" of our landscape while the last ones, with a smaller amplitude, add the details.
+	nbMaxIterations = 8,			// Max number of procedural iterations
+	currentIteration = 0;			// Current iteration
+
+///
+// Generate new intermediate points (and thus details) to the given heightmap, by using stochastic interpolation (pseudo Mid-Point Displacement algorithm).
+// Parameters:
+//	- currentMap : Array of points
+//	- amplitude : Alterations amplitude
+// Returns: New map, more detailed
+///
+function ComputeMidPointDisplacement(currentMap, amplitude) {
+	var dim = Math.sqrt(currentMap.length)+.5|0;
+	var newDim = 2*dim - 1; // We want to add 1 new element between each couple of them, so the size will increase of dim-1.
+	var newMap = [];
+	
+	for (var i = newDim; i--;) for (var j = newDim; j--;) {
+		var iMap = i*newDim + j,
+			iSMap = dim*(i>>1) + j/2|0; // Index of the top-left corner of the square in the smaller matrix.
+		// JS trick: Math.floor(X) = 0|X if X positive, and X>>Y = 0|(X/(2*Y))
+		newMap[iMap] =
+			(i%2?
+				j%2?// Element on an odd row and odd col: it corresponds to a square center, so we populate it as shown in the following ascii schema:
+					// 3  0  0		with X representing the current element, and the numbers those used to eval. it.
+					// 0  X  1		It's kind of a mix between the midpoint displacement and the diamond-square algo: we try to reduce the artifacts 
+					// 0  1  1		the 1st algo may generate, without the 2nd step required by the other.
+					(newMap[iMap+newDim] + newMap[iMap+1] + newMap[iMap+1+newDim] + 3*currentMap[iSMap]) / 6
+					
+				:	// Element on an odd row and even col: we give it the avg of the elements on the prev. and next cols:
+					// 1  0  0		Example
+					// X  0  0
+					// 1  0  0
+					(currentMap[iSMap] + currentMap[iSMap+dim]) / 2
+			:
+				j%2?// Element on an even row and odd col: we give it the avg of the elements on the prev. and next rows:
+					// 1  X  1		Example
+					// 0  0  0
+					// 0  0  0
+					(currentMap[iSMap] + currentMap[iSMap+1]) / 2
+				:	// Element on an even row and even col: it's one of the square corners, so we just give it the orig. val.:
+					currentMap[iSMap]
+			) + amplitude * (.5 - Math.random()); // And for each element, we add a small error to generate our random landscape. Our constant h controls the ampli. of this error. As h is divided by 2 every iteration, so is this coefficient. The first iterations thus generates the "rough geography" of our landscape while the last ones, with a smaller amplitude, add the details.
+		if (newMap[iMap] > 1) { newMap[iMap] = 1; }
+		if (newMap[iMap] < 0) { newMap[iMap] = 0; }
+	}
+	
+	return newMap;
+}
+
+///
+//	Generate a new random 2x2 map.
+///
+function GenerateNewStartingMap() {
+	// Dirty. :D
+	for (var newMap = [], it = 4; it-- ; newMap[it] = Math.random());
+	return newMap;
+}
+
+///
+// Display the tweened polyline
+///
+function Paint () {
+	var dim = Math.sqrt(heightMap.length)+.5|0;
+	var canvasWidth, canvasHeight;
+	// Clearing the canvas:
+	canvasWidth = c.width = innerWidth-21;
+	canvasHeight = c.height = innerHeight-21;
+	a.fillStyle = '#fff';
+	a.fillRect(0, 0, canvasWidth, canvasHeight);
+	canvasHeight /= (dim - 1);
+	canvasWidth /= (dim - 1);
+
+	for (var i = dim; i--;) for (var j = dim; j--;) {
+		a.fillStyle = a.strokeStyle = 'hsl(240, 60%, '+ (heightMap[i*dim + j]*100) + '%)';
+		a.fillRect(i*canvasWidth, j*canvasHeight, canvasWidth, canvasHeight);
+		a.strokeRect(i*canvasWidth, j*canvasHeight, canvasWidth, canvasHeight);
+	}
+};
+
+function Render() {
+	setTimeout(Render, 1500);
+	if (currentIteration == nbMaxIterations) { // We restart the demo
+		heightMap = GenerateNewStartingMap();
+		h = originalH;
+		currentIteration = 0;
+	}
+	else { // We iterate
+		heightMap = ComputeMidPointDisplacement(heightMap, h); // Generate the more-detailed map with displacements.
+		h /= 2; // Every iteration, we reduce the "error" amplitude, to generate more subtle alterations.
+		currentIteration++;
+		Paint();
+	}
+}
+
+heightMap = GenerateNewStartingMap();
+Render();
+
+		</script>
+	</body>
+</html>
