@@ -14,11 +14,11 @@
         <meta name="viewport" content="width=device-width">
 
 		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="../css/normalize.css"/>
-        <link rel="stylesheet" href="../css/main.css"/>
-		<link href="../css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
-		<link href="../css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
-        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+        <link rel="stylesheet" href="/css/normalize.css"/>
+        <link rel="stylesheet" href="/css/main.css"/>
+		<link href="/css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
+		<link href="/css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
+        <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body id="blog">
 			<!--[if lt IE 7]>
@@ -27,21 +27,21 @@
 
 			<!-- Add your site or application content here -->
 			<header id="main-header">
-				<h1><a href="../">Aldream</a></h1>
+				<h1><a href="/">Aldream</a></h1>
 				<nav id="menu-top">
 					<ul>
-						<a href="../blog"><li>Blog</li></a>
-						<a href="../demo"><li>Demo</li></a>
-						<a href="../projects"><li>Projects</li></a>
-						<a href="../about"><li>About</li></a>
+						<a href="/blog"><li>Blog</li></a>
+						<a href="/demo"><li>Demo</li></a>
+						<a href="/projects"><li>Projects</li></a>
+						<a href="/about"><li>About</li></a>
 					</ul>
 				</nav>
 				<nav id="menu-top-mini">
 					<ul>
-						<li><a href="../blog" title="Blog"><img width=22 alt="Blog" src="../img/glyphicons-color/book-blue.png"/></a></li>
-						<li><a href="../demo" title="Demo"><img width=25 alt="Demo" src="../img/glyphicons-color/eye-green.png"/></a></li>
-						<li><a href="../projects" title="Projects"><img width=25 alt="Projects" src="../img/glyphicons-color/star-yellow.png"/></a></li>
-						<li><a href="../about" title="About"><img width=25 alt="About" src="../img/glyphicons-color/user-red.png"/></a></li>
+						<li><a href="/blog" title="Blog"><img width=22 alt="Blog" src="/img/glyphicons-color/book-blue.png"/></a></li>
+						<li><a href="/demo" title="Demo"><img width=25 alt="Demo" src="/img/glyphicons-color/eye-green.png"/></a></li>
+						<li><a href="/projects" title="Projects"><img width=25 alt="Projects" src="/img/glyphicons-color/star-yellow.png"/></a></li>
+						<li><a href="/about" title="About"><img width=25 alt="About" src="/img/glyphicons-color/user-red.png"/></a></li>
 					</ul>
 				</nav>
 			</header>
@@ -49,12 +49,12 @@
 				<h1>Article</h1>
 				<article class="span3">
 					<div>
-<h1>Mesh Breeding</h1>
+<h1>Pointillism, depicted</h1>
 
-<p>To conclude my series of articles describing the tricks I learned and used for the <a href="http://js1k.com/2013-spring/" title="JS1K 2013">JS1K Spring-2013 challenge</a>, I will now explain how <em><strong>Pointillism</em></strong> (js1k demo / local demo) was done, since it received such nice reviews.</p>
+<p>To conclude my series of articles describing the tricks I learned and used for the <a href="http://js1k.com/2013-spring/" title="JS1K 2013">JS1K Spring-2013 challenge</a>, I will now explain how &laquo; <strong>Pointillism</strong> &raquo; (<a href="http://js1k.com/2013-spring/demo/1507" title="Demo on JS1K">js1k</a> / <a href="/demo#js1k-2013-pointillism" title="&laquo; Pointillism &raquo; - Demo in my sandbox">local</a>) was done, since it received such nice reviews.</p>
 <p>I will thus cover the <strong>lightweight procedural method</strong> used to generate the landscape, and the <strong><em>pointillist-like rendering</em></strong>.</p>
 
-<p>I will assume you read my previous articles (Mesh Breeding and especially Painter's Algorithm), since they already cover the main notions of 3D generation and rendering.
+<p>I will assume you read my previous articles (<a href="/article/2013-04-23-mesh-breeding.html"title="Article - Mesh Breeding">Mesh Breeding</a> and especially <a href="/article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">Painter's Algorithm</a>), since they already cover the main notions of 3D generation and rendering.
 
 <div style="display:none;">$
 \newcommand{\hvectwo}[2]
@@ -77,14 +77,14 @@ $</div>
 
 <h2>Generating the landscape</h2>
 
-<p>The creation of fractal landscapes (https://en.wikipedia.org/wiki/Fractal_landscape) is a famous and well-covered subject in Computer Graphics. Using stochastic algorithms emphasizing realism or performance, the aim is to generate a landform (mountains, lakes, plateau,...) and then to <i>give life to it</i> by painting it using Nature's logic (light-green meadow in flat sunny areas, white snow clinging to peaks,...), or by populating it with other 3D objects (trees, buildings,... <small>which can also be procedurally generated btw</small>).</p>
+<p>The creation of <em>fractal landscapes</em><a class="refing" id="refing-1" href="#refed-1" title="Ref - Wikipedia - Fractal Landscape">[1]</a> is a famous and well-covered subject in Computer Graphics. Using <strong>stochastic algorithms</strong> emphasizing realism or performance, the aim is to generate a landform (mountains, lakes, plateau,...) and then to <i>give life to it</i> by painting it using Nature's logic (light-green meadow in flat sunny areas, white snow clinging to peaks,...), or by populating it with other 3D objects (trees, buildings,... <small>which can also be procedurally generated btw</small>).</p>
 
 <h3>Topography</h3>
 <p>A simple landform (continuous surface without caves) can be represented by a 2D <em>heightmap</em>, a matrix containing the elevation of sampled points. If we get such a matrix, it is thus possible to convert it into a 3D landscape, by using its indices as x and y coordinates, and the elevation as z.</p>
 
 <p>A method to generate such heightmap must respect some criteria. It must be <em>stochastic</em>, ie &laquo; pseudo-random &raquo; (random enough to allow a wide range of landforms, but predictable enough to give some controls over it), exhibit <em>fractal behavior</em> (covering both the global molding and the detailed surface), and be <em>coherent</em>, ie without any discontinuity (unless we want special topographic features like cliffs).</em>
 
-<p>Some noise functions meet those conditions. The <strong>Perlin (http://mrl.nyu.edu/~perlin/) Noise</strong> is especially famous and widely used, being quite easy to implement though giving smooth results.</p>
+<p>Some noise functions meet those conditions. The <strong>Perlin Noise</strong><a class="refing" id="refing-2" href="#refed-2" title="Ref - New York University - Profile - Ken Perlin">[2]</a> is especially famous and widely used, being quite easy to implement though giving smooth results.</p>
 
 <p>Alas, &laquo; easy to implement &raquo; doesn't always mean &laquo; short &raquo;. Even though it can be condensed in few lines, it was still too long for an 1K demo. I thus opted for another well-know method: the <strong>Midpoint-Displacement algorithm</strong>. Its main idea is, given a 2D grid containing various values, to insert intermediate ones between each couple to induce details. The new values are computed using the mean of the surrounding points and adding a small error to generate new features. The amplitude of the error must be inversely proportional to the iteration / to the distance between the points to give the fractal-like result (the addition of big errors in the first iterations gives the landscape its global shape while the following iterations add smaller and smaller details to the surface).</p>
 
@@ -148,7 +148,7 @@ var nbMaxIterations = 8,	// Max number of procedural iterations
 for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap(); i--; heightMap = ComputeMidPointDisplacement(heightMap, h /= 2));
 ]]></script>
 
-<p>One problem this algorithm has is the squared artifacts it generates. A variant has been developed, the <strong>Diamond-Square algorithm</strong> (https://en.wikipedia.org/wiki/Diamond-square_algorithm)(http://www.gameprogrammer.com/fractal.html) to prevent them, but this requires another step per square, lengthening the function. To <i>reduce</i> those artifacts without exceeding the size limit, I made a mix of both methods, mixing points from the previous map and the already-generated ones from the new map to evaluate the value of the mid points:</p>
+<p>One problem this algorithm has is the squared artifacts it generates. A variant has been developed, the <strong>Diamond-Square algorithm</strong><a class="refing" id="refing-3" href="#refed-3" title="Ref - Wikipedia - Diamond-Square algorithm">[3]</a><a class="refing" id="refing-4" href="#refed-4" title="Ref - Paul Martz - Article on Gameprogrammer.com - &laquo; Generating Random Fractal Terrain &raquo;">[4]</a> to prevent them, but this requires another step per square, lengthening the function. To <i>reduce</i> those artifacts without exceeding the size limit, I made a mix of both methods, mixing points from the previous map and the already-generated ones from the new map to evaluate the value of the mid points:</p>
 
 <script type="syntaxhighlighter" class="brush: js"><![CDATA[
 		...
@@ -188,7 +188,7 @@ for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap(); i--; heightM
 
 <p>But getting a realist-enough result needs much tweaking, and also more inputs. One of the keys to give more depth and realism to a landscape is to take <strong>lighting</strong> into account. Computing shadows is out of order given our 1K limit, but simulating penumbra is easy using the <strong>incline</strong>.</p>
 
-<p>The traditionnal method to evaluate how much sunlight a surface gets is by computing the dot-product of the surface's normal (or local gradient) and the unit vector representing the direction from the center of the surface to the point representing the Sun. We thus get the cosine value of the angle between these two vectors - value which is proportional to the <em>luminance</em> of the surface. By multiplying it with the <em>reflectivity</em> of the surface (high for snow, low for vegetation, ...), you get your color's <strong>lightness</strong>.</p>
+<p>The traditionnal method to evaluate how much sunlight a surface gets is by computing the dot-product of the surface's normal (or local gradient) and the unit vector representing the direction from the center of the surface to the point representing the Sun. We thus get the cosine value of the angle between these two vectors - value which is proportional to the <em>luminance</em> of the surface. By multiplying it with the <em>reflectivity</em> of the surface (high for snow, low for vegetation, ...), you get your color's <strong>lightness</strong> <small>(remember: &laquo; Learn to love HSL color system &raquo;)</small>.</p>
 
 <p>Alas, here again, evaluating the local gradient and using a real dot-product was too long, so I approximated both operations by the following one:</p>
 
@@ -221,11 +221,11 @@ ctx.fillStyle = ctx.strokeStyle = 'hsl('+[ // Using coercion for the ","
 ]+'%)';
 ]]></script>
 
-<p>&laquo;<i>It still looks ugly</i>&raquo; ... Right, but we are adding relief effects to a flat surface, how can it look but disturbing? Let's now play with 3D.</p>
+<p>&laquo; <i>It still looks ugly</i> &raquo; ... Right, but we are adding relief effects to a flat surface, how can it look but disturbing? Let's now play with 3D.</p>
 
 <h3>Put everything into relief</h3>
 	
-<p>Almost nothing new here. The whole projection and rendering stuff has been covered in the previous articles. We just have to take each point $(i, j, height)$ of the heightmap and evaluate the position of the corresponding vertex $\hvecthree{x}{y}{z}$ with:</p>
+<p>Almost nothing new here. The whole projection and rendering stuff has been covered in the previous articles (<a href="/article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">hop</a>). We just have to take each point $(i, j, height)$ of the heightmap and evaluate the position of the corresponding vertex $\hvecthree{x}{y}{z}$ with:</p>
 
 <div class="mathjax-formula">$$
 	x = i \cdot \frac{landscape.width}{heightMap.width} \\
@@ -234,15 +234,13 @@ ctx.fillStyle = ctx.strokeStyle = 'hsl('+[ // Using coercion for the ","
 $$</div>
 
 <p>... then project it into screen coordinates.</p>
-<p>To check if the point should be displayed or not, we could use again the Painter's algorithm and its properties. This is what I used for the demo Loom (XXXXXXXXXXX).</p>
-
-[[ Loom ]]
+<p>To check if the point should be displayed or not, we could use again the Painter's algorithm and its properties. This is what I used for the demo <a href="/demo#js1k-2013-loom" title="&laquo; Loom &raquo; - Demo">&laquo; Loom &raquo;</a>.</p>
 
 <p>The problem of this method is that it implies to sort an array containing all the elements (simple vertices or surfaces) waiting to be drawn. That is quite a <i>heavy</i> operation, given the level of details of our landscape. This is why I have to reduce the details when moving around, or else the browser wouldn't be able to ensure a correct framerate <small>(and would probably crash)</small>.</p>
 
 <h3>Another way to see the world</h3>
 
-<p>While polishing some aspect of the demo, I came accross this article (http://www.romancortes.com/blog/1k-rose) made by Román Cortés (XXXX) about his great entry for JS1K 2012 (http://js1k.com/2012-love/). There, he describes in details the rendering method he used, combining the use of a <strong>z-buffer</strong> and a <strong>Monte-Carlo surface sampling</strong>. I thus decided to try to apply it to my landscapes, and create a new demo.</p>
+<p>While polishing some aspect of the demo, I came accross an article<a class="refing" id="refing-5" href="#refed-5" title="Ref - Román Cortés - Article - &laquo; 1k Rose &raquo;">[5]</a> by <a href="http://twitter.com/romancortes" title=" Twitter - @romancortes">@romancortes</a> about his great entry for <a href="http://js1k.com/2012-love/" title="JS1K Love '12 Challenge">JS1K Love '12</a>. There, he describes in details the rendering method he used, combining the use of a <strong>z-buffer</strong> and a <strong>Monte-Carlo surface sampling</strong>. I thus decided to try to apply it to my landscapes, and create a new demo.</p>
 
 <p>The idea behind this method is the following:</p>
 <ul>
@@ -262,7 +260,7 @@ $$</div>
 <ol>
 	<li>Given a point $P = \hvectwo{x}{y} \in \mathbb{R}^2$, find in which square $ABCD$ (unit square in the heightmap) it is, with $A = \hvectwo{X}{Y}$, $B = \hvectwo{X+1}{Y}$, $C = \hvectwo{X}{Y+1}$ and $D = \hvectwo{X+1}{Y+1}$, $X$ and $Y$ being the truncated value of $x$, $y$, ie $\hvectwo{X}{Y} \in \mathbb{N}^2$.</li>
     <li>Estimate in which triangle - $ABD$ or $ACD$ - $P$ is, using the condition: $d_x > d_y \to P \in ABD$ with $d_x$, $d_y$ the decimal part of $x$, $y$.</li>
-    <li>Evaluate the height of the point using linear interpolation with the implicit barycentric coordinates as weights(http://www.farinhansford.com/dianne/teaching/cse470/materials/BarycentricCoords.pdf):
+    <li>Evaluate the height of the point using linear interpolation with the implicit barycentric coordinates as weights<a class="refing" id="refing-6" href="#refed-6" title="Ref - Dianne Hansford - PDF - &laquo; Barycentric Coordinates &raquo;">[6]</a>:
 		<ul>
 			<li>if $P \in ABD$, $height = h(B) + [h(A) - h(B)] \cdot (1-d_x) + [h(D) - h(B)] \cdot d_y$.</li>
 			<li>if $P \in ACD$, $height = h(C) + [h(A) - h(C)] \cdot (1-d_y) + [h(D) - h(C)] \cdot d_x$, with $h(K=\hvectwo{X}{Y}) = heightMap\arraytwo{X}{Y}$.</li>
@@ -279,17 +277,21 @@ $$</div>
 
 <h2>Conclusion</h2>
 
-<p>With this article, I've finished covering the mathematical angle in my JS1K '13 demos. I was thinking about briefly describing the implementation process and the useful Javascript tricks, but <a href="http://twitter.com/BlurSpline" title=" Twitter - @BlurSpline">@BlurSpline</a> did this great presentation already (http://slid.es/zz85/the-js1k-experience).</p>
+<p>With this article, I've finished covering the mathematical angle in my JS1K '13 demos. I was thinking about briefly describing the implementation process and the useful Javascript tricks, but <a href="http://twitter.com/BlurSpline" title=" Twitter - @BlurSpline">@BlurSpline</a> already did a great presentation<a class="refing" id="refing-7" href="#refed-7" title="Ref - Joshua Koo - Online Presentation - &laquo; The js1k Experience &raquo;">[7]</a> you should watch if you're interested in JS1K.</p>
 
 <p>So to conclude, I highly recommend participating in such contests to any enthusiast-programmer - at least once. They represent an immersive playground to improve your skills. They restrict your ressources (time, size, ...) which results in a boost of your motivation and efficiency. And finally, they offer a great opportunity to meet highly talented people sharing the same masochistic relish as you, and to learn from each other. <em>A great experience</em>.</p>
 
-<div class="quote"><p>IMHO best compression scheme: imagination+time+math skills.</p><footer>Philippe Deschaseaux, winner of JS1k Spring '13 (<a href="ps://twitter.com/ehouais/status/313943128962908160" title="Twitter Status">here</a>)</footer></div>
+<div class="quote"><p>IMHO best compression scheme: imagination+time+math skills.</p><footer>Philippe Deschaseaux, winner of JS1k Spring '13 (<a href="ps://twitter.com/ehouais/status/313943128962908160" title="Tweet by @ehouais">tweet</a>)</footer></div>
 
 <h3>References</h3>
 <ol>
-	<li id="refed-1"><a class="refed" href="#refing-1">^</a> Steven Wittens - Article - &laquo; Making Worlds 1 - Of Spheres and Cubes &raquo; - <a href="http://acko.net/blog/making-worlds-1-of-spheres-and-cubes/" title="Steven Wittens - Article - &laquo; Making Worlds 1 - Of Spheres and Cubes &raquo;">acko.net/blog/making-worlds-1-of-spheres-and-cubes</a></li>
-	<li id="refed-2"><a class="refed" href="#refing-2">^</a> Iñigo Quílez - Article - &laquo; Useful Little Functions &raquo; - <a href="http://www.iquilezles.org/www/articles/functions/functions.htm" title="Iñigo Quílez - Article - &laquo; Useful Little Functions &raquo;">iquilezles.org/www/articles/functions/functions.htm</a></li>
-	<li id="refed-4"><a class="refed" href="#refing-'">^</a> Jeff Atwood: &laquo; Don't Reinvent The Wheel, Unless You Plan on Learning More About Wheels &raquo; - <a href="http://www.codinghorror.com/blog/2009/02/dont-reinvent-the-wheel-unless-you-plan-on-learning-more-about-wheels.html" title="Jeff Atwood: &laquo; Don't Reinvent The Wheel, Unless You Plan on Learning More About Wheels &raquo;">codinghorror.com/blog/2009/02/dont-reinvent-the-wheel-unless-you-plan-on-learning-more-about-wheels.html</a></li>
+	<li id="refed-1"><a class="refed" href="#refing-1">^</a> Wikipedia - Fractal Landscape - <a href="http://en.wikipedia.org/wiki/Fractal_landscape" title="Wikipedia - Fractal Landscape">en.wikipedia.org/wiki/Fractal_landscape</a></li>
+	<li id="refed-2"><a class="refed" href="#refing-2">^</a> New York University - Profile - Ken Perlin - <a href="http://mrl.nyu.edu/~perlin/" title="New York University - Profile - Ken Perlin">mrl.nyu.edu/~perlin</a></li>
+	<li id="refed-3"><a class="refed" href="#refing-3">^</a> Wikipedia - Diamond-Square algorithm - <a href="http://en.wikipedia.org/wiki/Diamond-square_algorithm" title="Wikipedia - Diamond-Square algorithm">en.wikipedia.org/wiki/Diamond-square_algorithm</a></li>
+	<li id="refed-4"><a class="refed" href="#refing-4">^</a> Paul Martz - Article - &laquo; Generating Random Fractal Terrain &raquo; - <a href="http://www.gameprogrammer.com/fractal.html" title="Paul Martz - Article on Gameprogrammer.com - &laquo; Generating Random Fractal Terrain &raquo;">gameprogrammer.com/fractal.html</a></li>
+	<li id="refed-5"><a class="refed" href="#refing-5">^</a> Román Cortés - Article - &laquo; 1k Rose &raquo; - <a href="http://www.romancortes.com/blog/1k-rose" title="Román Cortés - Article - &laquo; 1k Rose &raquo;">romancortes.com/blog/1k-rose</a></li>
+	<li id="refed-6"><a class="refed" href="#refing-6">^</a> Dianne Hansford - PDF - &laquo; Barycentric Coordinates &raquo; - <a href="http://www.farinhansford.com/dianne/teaching/cse470/materials/BarycentricCoords.pdf" title="Dianne Hansford - PDF - &laquo; Barycentric Coordinates &raquo;">farinhansford.com/dianne/teaching/cse470/materials/Baryc...</a></li>
+	<li id="refed-7"><a class="refed" href="#refing-7">^</a> Joshua Koo - Online Presentation - &laquo; The js1k Experience &raquo; - <a href="http://slid.es/zz85/the-js1k-experience" title="Joshua Koo - Online Presentation - &laquo; The js1k Experience &raquo;">slid.es/zz85/the-js1k-experience</a></li>
 </ol>
 						<footer>
 							<time datetime="2013-04-13">2013-04-23</time>
@@ -315,9 +317,9 @@ $$</div>
 
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
-        <script src="../js/plugins.js"></script>
-        <script src="../js/main.js"></script>
+        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+        <script src="/js/plugins.js"></script>
+        <script src="/js/main.js"></script>
 		<script type="text/x-mathjax-config">
 			MathJax.Hub.Config({
 				TeX: { extensions: ["autobold.js"] },
@@ -325,8 +327,8 @@ $$</div>
 			});
 		</script>
 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-		<script type="text/javascript" src="../js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
-		<script type="text/javascript" src="../js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
+		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
+		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
 		<script>
 			// Syntax Highlighting:
 			SyntaxHighlighter.all()
