@@ -133,6 +133,17 @@ function ComputeMidPointDisplacement(currentMap, amplitude) {
 	
 	return newMap;
 }
+
+// -------------------------------
+// HOW TO USE IT - (Dirty) Example
+
+function GenerateNewStartingMap() { // Generate a new random 2x2 map.
+	for (var newMap = [], it = 4; it-- ; newMap[it] = Math.random()*10); return newMap;
+}
+
+var nbMaxIterations = 8,	// Max number of procedural iterations
+	h = 16;					// Amplitude of the error
+for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap(); i--; heightMap = ComputeMidPointDisplacement(heightMap, h /= 2));
 ]]></script>
 
 <p>One problem of this algorithm is the squared artifacts it generates. A variant has been developed, the <strong>Diamond-Square algorithm</strong>(https://en.wikipedia.org/wiki/Diamond-square_algorithm)(http://www.gameprogrammer.com/fractal.html), but this requires another step per square, lengthening the function. To <i>partially</i> prevent those artifacts without exceeding the size limit, I made a mix of both methods, using both points from the previous map and the already generated points from the new one to evaluate the value of the mid points:</p>
@@ -208,9 +219,9 @@ ctx.fillStyle = ctx.strokeStyle = 'hsl('+[ // Using coercion for the ","
 
 <h3>Put everything into relief</h3>
 	
-<p>Almost nothing new here. The whole projection and rendering stuff has been covered in the previous articles. We just have to take each point $(i, j, height)$ of the heightmapand evaluate the position of the corresponding vertex $\hvecthree{x}{y}{z}$ with:</p>
+<p>Almost nothing new here. The whole projection and rendering stuff has been covered in the previous articles. We just have to take each point $(i, j, height)$ of the heightmap and evaluate the position of the corresponding vertex $\hvecthree{x}{y}{z}$ with:</p>
 
-$$x = i \cdot d \\ y = j \cdot d \\ d = landscape.size  \div heightmap.size \\ z = height \cdot k \text{ ( k constant)}$$
+$$x = i \cdot d \\ y = j \cdot d \\ d = landscape.size  \div heightMap.size \\ z = height \cdot k \text{ ( k constant)}$$
 
 <p>... then project it into screen coordinates.</p>
 <p>To check if the point should be displayed or not, ie. if it isn't hidden behind other features, we could use again the Painter's algorithm. This is what I used for the demo Loom (XXXXXXXXXXX).</p>
@@ -219,34 +230,42 @@ $$x = i \cdot d \\ y = j \cdot d \\ d = landscape.size  \div heightmap.size \\ z
 
 <p>The problem of this method is that it implies to sort an array containing all the elements (simple vertices or surfaces) waiting to be drawn. That is quite a <i>heavy</i> operation, given the level of details of our landscape. This is why I have to reduce the details when moving around, or else the browser wouldn't be able to ensure a correct framerate <small>(and would probably crash)</small>. I was though satisfied with the result, and ready to publish it.</p>
 
+<h3>Another way to see the world</h3>
+
 <p>While polishing some aspect of the demo, I came accross this article (http://www.romancortes.com/blog/1k-rose) made by Román Cortés (XXXX) about his great entry for JS1K 2012 (http://js1k.com/2012-love/). There, he describes in details the rendering method he used, combining the use of a <strong>z-buffer</strong> and a <strong>Monte-Carlo surface sampling</strong>. I thus decided to try to apply it to my landscapes, and create a new demo.</p>
 
 <p>The idea behind this method is the following:</p>
 <ul>
-	<li>We define our whole scene by a bijective function $f(a,b) = \hvecfour{x}{y}{z}{color}$ with $\hvectwo{a}{b} \in \arraytwo{0.0}{1.0} \times \arraytwo{0.0}{1.0}$ and $x$, $y$, $z$ the coordinates of the vertex matching the input. It implies to find a way to express each element as an explicit-surface with its own unique domain.</li>
-	<li>We keep two buffers of the same length $canvas.width \times canvas.height$ : one for the $color$ values of the projected elements (the  <em>z-canvas</em>), and one for their $depth$ values (the <em>z-buffer</em>).
-	<li><p>Each frame, we sample randomly a high number of points $\hvectwo{a}{b}$, evaluate the corresponding vertex using $f$, and project it into $\hvecfour{p_x}{p_y}{depth}{color}$. If the pixel $\hvectwo{p_x}{p_y}$ as already been drawn, we check the z-buffer:</p>
+	<li>We define our whole scene by a bijective function $f:\hvectwo{a}{b} \mapsto \hvecfour{x}{y}{z}{color}$ with $\hvectwo{a}{b} \in \arraytwo{0.0}{1.0} \times \arraytwo{0.0}{1.0}$ and $x$, $y$, $z$ the coordinates of the vertex matching the input. It implies to find a way to express each element as an explicit-surface with its own unique domain.</li>
+	<li>We keep two buffers of the same length $canvas.width \times canvas.height$ : one for the $color$ values of the projected elements (the  <em>z-canvas</em>), and one for their $depth$ values (the <em>z-buffer</em>).</li>
+	<li>Each frame, we sample randomly a high number of points $\hvectwo{a}{b}$, evaluate the corresponding vertex using $f$, and project it into $\hvecfour{p_x}{p_y}{depth}{color}$. If the pixel $\hvectwo{p_x}{p_y}$ as already been drawn, we check the z-buffer:
 		<ul>
 			<li>If $zBuffer\arraytwo{p_x}{p_y} < depth$, it means the element is actually behind the one already drawn, so we do nothing.</li>
 			<li>Else, the element should be represented above, so we update both $canvas\arraytwo{p_x}{p_y}$ with $color$ and $zBuffer\arraytwo{p_x}{p_y}$ with $depth$.</li>
 		</ul>
 	</li>
 	<li>As long as the camera and scene are static, we can keep drawing more random points each frame, until reaching a satisfactory density. If movements are required, then both canvas and z-buffer must be cleared <small>(unless you keep the 3D information of each points and reproject them accordingly to the new transform.)</small></li>
-<ul>
-<p>However, we need some adaptations to use this method on our landscape. We don't have a continuous function to pick vertices out of our 2D discrete heightmap. We need a way to evaluate the height of the points all over our surface, and not only at the nodes.</p>
+</ul>
+<p>However, we need some adaptations to use this method on our landscape. We don't have a <em>continuous</em> function to pick vertices out of our 2D <em>discrete</em> heightmap. We need a way to evaluate the height of the points all over our surface, and not only at the nodes.</p>
 
-<p><strong>Triangulation and linear interpolation</strong> do the trick nicely here. Here is how it works:</p>
+<p><strong>Triangulation and barycentric interpolation</strong> do the trick nicely. Here is how it works:</p>
 <ol>
 	<li>Given a point $P = \hvectwo{x}{y} \in \mathbb{R}^2$, find in which square $ABCD$ (unit square in the heightmap) it is, with $A = \hvectwo{X}{Y}$, $B = \hvectwo{X+1}{Y}$, $C = \hvectwo{X}{Y+1}$ and $D = \hvectwo{X+1}{Y+1}$, $X$ and $Y$ being the truncated value of $x$, $y$, ie $\hvectwo{X}{Y} \in \mathbb{N}^2$.</li>
-    <li>Estimate in which triangle - ABD or ACD - my point is, using the condition: isInABD = dx > dy with dx, dy the decimal part of x, y.</li>
-    <li><p>Evaluate the height of my point using linear interpolation:</p>
+    <li>Estimate in which triangle - $ABD$ or $ACD$ - $P$ is, using the condition: $d_x > d_y \to P \in ABD$ with $d_x$, $d_y$ the decimal part of $x$, $y$.</li>
+    <li>Evaluate the height of the point using linear interpolation with the implicit barycentric coordinates as weights(http://www.farinhansford.com/dianne/teaching/cse470/materials/BarycentricCoords.pdf):
 		<ul>
-			<li>if in ABD, height = h(B) + [h(A) - h(B)] * (1-dx) + [h(D) - h(B)] * dy.</li>
-			<li>if in ACD, height = h(C) + [h(A) - h(C)] * (1-dy) + [h(D) - h(C)] * dx, with h(X) height from the map.</li>
+			<li>if $P \in ABD$, $height = h(B) + [h(A) - h(B)] \cdot (1-d_x) + [h(D) - h(B)] \cdot d_y$.</li>
+			<li>if $P \in ACD$, $height = h(C) + [h(A) - h(C)] \cdot (1-d_y) + [h(D) - h(C)] \cdot d_x$, with $h(K=\hvectwo{X}{Y}) = heightMap\arraytwo{X}{Y}$.</li>
 		</ul></li>
 </ol>
 
+[[ Demo color interpolation ]]
 
+<p>We are thus able to describe explicitly our surface. We can now wrap this whole process into a function $g: \hvectwo{x}{y} \in \mathbb{R}^2 \mapsto \hvecfour{x}{y}{height}{color}$ ($color$ being computed by a function similar to the one described previously) and plug it to the Monte-Carlo sampling by defining $f$ as $f\hvectwo{a}{b} = g\hvectwo{a \cdot heightMap.width}{b \cdot heightMap.height}$.</p>
+
+<p>Nothing else to do but to put everything together, and that's it:</p>
+
+[[ Demo ]]
 
 <h2>Conclusion</h2>
 
