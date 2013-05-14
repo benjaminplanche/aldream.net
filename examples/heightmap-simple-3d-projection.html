@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+  <head>
+		<title>Procedural generation of landscapes - 3D example with coloration and pseudo-lightning</title>
+		<meta charset="utf-8" />
+		</style>
+	</head>
+	<body>
+		<canvas id="c"></canvas>
+		<script>
+			var b = document.body;
+			var c = document.getElementsByTagName('canvas')[0];
+			var a = c.getContext('2d');
+			document.body.clientWidth; // fix bug in webkit: http://qfox.nl/weblog/218
+		</script>
+		<script>
+
+
+// Demo Var:
+var heightMap=[],			// Map
+	displayHeightMap = [], 	// Heightmap with ranged values for display
+	ORIG_H = 8,				// Original alterations amplitude
+	WATER_LVL = 6,			// Sea level
+	BEACH_LVL = 6.2,		// Beach level
+	SNOW_LVL_DEC = 6,		// Snow level, minus the incline (Yeah, sounds strange. See the code lines)
+	SIZE = 20,				// Dimension of our map (landscape width)
+	h = ORIG_H,				// Alterations amplitude. As h is divided by 2 every iteration, so is this coefficient. The first iterations thus generates the "rough geography" of our landscape while the last ones, with a smaller amplitude, add the details.
+	nbMaxIterations = 8,	// Max number of procedural iterations
+	currentIteration = 0,	// Current iteration
+	camDist = 20,			// Distance between the camera and the center of our map
+	angleYaw=anglePitch= 4;	// Angles defining the camera orientation
+
+///
+// Generate new intermediate points (and thus details) to the given heightmap, by using stochastic interpolation (pseudo Mid-Point Displacement algorithm).
+// Parameters:
+//	- currentMap : Array of points
+//	- amplitude : Alterations amplitude
+// Returns: New map, more detailed
+///
+function ComputeMidPointDisplacement(currentMap, amplitude) {
+	var dim = Math.sqrt(currentMap.length)+.5|0;
+	var newDim = 2*dim - 1; // We want to add 1 new element between each couple of them, so the size will increase of dim-1.
+	var newMap = [];
+	displayHeightMap = [];
+	for (var i = newDim; i--;) for (var j = newDim; j--;) {
+		var iMap = i*newDim + j,
+			iSMap = dim*(i>>1) + j/2|0; // Index of the top-left corner of the square in the smaller matrix.
+		// JS trick: Math.floor(X) = 0|X if X positive, and X>>Y = 0|(X/(2*Y))
+		displayHeightMap[iMap] = newMap[iMap] =
+			(i%2?
+				j%2?// Element on an odd row and odd col: it corresponds to a square center, so we populate it as shown in the following ascii schema:
+					// 2  0  0		with X representing the current element, and the numbers those used to eval. it.
+					// 0  X  1		It's kind of a mix between the midpoint displacement and the diamond-square algo: we try to reduce the artifacts 
+					// 0  1  1		the 1st algo may generate, without the 2nd step required by the other.
+					(newMap[iMap+newDim] + newMap[iMap+1] + newMap[iMap+1+newDim] + 2*currentMap[iSMap]) / 5
+					
+				:	// Element on an odd row and even col: we give it the avg of the elements on the prev. and next cols:
+					// 1  0  0		Example
+					// X  0  0
+					// 1  0  0
+					(currentMap[iSMap] + currentMap[iSMap+dim]) / 2
+			:
+				j%2?// Element on an even row and odd col: we give it the avg of the elements on the prev. and next rows:
+					// 1  X  1		Example
+					// 0  0  0
+					// 0  0  0
+					(currentMap[iSMap] + currentMap[iSMap+1]) / 2
+				:	// Element on an even row and even col: it's one of the square corners, so we just give it the orig. val.:
+					currentMap[iSMap]
+			) + amplitude * (.6 - Math.random()); // And for each element, we add a small error to generate our random landscape. Our constant h controls the ampli. of this error. As h is divided by 2 every iteration, so is this coefficient. The first iterations thus generates the "rough geography" of our landscape while the last ones, with a smaller amplitude, add the details.
+		if (displayHeightMap[iMap] < WATER_LVL) { displayHeightMap[iMap] = WATER_LVL; }
+	}
+	
+	return newMap;
+}
+
+///
+//	Generate a new random 2x2 map.
+///
+function GenerateNewStartingMap() {
+	// Dirty. :D
+	for (var newMap = [], it = 4; it-- ; newMap[it] = Math.random()*10); return newMap;
+}
+
+///
+// Display the tweened polyline
+///
+function Paint () {
+	var dim = Math.sqrt(displayHeightMap.length)+.5|0;
+	var canvasWidth, canvasHeight;
+	// Clearing the canvas:
+	canvasWidth = c.width = innerWidth-21;
+	canvasHeight = c.height = innerHeight-21;
+	a.fillStyle = '#fff';
+	a.fillRect(0, 0, canvasWidth, canvasHeight);
+	var minDim = (canvasWidth < canvasHeight) ? canvasWidth : canvasHeight,
+		rectWidth = canvasWidth / (dim - 2),
+		rectHeight = canvasHeight / (dim - 2);
+	canvasHeight /= 2;
+	canvasWidth /= 2;
+	
+	var zBuffer = [];
+	var cosYaw = Math.cos(angleYaw),
+		sinYaw = Math.sin(angleYaw),
+		cosPitch = Math.cos(anglePitch),
+		sinPitch = Math.sin(anglePitch),
+		distanceBetweenLandscapePoints = SIZE / (dim - 2),
+		camPosX = camDist * cosPitch,
+		camPosY = camDist * sinPitch*cosYaw,
+		camPosZ = camDist * sinPitch*sinYaw;
+	for (var i = dim-1; i--;) for (var j = dim-1; j--;) {
+		var ind = i*dim + j,
+			height = displayHeightMap[ind],
+			posX = i*distanceBetweenLandscapePoints - SIZE/2,
+			posY = j*distanceBetweenLandscapePoints - SIZE/2,
+			posZ = height - WATER_LVL;
+		
+		// 3D Projection:
+		var temp1 = cosYaw*(posY - camPosY) - sinYaw*(posX - camPosX),
+			temp2 = posZ - camPosZ,
+			dX = (sinYaw*(posY - camPosY) + cosYaw*(posX - camPosX)),
+			dY = sinPitch*temp2 + cosPitch*temp1,
+			dZ = cosPitch*temp2 - sinPitch*temp1,
+			pixelY = dY / dZ * minDim + canvasHeight,
+			pixelX = dX / dZ * minDim + canvasWidth,
+			canvasInd = pixelY * canvasWidth*2 + pixelX;
+			
+		if (!zBuffer[canvasInd] || (dZ < zBuffer[canvasInd])) { // We check if what we want to draw will be visible or behind another element. If it will be visible (for now), we draw it and update the zBuffer:
+			zBuffer[canvasInd] = dZ;
+
+			// Color:
+			var pseudoGrad = 2+(2*displayHeightMap[ind+1]-displayHeightMap[ind+1+dim]-displayHeightMap[ind+dim])*26,
+				pseudoHeight = height-pseudoGrad;
+			a.fillStyle = a.strokeStyle = 'hsl('+[ // Using coercion for the ","
+				25*(	// Hue
+					(SNOW_LVL_DEC<height)? 25/height				// Green to brown
+					: 7 											// Blue
+					),
+				25*(	// Saturation	
+					(WATER_LVL<height)? pseudoGrad*14/height/height	// Ground saturation: medium, depending on the incline/height, giving us different kinds of veget.
+					: pseudoHeight									// Water saturation: high
+					)+'%',
+				(25*(	// Lightness
+					(SNOW_LVL_DEC<pseudoHeight)? pseudoGrad					// Bright snow with random noise
+					: (BEACH_LVL<height)? pseudoGrad/height*2				// Vegetation
+					: (WATER_LVL<height)? pseudoGrad						// Bright sand
+					: 1.8+Math.random()*.2									// Water with random waves
+					))-6*Math.cos(i/47*Math.cos(height/3+j/57)+pseudoHeight)// Some not-very-random-but-good-enough shadows/lights (casted by clouds for instance)
+			]+'%)';
+			a.fillRect(pixelX, pixelY, rectWidth, rectHeight);
+		}
+	}
+};
+
+function Render() {
+	if (currentIteration == nbMaxIterations) { // We restart the demo
+		setTimeout(Render, 2500);
+		heightMap = GenerateNewStartingMap();
+		h = ORIG_H;
+		currentIteration = 0;
+	}
+	else { // We iterate
+		setTimeout(Render, 500);
+		heightMap = ComputeMidPointDisplacement(heightMap, h); // Generate the more-detailed map with displacements.
+		h /= 2; // Every iteration, we reduce the "error" amplitude, to generate more subtle alterations.
+		currentIteration++;
+		Paint();
+	}
+}
+
+camPosition = [5*Math.cos(angleYaw)*Math.sin(anglePitch), 5*Math.sin(angleYaw)*Math.sin(anglePitch), 5*Math.cos(anglePitch)];
+heightMap = GenerateNewStartingMap();
+Render();
+
+		</script>
+	</body>
+</html>
