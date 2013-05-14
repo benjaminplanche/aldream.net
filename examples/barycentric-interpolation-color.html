@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+  <head>
+		<title>Color Barycentric Interpolation</title>
+		<meta charset="utf-8" />
+		</style>
+	</head>
+	<body>
+		<canvas id="c"></canvas>
+		<script>
+			var b = document.body;
+			var c = document.getElementsByTagName('canvas')[0];
+			var a = c.getContext('2d');
+			document.body.clientWidth; // fix bug in webkit: http://qfox.nl/weblog/218
+		</script>
+		<script>
+
+
+// Demo Var:
+var colorMap=[];			// Map
+
+///
+//	Generate a new random (dim x dim) hue map.
+///
+function GenerateNewStartingMap(dim) {
+	// Dirty. :D
+	for (var newMap = [], it = dim*dim; it-- ; newMap[it] = Math.random()*359, newMap[it] -= newMap[it]%90); return newMap;
+}
+
+///
+// Display the tweened polyline
+///
+function Paint () {
+	var dim = Math.sqrt(colorMap.length)+.5|0;
+	// We do not clear the canvas each frame anymore, as we want to accumulate the points.
+	
+	var zBuffer = [];
+		for (k = 0; k < 1e4; k++) {
+			// Random float indices:
+			var i = Math.random() * (dim-1),
+				j = Math.random() * (dim-1),
+			// Integer part (troncated):
+				iTronc = i|0,
+				jTronc = j|0,
+				indTronc = iTronc*dim + jTronc,
+			// Decimal part:
+				iDec = i%1,
+				jDec = j%1,
+			// Now we want to intrapolate the value of the float point from the surrounding points of our map. So we want to find in which triangle is our point to evaluate the weighted average of the 3 corresponding points.
+			// We already know that our point is in the square defined by the map points (iTronc, jTronc), (iTronc+1, jTronc), (iTronc, jTronc+1), (iTronc+1, jTronc+1).
+			// If we split this square into two rectangle using the diagonale [(iTronc, jTronc), (iTronc+1, jTronc+1)], we can deduce in which triangle is our point with the following condition:
+				whichTriangle = iDec < jDec, // ie "are we above or under the line j = jTronc + distanceBetweenLandscapePoints - (i-iTronc)"
+				indThirdPointOfTriangle = indTronc +dim*whichTriangle +1-whichTriangle, // Top-right point of the square or bottm left, depending on which triangle we are in.
+			// Intrapolating the point's hue:
+				deltaHeight1 = (colorMap[indTronc] - colorMap[indThirdPointOfTriangle]),
+				deltaHeight2 = (colorMap[indTronc+dim+1] - colorMap[indThirdPointOfTriangle]),
+				hue = colorMap[indThirdPointOfTriangle] + deltaHeight1 * (1-(whichTriangle? jDec:iDec)) + deltaHeight2 * (!whichTriangle? jDec:iDec),
+				
+				posX = i*canvasWidth,
+				posY = j*canvasWidth;
+			
+			a.fillStyle = a.strokeStyle = 'hsl('+hue+', 60%, 50%)';
+			a.fillRect(posX, posY, 1, 1);
+		}
+};
+
+// Shim layer with setTimeout fallback // Thank to Paul Irish (http://paulirish.com/2011/requestanimationframe-for-smart-animating)
+window.requestAnimFrame = (function(){
+  return window.requestAnimationFrame ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
+function Render() {
+	requestAnimFrame(Render);
+	Paint();
+}
+
+colorMap = GenerateNewStartingMap(2);
+var canvasWidth = c.width = innerWidth-21,
+	canvasHeight = c.height = innerHeight-21;
+a.fillStyle = '#fff';
+a.fillRect(0, 0, canvasWidth, canvasHeight);
+
+Render()
+		</script>
+	</body>
+</html>
