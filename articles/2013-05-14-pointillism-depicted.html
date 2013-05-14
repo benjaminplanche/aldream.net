@@ -14,11 +14,11 @@
         <meta name="viewport" content="width=device-width">
 
 		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="/css/normalize.css"/>
-        <link rel="stylesheet" href="/css/main.css"/>
-		<link href="/css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
-		<link href="/css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
-        <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
+        <link rel="stylesheet" href="../css/normalize.css"/>
+        <link rel="stylesheet" href="../css/main.css"/>
+		<link href="../css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
+		<link href="../css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body id="blog">
 			<!--[if lt IE 7]>
@@ -27,21 +27,21 @@
 
 			<!-- Add your site or application content here -->
 			<header id="main-header">
-				<h1><a href="/">Aldream</a></h1>
+				<h1><a href="../">Aldream</a></h1>
 				<nav id="menu-top">
 					<ul>
-						<a href="/blog"><li>Blog</li></a>
-						<a href="/demo"><li>Demo</li></a>
-						<a href="/projects"><li>Projects</li></a>
-						<a href="/about"><li>About</li></a>
+						<a href="../blog"><li>Blog</li></a>
+						<a href="../demo"><li>Demo</li></a>
+						<a href="../projects"><li>Projects</li></a>
+						<a href="../about"><li>About</li></a>
 					</ul>
 				</nav>
 				<nav id="menu-top-mini">
 					<ul>
-						<li><a href="/blog" title="Blog"><img width=22 alt="Blog" src="/img/glyphicons-color/book-blue.png"/></a></li>
-						<li><a href="/demo" title="Demo"><img width=25 alt="Demo" src="/img/glyphicons-color/eye-green.png"/></a></li>
-						<li><a href="/projects" title="Projects"><img width=25 alt="Projects" src="/img/glyphicons-color/star-yellow.png"/></a></li>
-						<li><a href="/about" title="About"><img width=25 alt="About" src="/img/glyphicons-color/user-red.png"/></a></li>
+						<li><a href="../blog" title="Blog"><img width=22 alt="Blog" src="../img/glyphicons-color/book-blue.png"/></a></li>
+						<li><a href="../demo" title="Demo"><img width=25 alt="Demo" src="../img/glyphicons-color/eye-green.png"/></a></li>
+						<li><a href="../projects" title="Projects"><img width=25 alt="Projects" src="../img/glyphicons-color/star-yellow.png"/></a></li>
+						<li><a href="../about" title="About"><img width=25 alt="About" src="../img/glyphicons-color/user-red.png"/></a></li>
 					</ul>
 				</nav>
 			</header>
@@ -52,9 +52,11 @@
 <h1>Mesh Breeding</h1>
 
 <p>To conclude my series of articles describing the tricks I learned and used for the <a href="http://js1k.com/2013-spring/" title="JS1K 2013">JS1K Spring-2013 challenge</a>, I will now explain how <em><strong>Pointillism</em></strong> (js1k demo / local demo) was done, since it received such nice reviews.</p>
-<p>I will thus cover the <strong>lightweight procedural method</strong> used to generate the landscape, and the <strong><em>pointillist-like rendering</em></strong> I will assume you read my previous articles (Mesh Breeding and especially Painter's Algorithm), since they already cover the main notions of 3D generation and rendering.
+<p>I will thus cover the <strong>lightweight procedural method</strong> used to generate the landscape, and the <strong><em>pointillist-like rendering</em></strong>.</p>
 
-$
+<p>I will assume you read my previous articles (Mesh Breeding and especially Painter's Algorithm), since they already cover the main notions of 3D generation and rendering.
+
+<div style="display:none;">$
 \newcommand{\hvectwo}[2]
 {
    \begin{pmatrix} #1 \!\!\! & , & \!\!\! #2 \end{pmatrix}
@@ -71,7 +73,7 @@ $
 {
    \begin{bmatrix} #1 \!\!\! & , & \!\!\! #2 \end{bmatrix}
 }
-$
+$</div>
 
 <h2>Generating the landscape</h2>
 
@@ -80,11 +82,11 @@ $
 <h3>Topography</h3>
 <p>A simple landform (continuous surface without caves) can be represented by a 2D <em>heightmap</em>, a matrix containing the elevation of sampled points. If we get such a matrix, it is thus possible to convert it into a 3D landscape, by using its indices as x and y coordinates, and the elevation as z.</p>
 
-<p>A method to generate such heightmap must respect some criteria. It must be <em>pseudo-random</em> (random enough to be stochastic and allow a wide range of landforms, but predictable enough to give some controls over it), exhibit <em>fractal behavior</em> (covering both the global molding and the detailed surface), and be <em>coherent</em>, ie without any discontinuity (unless we want special topographic features like cliffs).</em>
+<p>A method to generate such heightmap must respect some criteria. It must be <em>stochastic</em>, ie &laquo; pseudo-random &raquo; (random enough to allow a wide range of landforms, but predictable enough to give some controls over it), exhibit <em>fractal behavior</em> (covering both the global molding and the detailed surface), and be <em>coherent</em>, ie without any discontinuity (unless we want special topographic features like cliffs).</em>
 
 <p>Some noise functions meet those conditions. The <strong>Perlin (http://mrl.nyu.edu/~perlin/) Noise</strong> is especially famous and widely used, being quite easy to implement though giving smooth results.</p>
 
-<p>Alas, &laquo; easy to implement &raquo; doesn't always means &laquo; short &raquo;. Even though it can be condensed in few lines, it was still too long for a 1K demo. I thus opted for another well-know method: the <strong>Midpoint-Displacement algorithm</strong>. Its main idea is, given a 2D grid containing various values, to insert intermediate ones between each couple. The new values are computed using the mean of the surrounding points and adding a small error to it to generate new details. The amplitude of the error must be inversely proportional to the iteration / to the distance between the points to give the fractal-like result (the addition of big errors in the first iterations gives the landscape its global shape while the following iterations add smaller and smaller details to the surface).</p>
+<p>Alas, &laquo; easy to implement &raquo; doesn't always mean &laquo; short &raquo;. Even though it can be condensed in few lines, it was still too long for an 1K demo. I thus opted for another well-know method: the <strong>Midpoint-Displacement algorithm</strong>. Its main idea is, given a 2D grid containing various values, to insert intermediate ones between each couple to induce details. The new values are computed using the mean of the surrounding points and adding a small error to generate new features. The amplitude of the error must be inversely proportional to the iteration / to the distance between the points to give the fractal-like result (the addition of big errors in the first iterations gives the landscape its global shape while the following iterations add smaller and smaller details to the surface).</p>
 
 <p>Here is a simple implementation of this algorithm for a 2D map, using modulos to evaluate the position of each points in the current square:</p>
 <script type="syntaxhighlighter" class="brush: js"><![CDATA[
@@ -138,7 +140,7 @@ function ComputeMidPointDisplacement(currentMap, amplitude) {
 // HOW TO USE IT - (Dirty) Example
 
 function GenerateNewStartingMap() { // Generate a new random 2x2 map.
-	for (var newMap = [], it = 4; it-- ; newMap[it] = Math.random()*10); return newMap;
+	for (var newMap = [], it = 4; it-- ; newMap[it] = Math.random()); return newMap;
 }
 
 var nbMaxIterations = 8,	// Max number of procedural iterations
@@ -146,7 +148,7 @@ var nbMaxIterations = 8,	// Max number of procedural iterations
 for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap(); i--; heightMap = ComputeMidPointDisplacement(heightMap, h /= 2));
 ]]></script>
 
-<p>One problem of this algorithm is the squared artifacts it generates. A variant has been developed, the <strong>Diamond-Square algorithm</strong>(https://en.wikipedia.org/wiki/Diamond-square_algorithm)(http://www.gameprogrammer.com/fractal.html), but this requires another step per square, lengthening the function. To <i>partially</i> prevent those artifacts without exceeding the size limit, I made a mix of both methods, using both points from the previous map and the already generated points from the new one to evaluate the value of the mid points:</p>
+<p>One problem this algorithm has is the squared artifacts it generates. A variant has been developed, the <strong>Diamond-Square algorithm</strong> (https://en.wikipedia.org/wiki/Diamond-square_algorithm)(http://www.gameprogrammer.com/fractal.html) to prevent them, but this requires another step per square, lengthening the function. To <i>reduce</i> those artifacts without exceeding the size limit, I made a mix of both methods, mixing points from the previous map and the already-generated ones from the new map to evaluate the value of the mid points:</p>
 
 <script type="syntaxhighlighter" class="brush: js"><![CDATA[
 		...
@@ -182,15 +184,19 @@ for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap(); i--; heightM
 
 <h3>Coloring</h3>
 
-<p>Given your heightmap, it's quite easy to <em>assign color to every point depending on its elevation</em>: if the value equals the min. boundary, then paint it light blue to represent water; if it's above a given limit then make it white as snow; if it's between then make a gradient from vegetal-green to rocky-brown with a function using the height ; ...</p>
+<p>Given the heightmap, it's quite easy to <em>assign color to every point depending on its elevation</em>: if the value equals the min. boundary, then paint it light blue to represent water; if it's above a given limit then make it white as snow; if it's between then make a gradient from vegetal-green to rocky-brown with a function using the height; ...</p>
 
-<p>But getting a realist-enough result needs much tweaking, and also more inputs.</p>
+<p>But getting a realist-enough result needs much tweaking, and also more inputs. One of the keys to give more depth and realism to a landscape is to take <strong>lighting</strong> into account. Computing shadows is out of order given our 1K limit, but simulating penumbra is easy using the <strong>incline</strong>.</p>
 
-<p>One of the keys to give more depth and realism to a landscape is to take <strong>lighting</strong> into account. Computing shadows is out of question given our 1K limit, but simulating penumbra is easy using the <strong>incline</strong>. The traditionnal method to evaluate how much sunlight a surface get is by computing the dot-product of the surface's normal (or local gradient) and the unit vector representing the direction from the center of the surface to the point representing the Sun. We thus get the value of the cosine of the angle between these two vectors - value which is proportional to the luminance of the surface. By multiplying it with the <em>reflectivity</em> of the surface (high for snow, low for vegetation, ...), you get your color's <em>lightness</em>.</p>
+<p>The traditionnal method to evaluate how much sunlight a surface gets is by computing the dot-product of the surface's normal (or local gradient) and the unit vector representing the direction from the center of the surface to the point representing the Sun. We thus get the cosine value of the angle between these two vectors - value which is proportional to the <em>luminance</em> of the surface. By multiplying it with the <em>reflectivity</em> of the surface (high for snow, low for vegetation, ...), you get your color's <strong>lightness</strong>.</p>
 
-<p>Alas, here again, evaluating the local gradient and using a real dot-product was too long, so I approximated both operations by the following: $pseudoGrad\arraytwo{i}{j}=(2 \cdot heightMap\arraytwo{i+1}{j+1}-heightMap\arraytwo{i+1}{j}-heightMap\arraytwo{i}{j+1}) \cdot 26$. The shifting and incompletness of the evaluation of the gradient and its projection simulate the dot-product with a sun positioned somewhere north-east of the map...</p>
+<p>Alas, here again, evaluating the local gradient and using a real dot-product was too long, so I approximated both operations by the following one:</p>
 
-<p>But we can use this value for <em>much more than simply evaluating the lightness</em>. Lighting also impacts directly the elements in the landscapes. For instance, vegetation isn't the same in sunny places than in the dark coombes. And the quantity of snow isn't only function of the elevation but also of the surface's penumbra. So by also using our pseudo-derivated value as input for the computations of the other color components (hue and saturation), we can give to our landscape much more nuances, simulating some natural phenomena.</p>
+<div class="mathjax-formula">$$pseudoGrad\arraytwo{i}{j}=(2 \cdot heightMap\arraytwo{i+1}{j+1}-heightMap\arraytwo{i+1}{j}-heightMap\arraytwo{i}{j+1}) \cdot 26$$</div>
+
+<p>The shifting and incompletness in the evaluation of the gradient and its projection simulate the dot-product with a sun positioned somewhere north-east of the map...</p>
+
+<p>This value can be used for <em>much more than simply evaluating the lightness</em>. Lighting also impacts directly the elements in the landscapes. For instance, vegetation isn't the same in sunny places than in the dark coombes. And the quantity of snow isn't only function of the elevation but also of the surface's penumbra. So by also using our pseudo-derivated value as input for the computations of the other color components (hue and saturation), we can give to our landscape much more nuances, <strong>simulating some natural phenomena</strong>.</p>
 
 <p>For each point $(i,j, height)$ to display, I thus evaluate its color with the <i>highy-personal-and-not-so-reusable</i> following code (just so you can see the structure):</p>
 
@@ -215,20 +221,24 @@ ctx.fillStyle = ctx.strokeStyle = 'hsl('+[ // Using coercion for the ","
 ]+'%)';
 ]]></script>
 
-<p>&laquo;<i>It still looks ugly.</i>&raquo; Right, but we are adding relief effects to a flat surface, how can it look but disturbing? Let's now play with 3D.</p>
+<p>&laquo;<i>It still looks ugly</i>&raquo; ... Right, but we are adding relief effects to a flat surface, how can it look but disturbing? Let's now play with 3D.</p>
 
 <h3>Put everything into relief</h3>
 	
 <p>Almost nothing new here. The whole projection and rendering stuff has been covered in the previous articles. We just have to take each point $(i, j, height)$ of the heightmap and evaluate the position of the corresponding vertex $\hvecthree{x}{y}{z}$ with:</p>
 
-$$x = i \cdot d \\ y = j \cdot d \\ d = landscape.size  \div heightMap.size \\ z = height \cdot k \text{ ( k constant)}$$
+<div class="mathjax-formula">$$
+	x = i \cdot \frac{landscape.width}{heightMap.width} \\
+	y = j \cdot \frac{landscape.height}{heightMap.height} \\
+	z = height \cdot k \text{ ( k constant)}
+$$</div>
 
 <p>... then project it into screen coordinates.</p>
-<p>To check if the point should be displayed or not, ie. if it isn't hidden behind other features, we could use again the Painter's algorithm. This is what I used for the demo Loom (XXXXXXXXXXX).</p>
+<p>To check if the point should be displayed or not, we could use again the Painter's algorithm and its properties. This is what I used for the demo Loom (XXXXXXXXXXX).</p>
 
 [[ Loom ]]
 
-<p>The problem of this method is that it implies to sort an array containing all the elements (simple vertices or surfaces) waiting to be drawn. That is quite a <i>heavy</i> operation, given the level of details of our landscape. This is why I have to reduce the details when moving around, or else the browser wouldn't be able to ensure a correct framerate <small>(and would probably crash)</small>. I was though satisfied with the result, and ready to publish it.</p>
+<p>The problem of this method is that it implies to sort an array containing all the elements (simple vertices or surfaces) waiting to be drawn. That is quite a <i>heavy</i> operation, given the level of details of our landscape. This is why I have to reduce the details when moving around, or else the browser wouldn't be able to ensure a correct framerate <small>(and would probably crash)</small>.</p>
 
 <h3>Another way to see the world</h3>
 
@@ -237,18 +247,18 @@ $$x = i \cdot d \\ y = j \cdot d \\ d = landscape.size  \div heightMap.size \\ z
 <p>The idea behind this method is the following:</p>
 <ul>
 	<li>We define our whole scene by a bijective function $f:\hvectwo{a}{b} \mapsto \hvecfour{x}{y}{z}{color}$ with $\hvectwo{a}{b} \in \arraytwo{0.0}{1.0} \times \arraytwo{0.0}{1.0}$ and $x$, $y$, $z$ the coordinates of the vertex matching the input. It implies to find a way to express each element as an explicit-surface with its own unique domain.</li>
-	<li>We keep two buffers of the same length $canvas.width \times canvas.height$ : one for the $color$ values of the projected elements (the  <em>z-canvas</em>), and one for their $depth$ values (the <em>z-buffer</em>).</li>
+	<li>We keep two buffers of the same length $canvas.width \times canvas.height$ : one to display the $color$ values of the projected elements (the <em>canvas</em>), and one kept hidden, for their $depth$ values (the <em>z-buffer</em>).</li>
 	<li>Each frame, we sample randomly a high number of points $\hvectwo{a}{b}$, evaluate the corresponding vertex using $f$, and project it into $\hvecfour{p_x}{p_y}{depth}{color}$. If the pixel $\hvectwo{p_x}{p_y}$ as already been drawn, we check the z-buffer:
 		<ul>
 			<li>If $zBuffer\arraytwo{p_x}{p_y} < depth$, it means the element is actually behind the one already drawn, so we do nothing.</li>
 			<li>Else, the element should be represented above, so we update both $canvas\arraytwo{p_x}{p_y}$ with $color$ and $zBuffer\arraytwo{p_x}{p_y}$ with $depth$.</li>
 		</ul>
 	</li>
-	<li>As long as the camera and scene are static, we can keep drawing more random points each frame, until reaching a satisfactory density. If movements are required, then both canvas and z-buffer must be cleared <small>(unless you keep the 3D information of each points and reproject them accordingly to the new transform.)</small></li>
+	<li>As long as the camera and scene are static, we can keep drawing more random points each frame, until reaching a satisfactory density. If movements are required, then both canvas and z-buffer must be cleared <small>(unless you keep the 3D information of each points and reproject them accordingly to the new transform)</small>.</li>
 </ul>
-<p>However, we need some adaptations to use this method on our landscape. We don't have a <em>continuous</em> function to pick vertices out of our 2D <em>discrete</em> heightmap. We need a way to evaluate the height of the points all over our surface, and not only at the nodes.</p>
+<p>However, we need some adaptations to use this method on our landscape. We don't have a <strong>continuous</strong> function to pick vertices out of our 2D <strong>discrete</strong> heightmap. We need a way to evaluate the height of the points <em>all over</em> our surface, and not only at the nodes.</p>
 
-<p><strong>Triangulation and barycentric interpolation</strong> do the trick nicely. Here is how it works:</p>
+<p><strong>Triangulation + barycentric interpolation</strong> do the trick nicely. Here is how it works:</p>
 <ol>
 	<li>Given a point $P = \hvectwo{x}{y} \in \mathbb{R}^2$, find in which square $ABCD$ (unit square in the heightmap) it is, with $A = \hvectwo{X}{Y}$, $B = \hvectwo{X+1}{Y}$, $C = \hvectwo{X}{Y+1}$ and $D = \hvectwo{X+1}{Y+1}$, $X$ and $Y$ being the truncated value of $x$, $y$, ie $\hvectwo{X}{Y} \in \mathbb{N}^2$.</li>
     <li>Estimate in which triangle - $ABD$ or $ACD$ - $P$ is, using the condition: $d_x > d_y \to P \in ABD$ with $d_x$, $d_y$ the decimal part of $x$, $y$.</li>
@@ -271,7 +281,7 @@ $$x = i \cdot d \\ y = j \cdot d \\ d = landscape.size  \div heightMap.size \\ z
 
 <p>With this article, I've finished covering the mathematical angle in my JS1K '13 demos. I was thinking about briefly describing the implementation process and the useful Javascript tricks, but <a href="http://twitter.com/BlurSpline" title=" Twitter - @BlurSpline">@BlurSpline</a> did this great presentation already (http://slid.es/zz85/the-js1k-experience).</p>
 
-<p>To conclude, I highly recommend such contests to any enthusiast-programmer - at least to try once. They represent an immersive playground to improve your skills. They restrict your ressources (time, size, ...) wich results in a boost of your motivation and efficiency. And finally, they offer a great opportunity to meet highly talented people sharing the same masochistic relish as you, and to learn from each other.</p>
+<p>So to conclude, I highly recommend participating in such contests to any enthusiast-programmer - at least once. They represent an immersive playground to improve your skills. They restrict your ressources (time, size, ...) which results in a boost of your motivation and efficiency. And finally, they offer a great opportunity to meet highly talented people sharing the same masochistic relish as you, and to learn from each other. <em>A great experience</em>.</p>
 
 <div class="quote"><p>IMHO best compression scheme: imagination+time+math skills.</p><footer>Philippe Deschaseaux, winner of JS1k Spring '13 (<a href="ps://twitter.com/ehouais/status/313943128962908160" title="Twitter Status">here</a>)</footer></div>
 
@@ -287,10 +297,8 @@ $$x = i \cdot d \\ y = j \cdot d \\ d = landscape.size  \div heightMap.size \\ z
 						</footer>
 						<div id="disqus_thread"></div>
 						<script type="text/javascript">
-							/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
 							var disqus_shortname = 'aldream'; // required: replace example with your forum shortname
 
-							/* * * DON'T EDIT BELOW THIS LINE * * */
 							(function() {
 								var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
 								dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
@@ -307,9 +315,9 @@ $$x = i \cdot d \\ y = j \cdot d \\ d = landscape.size  \div heightMap.size \\ z
 
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
-        <script src="/js/plugins.js"></script>
-        <script src="/js/main.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
 		<script type="text/x-mathjax-config">
 			MathJax.Hub.Config({
 				TeX: { extensions: ["autobold.js"] },
@@ -317,8 +325,8 @@ $$x = i \cdot d \\ y = j \cdot d \\ d = landscape.size  \div heightMap.size \\ z
 			});
 		</script>
 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
-		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
+		<script type="text/javascript" src="../js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
+		<script type="text/javascript" src="../js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
 		<script>
 			// Syntax Highlighting:
 			SyntaxHighlighter.all()
