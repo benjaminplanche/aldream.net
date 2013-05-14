@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
-  <head>
-		<title>Procedural generation of landscapes - 2D example (with displacement for every point)</title>
+	<head>
+		<title>Procedural generation of landscapes - 2D example</title>
 		<meta charset="utf-8" />
 		</style>
 	</head>
@@ -40,11 +40,11 @@ function ComputeMidPointDisplacement(currentPolyline, amplitude) {
 		var i2 = i/2|0; // Index for the smaller current array
 		// JS trick: Math.floor(X) = 0|X if X positive, and X>>Y = 0|(X/(2*Y))
 		newPolyline[i] =
-			(i%2? // Odd - New element placed between the 2 ancient one:
-				(currentPolyline[i2] + currentPolyline[i2+1]) / 2  
+			(i%2? // Odd - New element placed between the 2 ancient one, with a small displacement:
+				((currentPolyline[i2] + currentPolyline[i2+1]) / 2 + amplitude * (.5 - Math.random())) 
 			:	// Even - Ancient element, so we just give it the orig. val.:
 				currentPolyline[i2]
-			) + amplitude * (.5 - Math.random()); // We add a displacement to every point (done in the js1k demo to save some bytes). The result thus won't be as confrom to the original "geography" that it could, but in my case it didn't matter (quite the opposite, as it allowed more randomness).
+			);
 		if (newPolyline[i] > 1) { newPolyline[i] = 1; }
 		if (newPolyline[i] < 0) { newPolyline[i] = 0; }
 	}
