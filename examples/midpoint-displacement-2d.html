@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+  <head>
+		<title>Procedural generation of landscapes - 2D example (with displacement for every point)</title>
+		<meta charset="utf-8" />
+		</style>
+	</head>
+	<body>
+		<canvas id="c"></canvas>
+		<script>
+			var b = document.body;
+			var c = document.getElementsByTagName('canvas')[0];
+			var a = c.getContext('2d');
+			document.body.clientWidth; // fix bug in webkit: http://qfox.nl/weblog/218
+		</script>
+		<script>
+
+
+// Demo Var:
+var previousPolyline=[],				// Polyline of the previous iteration
+	previousPolylineWithMidPoints=[],	// Polyline of the previous iteration with un-displaced midpoints
+	nextPolyline=[],					// Polyline with new displaced midpoints
+	time = 1,							// Timer
+	originalH = .8,						// Original alterations amplitude
+	h = originalH,						// Alterations amplitude. As h is divided by 2 every iteration, so is this coefficient. The first iterations thus generates the "rough geography" of our landscape while the last ones, with a smaller amplitude, add the details.
+	nbMaxIterations = 8,				// Max number of procedural iterations
+	currentIteration = 0;				// Current iteration
+
+///
+// Generate new intermediate points (and thus details) to the given polyline, by using stochastic interpolation (pseudo Mid-Point Displacement algorithm).
+// Parameters:
+//	- currentPolyline : Array of points
+//	- amplitude : Alterations amplitude
+// Returns: New polyline, more detailed
+///
+function ComputeMidPointDisplacement(currentPolyline, amplitude) {
+	var newDim = 2*currentPolyline.length - 1; // We want to add 1 new element between each couple of them, so the size will increase of dim-1.
+	var newPolyline = [];
+	for (var i = newDim; i--;) {
+		var i2 = i/2|0; // Index for the smaller current array
+		// JS trick: Math.floor(X) = 0|X if X positive, and X>>Y = 0|(X/(2*Y))
+		newPolyline[i] =
+			(i%2? // Odd - New element placed between the 2 ancient one:
+				(currentPolyline[i2] + currentPolyline[i2+1]) / 2  
+			:	// Even - Ancient element, so we just give it the orig. val.:
+				currentPolyline[i2]
+			) + amplitude * (.5 - Math.random()); // We add a displacement to every point (done in the js1k demo to save some bytes). The result thus won't be as confrom to the original "geography" that it could, but in my case it didn't matter (quite the opposite, as it allowed more randomness).
+		if (newPolyline[i] > 1) { newPolyline[i] = 1; }
+		if (newPolyline[i] < 0) { newPolyline[i] = 0; }
+	}
+	return newPolyline;
+}
+
+///
+//	Generate a new random polyline with 2 or 3 points.
+///
+function GenerateNewStartingPolyline() {
+	// Dirty. :D
+	for (var newPolyline = [], nbElements = (Math.random() > .5)? 3 : 2; nbElements-- ; newPolyline[nbElements] = Math.random());
+	return newPolyline;
+}
+
+///
+// Linear tweening
+// Parameters:
+//	- A - 1st value
+//	- B - 2nd value
+//	- coef - Tweening coef 
+// Returns: the intermediate value
+///
+function Tween (A, B, coef) {
+	return B*coef + A*(1-coef);
+}
+
+///
+// Display the tweened polyline
+///
+function Paint () {
+	var canvasWidth, canvasHeight, hDistanceBetweenPoints, hOffset, vOffset;
+	// Clearing the canvas:
+	canvasWidth = c.width = innerWidth-21;
+	canvasHeight = c.height = innerHeight-21;
+	a.fillStyle = '#fff';
+	a.fillRect(0, 0, canvasWidth, canvasHeight);
+	hDistanceBetweenPoints = canvasWidth / (previousPolylineWithMidPoints.length - 1) * .8;
+	hOffset = canvasWidth * .1;
+	vOffset = canvasHeight / 2;
+	canvasHeight *= .8;
+
+	var heightValue, isNewPoint;
+	var timeMod100 = time%100;
+	// Evaluate the 1st point:
+	if (previousPolylineWithMidPoints[i] == nextPolyline[i] || timeMod100 > 75) {
+		heightValue = nextPolyline[i];
+		isNewPoint = false;
+	}
+	else {
+		heightValue = Tween(previousPolylineWithMidPoints[i], nextPolyline[i], timeMod100/75);
+		isNewPoint = true;
+	}
+	
+	a.strokeStyle = '#99b';
+	for(var i = previousPolylineWithMidPoints.length; i--;) { // Drawing the polyline:
+		// Draw the point:
+		a.fillStyle = isNewPoint? '#00f' : '#777';
+		a.beginPath();
+		a.arc((i+1)*hDistanceBetweenPoints + hOffset, (heightValue - .5) * canvasHeight + vOffset, 2, 0, 2*Math.PI);
+		a.fill();
+		a.stroke();
+		
+		// Evaluate the next point to draw the segment:
+		a.moveTo((i+1)*hDistanceBetweenPoints + hOffset, (heightValue - .5) * canvasHeight + vOffset);
+		if (previousPolylineWithMidPoints[i] == nextPolyline[i] || timeMod100 > 75) {
+			heightValue = nextPolyline[i];
+			isNewPoint = false;
+		}
+		else {
+			heightValue = Tween(previousPolylineWithMidPoints[i], nextPolyline[i], timeMod100/75);
+			isNewPoint = true;
+		}
+		a.lineTo(i*hDistanceBetweenPoints + hOffset, (heightValue - .5) * canvasHeight + vOffset);
+		a.stroke();
+	}
+	
+	// Draw the "last" (first) point:
+	a.fillStyle = isNewPoint? '#77c' : '#777';
+	a.beginPath();
+	a.arc(hOffset, (heightValue - .5) * canvasHeight + vOffset, 2, 0, 2*Math.PI);
+	a.fill();
+	a.stroke();
+};
+
+
+// Shim layer with setTimeout fallback // Thank to Paul Irish (http://paulirish.com/2011/requestanimationframe-for-smart-animating)
+window.requestAnimFrame = (function(){
+  return window.requestAnimationFrame ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
+function Render() {
+	if (time%100 == 0) {
+		if (currentIteration == nbMaxIterations) { // We restart the demo
+			previousPolylineWithMidPoints = previousPolyline = nextPolyline = GenerateNewStartingPolyline();
+			h = originalH;
+			currentIteration = 0;
+		}
+		else { // We iterate
+			previousPolyline = nextPolyline;
+			nextPolyline = ComputeMidPointDisplacement(previousPolyline, h); // Generate the more-detailed polyline with displacements
+			previousPolylineWithMidPoints = ComputeMidPointDisplacement(previousPolyline, 0); // Generate the more-detailed polyline without displacements, to display the tweening
+			h /= 2; // Every iteration, we reduce the "error" amplitude, to generate more subtle alterations.
+			currentIteration++;
+		}
+	}
+	requestAnimFrame(Render);
+	Paint();
+	time++;
+}
+
+previousPolylineWithMidPoints = previousPolyline = nextPolyline = GenerateNewStartingPolyline();
+Render();
+
+		</script>
+	</body>
+</html>
