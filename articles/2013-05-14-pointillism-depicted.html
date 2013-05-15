@@ -14,11 +14,11 @@
         <meta name="viewport" content="width=device-width">
 
 		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="/css/normalize.css"/>
-        <link rel="stylesheet" href="/css/main.css"/>
-		<link href="/css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
-		<link href="/css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
-        <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
+        <link rel="stylesheet" href="../css/normalize.css"/>
+        <link rel="stylesheet" href="../css/main.css"/>
+		<link href="../css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
+		<link href="../css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body id="blog">
 			<!--[if lt IE 7]>
@@ -27,21 +27,21 @@
 
 			<!-- Add your site or application content here -->
 			<header id="main-header">
-				<h1><a href="/">Aldream</a></h1>
+				<h1><a href="../">Aldream</a></h1>
 				<nav id="menu-top">
 					<ul>
-						<a href="/blog"><li>Blog</li></a>
-						<a href="/demo"><li>Demo</li></a>
-						<a href="/projects"><li>Projects</li></a>
-						<a href="/about"><li>About</li></a>
+						<a href="../blog"><li>Blog</li></a>
+						<a href="../demo"><li>Demo</li></a>
+						<a href="../projects"><li>Projects</li></a>
+						<a href="../about"><li>About</li></a>
 					</ul>
 				</nav>
 				<nav id="menu-top-mini">
 					<ul>
-						<li><a href="/blog" title="Blog"><img width=22 alt="Blog" src="/img/glyphicons-color/book-blue.png"/></a></li>
-						<li><a href="/demo" title="Demo"><img width=25 alt="Demo" src="/img/glyphicons-color/eye-green.png"/></a></li>
-						<li><a href="/projects" title="Projects"><img width=25 alt="Projects" src="/img/glyphicons-color/star-yellow.png"/></a></li>
-						<li><a href="/about" title="About"><img width=25 alt="About" src="/img/glyphicons-color/user-red.png"/></a></li>
+						<li><a href="../blog" title="Blog"><img width=22 alt="Blog" src="../img/glyphicons-color/book-blue.png"/></a></li>
+						<li><a href="../demo" title="Demo"><img width=25 alt="Demo" src="../img/glyphicons-color/eye-green.png"/></a></li>
+						<li><a href="../projects" title="Projects"><img width=25 alt="Projects" src="../img/glyphicons-color/star-yellow.png"/></a></li>
+						<li><a href="../about" title="About"><img width=25 alt="About" src="../img/glyphicons-color/user-red.png"/></a></li>
 					</ul>
 				</nav>
 			</header>
@@ -51,10 +51,10 @@
 					<div>
 <h1>Pointillism, depicted</h1>
 
-<p>To conclude my series of articles describing the tricks I learned and used for the <a href="http://js1k.com/2013-spring/" title="JS1K 2013">JS1K Spring-2013 challenge</a>, I will now explain how &laquo; <strong>Pointillism</strong> &raquo; (<a href="http://js1k.com/2013-spring/demo/1507" title="Demo on JS1K">js1k</a> / <a href="/demo#js1k-2013-pointillism" title="&laquo; Pointillism &raquo; - Demo in my sandbox">local</a>) was done, since it received such nice reviews.</p>
-<p>I will thus cover the <strong>lightweight procedural method</strong> used to generate the landscape, and the <strong><em>pointillist-like rendering</em></strong>.</p>
+<p>To conclude my series of articles describing the tricks I learned and used for the <a href="http://js1k.com/2013-spring/" title="JS1K 2013">JS1K Spring-2013 challenge</a>, I will now explain how &laquo; <strong>Pointillism</strong> &raquo; (<a href="http://js1k.com/2013-spring/demo/1507" title="Demo on JS1K">js1k</a> / <a href="../demo#js1k-2013-pointillism" title="&laquo; Pointillism &raquo; - Demo in my sandbox">local</a>) was done, since it received such nice reviews.</p>
+<p>I will thus cover the <strong>lightweight procedural method</strong> used to generate the landscape, and the <strong><em>pointillist-like</em> rendering</strong>.</p>
 
-<p>I will assume you read my previous articles (<a href="/article/2013-04-23-mesh-breeding.html"title="Article - Mesh Breeding">Mesh Breeding</a> and especially <a href="/article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">Painter's Algorithm</a>), since they already cover the main notions of 3D generation and rendering.
+<p>I will assume you've already read my previous articles (<a href="../article/2013-04-23-mesh-breeding.html"title="Article - Mesh Breeding">Mesh Breeding</a> and especially <a href="../article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">Painter's Algorithm</a>), since they cover the basic notions of 3D generation and rendering.
 
 <div style="display:none;">$
 \newcommand{\hvectwo}[2]
@@ -77,16 +77,16 @@ $</div>
 
 <h2>Generating the landscape</h2>
 
-<p>The creation of <em>fractal landscapes</em><a class="refing" id="refing-1" href="#refed-1" title="Ref - Wikipedia - Fractal Landscape">[1]</a> is a famous and well-covered subject in Computer Graphics. Using <strong>stochastic algorithms</strong> emphasizing realism or performance, the aim is to generate a landform (mountains, lakes, plateau,...) and then to <i>give life to it</i> by painting it using Nature's logic (light-green meadow in flat sunny areas, white snow clinging to peaks,...), or by populating it with other 3D objects (trees, buildings,... <small>which can also be procedurally generated btw</small>).</p>
+<p>The creation of <em>fractal landscapes</em><a class="refing" id="refing-1" href="#refed-1" title="Ref - Wikipedia - Fractal Landscape">[1]</a> is a famous and well-covered subject in Computer Graphics. Using <strong>stochastic algorithms</strong> emphasizing realism or performance, the aim is to generate a landform (mountains, lakes, plateau,...) and then to <i>give life to it</i> by painting it using <em>Nature's logic</em> (light-green meadow in flat sunny areas, white snow clinging to peaks,...), or by populating it with other 3D objects (trees, buildings,... <small>which can also be procedurally generated btw</small>).</p>
 
 <h3>Topography</h3>
-<p>A simple landform (continuous surface without caves) can be represented by a 2D <em>heightmap</em>, a matrix containing the elevation of sampled points. If we get such a matrix, it is thus possible to convert it into a 3D landscape, by using its indices as x and y coordinates, and the elevation as z.</p>
+<p>A simple landform (continuous surface without caves or overhangs) can be represented by a 2D <em>heightmap</em>, a matrix containing the elevation of sampled points. If we get such a matrix, it is thus possible to convert it into a 3D landscape, by using its indices as $x$ and $y$ coordinates for our vertices, and the elevation as $z$.</p>
 
 <p>A method to generate such heightmap must respect some criteria. It must be <em>stochastic</em>, ie &laquo; pseudo-random &raquo; (random enough to allow a wide range of landforms, but predictable enough to give some controls over it), exhibit <em>fractal behavior</em> (covering both the global molding and the detailed surface), and be <em>coherent</em>, ie without any discontinuity (unless we want special topographic features like cliffs).</em>
 
-<p>Some noise functions meet those conditions. The <strong>Perlin Noise</strong><a class="refing" id="refing-2" href="#refed-2" title="Ref - New York University - Profile - Ken Perlin">[2]</a> is especially famous and widely used, being quite easy to implement though giving smooth results.</p>
+<p>Some noise functions meet those conditions. The <strong>Perlin Noise</strong><a class="refing" id="refing-2" href="#refed-2" title="Ref - New York University - Profile - Ken Perlin">[2]</a> is especially famous and widely used, being quite easy to implement while giving smooth results.</p>
 
-<p>Alas, &laquo; easy to implement &raquo; doesn't always mean &laquo; short &raquo;. Even though it can be condensed in few lines, it was still too long for an 1K demo. I thus opted for another well-know method: the <strong>Midpoint-Displacement algorithm</strong>. Its main idea is, given a 2D grid containing various values, to insert intermediate ones between each couple to induce details. The new values are computed using the mean of the surrounding points and adding a small error to generate new features. The amplitude of the error must be inversely proportional to the iteration / to the distance between the points to give the fractal-like result (the addition of big errors in the first iterations gives the landscape its global shape while the following iterations add smaller and smaller details to the surface).</p>
+<p>Alas, &laquo; easy to implement &raquo; doesn't always mean &laquo; short &raquo;. Even though it can be condensed in few lines, it was still too long for an 1K demo. I thus opted for another well-known method: the <strong>Midpoint-Displacement algorithm</strong>. Its main idea is, given a 2D grid containing various values, to insert intermediate ones between each couple to induce details. The new values are computed using the mean of the surrounding points and adding a small error to generate new features. The amplitude of the error must be inversely proportional to the iteration / to the distance between the points, to give the fractal-like result (the addition of important errors in the first iterations gives the landscape its global shape while the following iterations add smaller and smaller details to the surface).</p>
 
 <p>Here is a simple implementation of this algorithm for a 2D map, using modulos to evaluate the position of each points in the current square:</p>
 <script type="syntaxhighlighter" class="brush: js"><![CDATA[
@@ -184,19 +184,19 @@ for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap(); i--; heightM
 
 <h3>Coloring</h3>
 
-<p>Given the heightmap, it's quite easy to <em>assign color to every point depending on its elevation</em>: if the value equals the min. boundary, then paint it light blue to represent water; if it's above a given limit then make it white as snow; if it's between then make a gradient from vegetal-green to rocky-brown with a function using the height; ...</p>
+<p>Given the heightmap, it's quite easy to <em>assign color to every point depending on its elevation</em>: if the value equals the min. boundary, then paint it light blue to represent water; if it's above a given limit then make it white as snow; if it's somewhere between then make a gradient from vegetal-green to rocky-brown with a function using the height; ...</p>
 
-<p>But getting a realist-enough result needs much tweaking, and also more inputs. One of the keys to give more depth and realism to a landscape is to take <strong>lighting</strong> into account. Computing shadows is out of order given our 1K limit, but simulating penumbra is easy using the <strong>incline</strong>.</p>
+<p>But getting a realist-enough result needs much tweaking, and also more inputs. One of the keys to add depth and realism to a landscape is to take <strong>lighting</strong> into account. Computing shadows is out of order given our 1K limit, but <strong>simulating penumbra is easy using the incline</strong>.</p>
 
-<p>The traditionnal method to evaluate how much sunlight a surface gets is by computing the dot-product of the surface's normal (or local gradient) and the unit vector representing the direction from the center of the surface to the point representing the Sun. We thus get the cosine value of the angle between these two vectors - value which is proportional to the <em>luminance</em> of the surface. By multiplying it with the <em>reflectivity</em> of the surface (high for snow, low for vegetation, ...), you get your color's <strong>lightness</strong> <small>(remember: &laquo; Learn to love HSL color system &raquo;)</small>.</p>
+<p>The traditionnal method to evaluate how much sunlight a surface gets is by computing the dot-product of the surface's normal (or local gradient) and the unit vector representing the direction from the center of the surface to the point representing the Sun. We thus get the cosine value of the angle between these two vectors - value which can be considered as proportional to the <em>luminance</em> of the surface. By multiplying it with the <em>reflectivity</em> of the surface (high for snow, low for vegetation, ...), you get your color's <strong>lightness</strong> <small>(remember: &laquo; Learn to love HSL color system &raquo;)</small>.</p>
 
 <p>Alas, here again, evaluating the local gradient and using a real dot-product was too long, so I approximated both operations by the following one:</p>
 
 <div class="mathjax-formula">$$pseudoGrad\arraytwo{i}{j}=(2 \cdot heightMap\arraytwo{i+1}{j+1}-heightMap\arraytwo{i+1}{j}-heightMap\arraytwo{i}{j+1}) \cdot 26$$</div>
+<p>The shifting and incompletness in the evaluation of this gradient and its projection simulate the dot-product with a sun positioned somewhere north-east of the map.. Hacky, static and far from perfect, but it does the trick...</p>
 
-<p>The shifting and incompletness in the evaluation of the gradient and its projection simulate the dot-product with a sun positioned somewhere north-east of the map...</p>
 
-<p>This value can be used for <em>much more than simply evaluating the lightness</em>. Lighting also impacts directly the elements in the landscapes. For instance, vegetation isn't the same in sunny places than in the dark coombes. And the quantity of snow isn't only function of the elevation but also of the surface's penumbra. So by also using our pseudo-derivated value as input for the computations of the other color components (hue and saturation), we can give to our landscape much more nuances, <strong>simulating some natural phenomena</strong>.</p>
+<p>This value can be used for <em>much more than simply evaluating the lightness</em>. Lighting also impacts directly the elements in the landscapes. For instance, vegetation isn't the same in sunny places than in the dark coombes. And the quantity of snow isn't only function of the elevation but also of the surface's penumbra. So by using our pseudo-derivated value as input for the computations of the other color components (hue and saturation), we can give to our landscape much more nuances, <strong>imitating some natural phenomena</strong>.</p>
 
 <p>For each point $(i,j, height)$ to display, I thus evaluate its color with the <i>highy-personal-and-not-so-reusable</i> following code (just so you can see the structure):</p>
 
@@ -221,11 +221,11 @@ ctx.fillStyle = ctx.strokeStyle = 'hsl('+[ // Using coercion for the ","
 ]+'%)';
 ]]></script>
 
-<p>&laquo; <i>It still looks ugly</i> &raquo; ... Right, but we are adding relief effects to a flat surface, how can it look but disturbing? Let's now play with 3D.</p>
+<p>&laquo; <i>It still looks ugly</i> &raquo; ... Right, but we are adding relief effects to a flat surface, how can it look but disturbing? Let's <em>put it into perspective</em>.</p>
 
-<h3>Put everything into relief</h3>
+<h3>Give it relief</h3>
 	
-<p>Almost nothing new here. The whole projection and rendering stuff has been covered in the previous articles (<a href="/article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">hop</a>). We just have to take each point $(i, j, height)$ of the heightmap and evaluate the position of the corresponding vertex $\hvecthree{x}{y}{z}$ with:</p>
+<p>The whole projection and rendering stuff has been covered in the previous articles (<a href="../article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">hop</a>). We just have to take each point $(i, j, height)$ of the heightmap and evaluate the position of the corresponding vertex $\hvecthree{x}{y}{z}$ with:</p>
 
 <div class="mathjax-formula">$$
 	x = i \cdot \frac{landscape.width}{heightMap.width} \\
@@ -234,21 +234,21 @@ ctx.fillStyle = ctx.strokeStyle = 'hsl('+[ // Using coercion for the ","
 $$</div>
 
 <p>... then project it into screen coordinates.</p>
-<p>To check if the point should be displayed or not, we could use again the Painter's algorithm and its properties. This is what I used for the demo <a href="/demo#js1k-2013-loom" title="&laquo; Loom &raquo; - Demo">&laquo; Loom &raquo;</a>.</p>
+<p>To check if the point should be displayed or not, we could use again the Painter's algorithm and its properties. Check the demo <a href="../demo#js1k-2013-loom" title="&laquo; Loom &raquo; - Demo">&laquo; Loom &raquo;</a> to see how it looks.</p>
 
-<p>The problem of this method is that it implies to sort an array containing all the elements (simple vertices or surfaces) waiting to be drawn. That is quite a <i>heavy</i> operation, given the level of details of our landscape. This is why I have to reduce the details when moving around, or else the browser wouldn't be able to ensure a correct framerate <small>(and would probably crash)</small>.</p>
+<p>The problem of this method is that it implies to sort an array containing all the elements (simple vertices or surfaces) waiting to be drawn. That is quite a <i>heavy</i> operation, given the level of details of our landscape. This is why I have to reduce the details when moving around in &laquo; Loom &raquo;, or else the browser wouldn't be able to ensure a correct framerate <small>(and would probably crash)</small>.</p>
 
 <h3>Another way to see the world</h3>
 
-<p>While polishing some aspect of the demo, I came accross an article<a class="refing" id="refing-5" href="#refed-5" title="Ref - Román Cortés - Article - &laquo; 1k Rose &raquo;">[5]</a> by <a href="http://twitter.com/romancortes" title=" Twitter - @romancortes">@romancortes</a> about his great entry for <a href="http://js1k.com/2012-love/" title="JS1K Love '12 Challenge">JS1K Love '12</a>. There, he describes in details the rendering method he used, combining the use of a <strong>z-buffer</strong> and a <strong>Monte-Carlo surface sampling</strong>. I thus decided to try to apply it to my landscapes, and create a new demo.</p>
+<p>While polishing some aspect of the demo, I came accross an article<a class="refing" id="refing-5" href="#refed-5" title="Ref - Román Cortés - Article - &laquo; 1k Rose &raquo;">[5]</a> by <a href="http://twitter.com/romancortes" title=" Twitter - @romancortes">@romancortes</a> about his great entry for <a href="http://js1k.com/2012-love/" title="JS1K Love '12 Challenge">JS1K Love '12</a>. There, he describes in details the rendering method he employed, combining the use of a <strong>z-buffer</strong> and a <strong>Monte-Carlo surface sampling</strong>. I thus decided to try to apply it to my landscapes, and create a new demo.</p>
 
 <p>The idea behind this method is the following:</p>
 <ul>
-	<li>We define our whole scene by a bijective function $f:\hvectwo{a}{b} \mapsto \hvecfour{x}{y}{z}{color}$ with $\hvectwo{a}{b} \in \arraytwo{0.0}{1.0} \times \arraytwo{0.0}{1.0}$ and $x$, $y$, $z$ the coordinates of the vertex matching the input. It implies to find a way to express each element as an explicit-surface with its own unique domain.</li>
+	<li>We define our whole scene by a function $f:\hvectwo{a}{b} \mapsto \hvecfour{x}{y}{z}{color}$, ie a <em>surjective</em> function $f$ which maps every $\hvectwo{a}{b} \in \arraytwo{0.0}{1.0} \times \arraytwo{0.0}{1.0}$ to a vertex $\hvecfour{x}{y}{z}{color}$ of the scene (our landform's surface in our case). It implies to find a way to express each element as an explicit-surface with its own unique domain.</li>
 	<li>We keep two buffers of the same length $canvas.width \times canvas.height$ : one to display the $color$ values of the projected elements (the <em>canvas</em>), and one kept hidden, for their $depth$ values (the <em>z-buffer</em>).</li>
-	<li>Each frame, we sample randomly a high number of points $\hvectwo{a}{b}$, evaluate the corresponding vertex using $f$, and project it into $\hvecfour{p_x}{p_y}{depth}{color}$. If the pixel $\hvectwo{p_x}{p_y}$ as already been drawn, we check the z-buffer:
+	<li>Each frame, we sample randomly a high number of points $\hvectwo{a}{b}$, evaluate the corresponding vertices using $f$, and project them into $\hvecfour{p_x}{p_y}{depth}{color}$. If the pixel $\hvectwo{p_x}{p_y}$ as already been drawn, we check the z-buffer:
 		<ul>
-			<li>If $zBuffer\arraytwo{p_x}{p_y} < depth$, it means the element is actually behind the one already drawn, so we do nothing.</li>
+			<li>If $zBuffer\arraytwo{p_x}{p_y} < depth$, the element is actually behind the one already drawn, so we do nothing.</li>
 			<li>Else, the element should be represented above, so we update both $canvas\arraytwo{p_x}{p_y}$ with $color$ and $zBuffer\arraytwo{p_x}{p_y}$ with $depth$.</li>
 		</ul>
 	</li>
@@ -316,10 +316,10 @@ $$</div>
 			<footer id="page-footer">&copy; Aldream / Benjamin (Bill) Planche 2013 - <a href="#blog-article" title="Up">Fly high</a></footer>
 
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
-        <script src="/js/plugins.js"></script>
-        <script src="/js/main.js"></script>
+        <script src="..//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
 		<script type="text/x-mathjax-config">
 			MathJax.Hub.Config({
 				TeX: { extensions: ["autobold.js"] },
@@ -327,8 +327,8 @@ $$</div>
 			});
 		</script>
 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
-		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
+		<script type="text/javascript" src="../js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
+		<script type="text/javascript" src="../js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
 		<script>
 			// Syntax Highlighting:
 			SyntaxHighlighter.all()
