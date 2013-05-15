@@ -495,11 +495,11 @@ article p {
 	line-height: 2em;
 	margin: 2em 0;
 }
-#blog-article ul  {
+#blog-article ul , #blog-article ol {
 	padding: .1em 5em 0 6.5em;
 	line-height: 2em;
 }
-#blog-article ul ul  {
+#blog-article ul ul, #blog-article ol ul, #blog-article ul ol  {
 	padding: 0 0 0 2em;
 }
 #blog-article  img {
@@ -514,6 +514,12 @@ article p {
 	margin: auto;
 } 
 
+article .example {
+	margin: 2em 0;
+}
+article .small-example {
+	display: inline-block;
+}
 article .example p {
 	margin: 0 !important;
 	padding: 0 !important;
@@ -535,34 +541,68 @@ article .example p {
 }
 .syntaxhighlighter-compacted {
 	float:left;
-	margin: 0 1em 0 0;
+	margin: 1em 2em 0 0;
 	padding: 0;
 }
 .syntaxhighlighter-compacted  .syntaxhighlighter {
 	width: 35em !important;
-	height: 14em;
+	margin: 1em 0 !important;
+	height: 17.5em;
 	overflow:auto;
 }
+.syntaxhighlighter  {
+	border-radius: 5px;
+}
+.syntaxhighlighter .expandSource {
+	color: hsl(133, 74%, 39%);
+}
+	
 .quote {
 	font-size: 1.2em;
 	margin: 0 .5em;
 	padding: 0 1em;
-	color: hsl(217, 74%, 70%);
 }
-.quote:before {
+.quote p {
+	margin-bottom: 0 !important;
+	color: hsl(217, 74%, 39%);
+}
+.quote p:before {
 	content:'«';
 	font-size: 10em;
 	position: absolute;
 	left: .35em;
 	color: hsla(217, 74%, 70%, .2);
-}                   
-.quote:after {
+}
+.quote footer {
+	color: hsl(217, 74%, 70%) !important;
+	font-size: 1em;
+	text-align: right;
+	margin: 0;
+	margin-right: 5em;
+}  
+.quote footer:after {
 	content:'»';
 	font-size: 10em;
 	position: absolute;
 	right: .35em;
-	margin-top: -.31em;
+	margin-top: -.75em;
 	color: hsla(217, 74%, 70%, .2);
+}
+.note {
+	font-size: .9em;
+	background: hsl(217, 74%, 92%);
+	border-radius: 10px;
+	margin: 1em 6em !important;
+	color: #333;
+}
+.note:before {
+	content:'☄';
+	font-size: 7em;
+	position: absolute;
+	left: 1.25em;
+	margin-top: .3em;
+	color: hsla(0,0%,100%,.3);
+
 }
 #blog-article li  {
 	margin-bottom: .5em;
@@ -583,7 +623,7 @@ article a, footer a {
 					-ms-transition: all .5s;
 }
 article a:hover {
-	color: #fff;
+	color: #fff !important;
 }
 footer a:hover {
 	color: #222;
