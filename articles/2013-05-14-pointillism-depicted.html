@@ -75,23 +75,25 @@
 }
 $</div>
 
-<h2>Generating the landscape</h2>
+<h2>Land-form</h2>
 
 <p>The creation of <em>fractal landscapes</em><a class="refing" id="refing-1" href="#refed-1" title="Ref - Wikipedia - Fractal Landscape">[1]</a> is a famous and well-covered subject in Computer Graphics. Using <strong>stochastic algorithms</strong> emphasizing realism or performance, the aim is to generate a landform (mountains, lakes, plateau,...) and then to <i>give life to it</i> by painting it using <em>Nature's logic</em> (light-green meadow in flat sunny areas, white snow clinging to peaks,...), or by populating it with other 3D objects (trees, buildings,... <small>which can also be procedurally generated btw</small>).</p>
 
-<h3>Topography</h3>
-<p>A simple landform (continuous surface without caves or overhangs) can be represented by a 2D <em>heightmap</em>, a matrix containing the elevation of sampled points. If we get such a matrix, it is thus possible to convert it into a 3D landscape, by using its indices as $x$ and $y$ coordinates for our vertices, and the elevation as $z$.</p>
+<p>A simple <strong>landform</strong> (continuous surface without caves or overhangs) can be represented by a 2D <em>heightmap</em>, a matrix containing the elevation of sampled points. If we get such a matrix, it is thus possible to convert it into a 3D landscape, by using its indices as $x$ and $y$ coordinates for our vertices, and the elevation as $z$.</p>
 
-<p>A method to generate such heightmap must respect some criteria. It must be <em>stochastic</em>, ie &laquo; pseudo-random &raquo; (random enough to allow a wide range of landforms, but predictable enough to give some controls over it), exhibit <em>fractal behavior</em> (covering both the global molding and the detailed surface), and be <em>coherent</em>, ie without any discontinuity (unless we want special topographic features like cliffs).</em>
+<p>A method to generate such heightmap must respect some criteria. It must be <strong>stochastic</strong>, ie &laquo; <em>pseudo-random</em> &raquo; (<em>random</em> enough to allow a wide range of landforms, but <em>predictable</em> enough to give some controls over it), exhibit <strong>fractal behavior</strong> (covering both the global molding and the detailed surface), and be <strong>coherent</strong>, ie without any discontinuity <small>(unless we want special topographic features like cliffs)</small>.</em>
 
 <p>Some noise functions meet those conditions. The <strong>Perlin Noise</strong><a class="refing" id="refing-2" href="#refed-2" title="Ref - New York University - Profile - Ken Perlin">[2]</a> is especially famous and widely used, being quite easy to implement while giving smooth results.</p>
 
-<p>Alas, &laquo; easy to implement &raquo; doesn't always mean &laquo; short &raquo;. Even though it can be condensed in few lines, it was still too long for an 1K demo. I thus opted for another well-known method: the <strong>Midpoint-Displacement algorithm</strong>. Its main idea is, given a 2D grid containing various values, to insert intermediate ones between each couple to induce details. The new values are computed using the mean of the surrounding points and adding a small error to generate new features. The amplitude of the error must be inversely proportional to the iteration / to the distance between the points, to give the fractal-like result (the addition of important errors in the first iterations gives the landscape its global shape while the following iterations add smaller and smaller details to the surface).</p>
+<p>Alas, &laquo; easy to implement &raquo; doesn't always mean &laquo; short &raquo;. Even though it can be condensed in few lines, it was still too long for an 1K demo. I thus opted for another well-known method: the <strong>Midpoint-Displacement algorithm</strong>. Its main idea is, given a 2D grid containing various values, to insert intermediate ones between each couple to induce details.</p>
+
+<p>The new values are computed by using the mean of the surrounding points and by adding a small error to generate new features. The amplitude of the error must be inversely proportional to the iteration / to the distance between the points, to give the <i>fractal-like</i>f result (the addition of important errors in the first iterations gives the landscape its global shape while the following iterations add smaller and smaller details to the surface).</p>
 
 <p>Here is a simple implementation of this algorithm for a 2D map, using modulos to evaluate the position of each points in the current square:</p>
 <script type="syntaxhighlighter" class="brush: js"><![CDATA[
 ///
-// Generate new intermediate points (and thus details) to the given heightmap, by using stochastic interpolation (Midpoint-Displacement algorithm).
+// Generate new intermediate points (and thus details) to the given heightmap, by using stochastic
+// interpolation (Midpoint-Displacement algorithm).
 // Parameters:
 //	- currentMap : Array of points (square matrix)
 //	- amplitude : Alterations amplitude
@@ -99,33 +101,41 @@ $</div>
 ///
 function ComputeMidPointDisplacement(currentMap, amplitude) {
 	var dim = Math.sqrt(currentMap.length)+.5|0;
-	var newDim = 2*dim - 1; // We want to add 1 new element between each couple of them, so the size will increase of dim-1.
+	// We will add 1 new element between each couple of them, so the size will increase of dim-1:
+	var newDim = 2*dim - 1;
 	var newMap = [];
 	
 	for (var i = newDim; i--;) for (var j = newDim; j--;) {
 		var iMap = i*newDim + j,
-			iSMap = dim*(i>>1) + j/2|0; // Index of the top-left corner of the square in the smaller matrix.
+			// Index of the top-left corner of the square in the smaller matrix:
+			iSMap = dim*(i>>1) + j/2|0; 
 		// JS trick: Math.floor(X) = 0|X if X positive, and X>>Y = 0|(X/(2*Y))
 		newMap[iMap] =
 			i%2?
-				j%2?// Element on an odd row and odd col: it corresponds to a square center, so we populate it as shown in the following ascii schema:
-					// 1  0  1		with X representing the current element, and the numbers the weight used to compute the mean value.
-					// 0  X  0		So here, we use the value of the corners of the parent square to get the value of the new point, and we add a small
-					// 1  0  1		error to it.
-					((currentMap[iSMap] + currentMap[iSMap+1] +currentMap[iSMap+dim] +currentMap[iSMap+dim+1]) / 4 + amplitude * (.5 - Math.random()))
+				j%2?// Element on an odd row and odd col: it corresponds to a square center,
+					// so we populate it as shown in the following ascii schema:
+					// 1  0  1		with X representing the current element, and the numbers the
+					// 0  X  0		weight used to compute the mean value. So here, we use the value
+					// 1  0  1		of the corners of the parent square to get the value of the new
+					//				point, and we add a small error to it.
+					((currentMap[iSMap] + currentMap[iSMap+1] + currentMap[iSMap+dim]
+						+ currentMap[iSMap+dim+1]) / 4 + amplitude * (.5 - Math.random()))
 					
-				:	// Element on an odd row and even col: we give it the avg of the elements on the prev. and next cols:
+				:	// Element on an odd row and even col: we give it the avg of the elements on
+					// the prev. and next cols:
 					// 1  0  0		Example
 					// X  0  0
 					// 1  0  0
 					(currentMap[iSMap] + currentMap[iSMap+dim]) / 2
 			:
-				j%2?// Element on an even row and odd col: we give it the avg of the elements on the prev. and next rows:
+				j%2?// Element on an even row and odd col: we give it the avg of the elements on
+					// the prev. and next rows:
 					// 1  X  1		Example
 					// 0  0  0
 					// 0  0  0
 					(currentMap[iSMap] + currentMap[iSMap+1]) / 2
-				:	// Element on an even row and even col: it's one of the square corners, so we just give it the orig. val.:
+				:	// Element on an even row and even col: it's one of the square corners,
+					// so we just give it the orig. val.:
 					currentMap[iSMap];
 		
 		// Just to keep the values into control (boundaries):
@@ -145,7 +155,9 @@ function GenerateNewStartingMap() { // Generate a new random 2x2 map.
 
 var nbMaxIterations = 8,	// Max number of procedural iterations
 	h = 16;					// Amplitude of the error
-for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap(); i--; heightMap = ComputeMidPointDisplacement(heightMap, h /= 2));
+for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap();
+	i--;
+	heightMap = ComputeMidPointDisplacement(heightMap, h /= 2));
 ]]></script>
 
 <p>One problem this algorithm has is the squared artifacts it generates. A variant has been developed, the <strong>Diamond-Square algorithm</strong><a class="refing" id="refing-3" href="#refed-3" title="Ref - Wikipedia - Diamond-Square algorithm">[3]</a><a class="refing" id="refing-4" href="#refed-4" title="Ref - Paul Martz - Article on Gameprogrammer.com - &laquo; Generating Random Fractal Terrain &raquo;">[4]</a> to prevent them, but this requires another step per square, lengthening the function. To <i>reduce</i> those artifacts without exceeding the size limit, I made a mix of both methods, mixing points from the previous map and the already-generated ones from the new map to evaluate the value of the mid points:</p>
@@ -154,37 +166,73 @@ for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap(); i--; heightM
 		...
 		newMap[iMap] =
 			(i%2?
-				j%2?// Element on an odd row and odd col: it corresponds to a square center, so we populate it as shown in the following ascii schema:
-					// 3  0  0		with X representing the current element, and the numbers those used to eval. it.
-					// 0  X  1		It's kind of a mix between the midpoint displacement and the diamond-square algo: we try to reduce the artifacts 
-					// 0  1  1		the 1st algo may generate, without the 2nd step required by the other.
-					(newMap[iMap+newDim] + newMap[iMap+1] + newMap[iMap+1+newDim] + 3*currentMap[iSMap]) / 6
-					// or (newMap[iMap+newDim] + newMap[iMap+1] + 2*currentMap[iSMap]) / 4 if like me you don't have enough place for the extra weight.
+				j%2?// Element on an odd row and odd col: it corresponds to a square center,
+					// so we populate it as shown in the following ascii schema:
+					// 3  0  0		with X representing the current element, and the numbers the
+					// 0  X  1		weight used to compute the mean value.
+					// 0  1  1		
+					(newMap[iMap+newDim] + newMap[iMap+1] + newMap[iMap+1+newDim]
+						+ 3*currentMap[iSMap]) / 6
 					
-				:	// Element on an odd row and even col: we give it the avg of the elements on the prev. and next cols:
+				:	// Element on an odd row and even col: we give it the avg of the elements on
+					// the prev. and next cols:
 					// 1  0  0		Example
 					// X  0  0
 					// 1  0  0
 					(currentMap[iSMap] + currentMap[iSMap+dim]) / 2
 			:
-				j%2?// Element on an even row and odd col: we give it the avg of the elements on the prev. and next rows:
+				j%2?// Element on an even row and odd col: we give it the avg of the elements on
+					// the prev. and next rows:
 					// 1  X  1		Example
 					// 0  0  0
 					// 0  0  0
 					(currentMap[iSMap] + currentMap[iSMap+1]) / 2
-				:	// Element on an even row and even col: it's one of the square corners, so we just give it the orig. val.:
-					currentMap[iSMap]
-			) + amplitude * (.5 - Math.random()); // By adding errors to every point (even the previously fixed one), we lose in predictability but reduce a bit the visibility of the remaining artifacts.
+				:	// Element on an even row and even col: it's one of the square corners,
+					// so we just give it the orig. val.:
+					currentMap[iSMap];
+			) + amplitude * (.5 - Math.random());
+			// By adding errors to every point (even thepreviously fixed one), we lose in
+			// predictability but reduce a bit the visibility of the remaining artifacts.
 		...
 ]]></script>
 
-[[1D demo vs 1D demo with pseudo algo]]
-[[2D demo vs 2D demo with pseudo algo]]
-[[ adding some codes ]]
+<div class="syntaxhighlighter-compacted"><script num=1 type="syntaxhighlighter" class="brush: js"><![CDATA[
+]]></script></div>
+<div class="example small-example">
+<iframe num=1 width=320 height=230 class="demo" src="../examples/custom-midpoint-displacement-2d.html"></iframe>
+<p>2D Midpoint Displacement (with tweening)</p>
+</div>
 
-<h3>Coloring</h3>
+<div class="syntaxhighlighter-compacted"><script num=2 type="syntaxhighlighter" class="brush: js"><![CDATA[
+]]></script></div>
+<div class="example small-example">
+<iframe num=2 width=320 height=230 class="demo" src="../examples/midpoint-displacement-2d.html"></iframe>
+<p>... Now using the custom displacement</p>
+</div>
+
+<div class="syntaxhighlighter-compacted"><script num=3 type="syntaxhighlighter" class="brush: js"><![CDATA[
+]]></script></div>
+<div class="example small-example">
+<iframe num=3 width=320 height=230 class="demo" src="../examples/custom-midpoint-displacement-3d.html"></iframe>
+<p>3D Midpoint Displacement</p>
+</div>
+<div class="syntaxhighlighter-compacted"><script num=4 type="syntaxhighlighter" class="brush: js"><![CDATA[
+]]></script></div>
+<div class="example small-example">
+<iframe num=4 width=320 height=230 class="demo" src="../examples/midpoint-displacement-3d.html"></iframe>
+<p>... One more time, using the custom displacement</p>
+</div>
+
+<h2>Coloring</h2>
 
 <p>Given the heightmap, it's quite easy to <em>assign color to every point depending on its elevation</em>: if the value equals the min. boundary, then paint it light blue to represent water; if it's above a given limit then make it white as snow; if it's somewhere between then make a gradient from vegetal-green to rocky-brown with a function using the height; ...</p>
+
+<div class="example">
+<iframe num=5 width=560 height=300 class="demo" src="../examples/midpoint-displacement-flat-landscape.html"></iframe>
+<p>Colored Heightmap</p>
+</div>
+<script num=5 type="syntaxhighlighter" class="brush: js; collapse: true"><![CDATA[
+]]></script>
 
 <p>But getting a realist-enough result needs much tweaking, and also more inputs. One of the keys to add depth and realism to a landscape is to take <strong>lighting</strong> into account. Computing shadows is out of order given our 1K limit, but <strong>simulating penumbra is easy using the incline</strong>.</p>
 
@@ -207,25 +255,35 @@ ctx.fillStyle = ctx.strokeStyle = 'hsl('+[ // Using coercion for the ","
 	25*(	// Hue
 		(WATER_LVL<height)? 25/height					// Green to brown
 		: 7 											// Blue
-		), // can be approximated by: hue = 13.7*height*height-244*height+1143
+	), // can be approximated by: hue = 13.7*height*height-244*height+1143
 	25*(	// Saturation	
-		(WATER_LVL<height)? pseudoGrad*14/height/height	// Ground saturation: medium, depending on the incline/height, giving us different kinds of veget.
+		(WATER_LVL<height)? pseudoGrad*14/height/height	// Ground saturation: medium, depending on
+														// the incline/height, giving us different
+														// kinds of veget.
 		: pseudoHeight									// Water saturation: high
-		)+'%',
+	)+'%',
 	(25*(	// Lightness
-		(SNOW_LVL_DEC<pseudoHeight)? pseudoGrad					// Bright snow with random noise
-		: (BEACH_LVL<height)? pseudoGrad/height*2				// Vegetation
-		: (WATER_LVL<height)? pseudoGrad						// Bright sand
-		: 1.8+Math.random()*.2									// Water with random waves
-		))-6*Math.cos(i/47*Math.cos(height/3+j/57)+pseudoHeight)// Some not-very-random-but-good-enough shadows/lights (casted by clouds for instance)
+		(SNOW_LVL_DEC<pseudoHeight)? pseudoGrad			// Bright snow with random noise
+		: (BEACH_LVL<height)? pseudoGrad/height*2		// Vegetation
+		: (WATER_LVL<height)? pseudoGrad				// Bright sand
+		: 1.8+Math.random()*.2							// Water with random waves
+	// Some not-very-random-but-good-enough shadows/lights (casted by clouds for instance)
+	))-6*Math.cos(i/47*Math.cos(height/3+j/57)+pseudoHeight)
 ]+'%)';
+]]></script>
+
+<div class="example">
+<iframe num=6 width=560 height=300 class="demo" src="../examples/midpoint-displacement-flat-lighted-landscape.html"></iframe>
+<p>Colored & lighted Heightmap</p>
+</div>
+<script num=6 type="syntaxhighlighter" class="brush: js; collapse: true"><![CDATA[
 ]]></script>
 
 <p>&laquo; <i>It still looks ugly</i> &raquo; ... Right, but we are adding relief effects to a flat surface, how can it look but disturbing? Let's <em>put it into perspective</em>.</p>
 
-<h3>Give it relief</h3>
+<h2>Give it relief</h2>
 	
-<p>The whole projection and rendering stuff has been covered in the previous articles (<a href="../article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">hop</a>). We just have to take each point $(i, j, height)$ of the heightmap and evaluate the position of the corresponding vertex $\hvecthree{x}{y}{z}$ with:</p>
+<p>The whole projection and rendering stuff has been covered in the previous articles<a class="refing" href="../article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">[hop]</a>. We just have to take each point $(i, j, height)$ of the heightmap and evaluate the position of the corresponding vertex $\hvecthree{x}{y}{z}$ with:</p>
 
 <div class="mathjax-formula">$$
 	x = i \cdot \frac{landscape.width}{heightMap.width} \\
@@ -238,7 +296,7 @@ $$</div>
 
 <p>The problem of this method is that it implies to sort an array containing all the elements (simple vertices or surfaces) waiting to be drawn. That is quite a <i>heavy</i> operation, given the level of details of our landscape. This is why I have to reduce the details when moving around in &laquo; Loom &raquo;, or else the browser wouldn't be able to ensure a correct framerate <small>(and would probably crash)</small>.</p>
 
-<h3>Another way to see the world</h3>
+<h2>Another way to see the world</h2>
 
 <p>While polishing some aspect of the demo, I came accross an article<a class="refing" id="refing-5" href="#refed-5" title="Ref - Román Cortés - Article - &laquo; 1k Rose &raquo;">[5]</a> by <a href="http://twitter.com/romancortes" title=" Twitter - @romancortes">@romancortes</a> about his great entry for <a href="http://js1k.com/2012-love/" title="JS1K Love '12 Challenge">JS1K Love '12</a>. There, he describes in details the rendering method he employed, combining the use of a <strong>z-buffer</strong> and a <strong>Monte-Carlo surface sampling</strong>. I thus decided to try to apply it to my landscapes, and create a new demo.</p>
 
@@ -256,6 +314,13 @@ $$</div>
 </ul>
 <p>However, we need some adaptations to use this method on our landscape. We don't have a <strong>continuous</strong> function to pick vertices out of our 2D <strong>discrete</strong> heightmap. We need a way to evaluate the height of the points <em>all over</em> our surface, and not only at the nodes.</p>
 
+<div class="example">
+<iframe num=9 width=560 height=450 class="demo" src="../examples/heightmap-simple-3d-projection.html"></iframe>
+<p>A bit hollow, if we draw only the nodes...</p>
+</div>
+<script num=9 type="syntaxhighlighter" class="brush: js; collapse: true"><![CDATA[
+]]></script>
+
 <p><strong>Triangulation + barycentric interpolation</strong> do the trick nicely. Here is how it works:</p>
 <ol>
 	<li>Given a point $P = \hvectwo{x}{y} \in \mathbb{R}^2$, find in which square $ABCD$ (unit square in the heightmap) it is, with $A = \hvectwo{X}{Y}$, $B = \hvectwo{X+1}{Y}$, $C = \hvectwo{X}{Y+1}$ and $D = \hvectwo{X+1}{Y+1}$, $X$ and $Y$ being the truncated value of $x$, $y$, ie $\hvectwo{X}{Y} \in \mathbb{N}^2$.</li>
@@ -267,13 +332,25 @@ $$</div>
 		</ul></li>
 </ol>
 
-[[ Demo color interpolation ]]
+<div class="example">
+<iframe num=7 width=400 height=400 class="demo" src="../examples/barycentric-interpolation-color.html"></iframe>
+<p>Barycentric Interpolation of colors</p>
+</div>
+<script num=7 type="syntaxhighlighter" class="brush: js; collapse: true"><![CDATA[
+]]></script>
 
 <p>We are thus able to describe explicitly our surface. We can now wrap this whole process into a function $g: \hvectwo{x}{y} \in \mathbb{R}^2 \mapsto \hvecfour{x}{y}{height}{color}$ ($color$ being computed by a function similar to the one described previously) and plug it to the Monte-Carlo sampling by defining $f$ as $f\hvectwo{a}{b} = g\hvectwo{a \cdot heightMap.width}{b \cdot heightMap.height}$.</p>
 
 <p>Nothing else to do but to put everything together, and that's it:</p>
 
-[[ Demo ]]
+<div class="example">
+<iframe num=8 width=560 height=450 class="demo" src="../examples/heightmap-interpolated-3d-projection.html"></iframe>
+<p>About 850B once crushed.</p>
+</div>
+<script num=8 type="syntaxhighlighter" class="brush: js; collapse: true"><![CDATA[
+]]></script>
+
+<p class="note">If you want to know more about how <i>not</i> to use the z-buffer or why the hilly parts of the landscape take longer to be correctly rendered, you should read the <a href="http://stackoverflow.com/questions/16441376/glitches-with-triangulation-linear-interpolation-3d-projection" title=" Stack Overflow - Glitches with Triangulation + Linear Interpolation + 3D projection">Stack Overflow thread</a> I made when I was trying to fix some glitches.</p>
 
 <h2>Conclusion</h2>
 
@@ -281,16 +358,16 @@ $$</div>
 
 <p>So to conclude, I highly recommend participating in such contests to any enthusiast-programmer - at least once. They represent an immersive playground to improve your skills. They restrict your ressources (time, size, ...) which results in a boost of your motivation and efficiency. And finally, they offer a great opportunity to meet highly talented people sharing the same masochistic relish as you, and to learn from each other. <em>A great experience</em>.</p>
 
-<div class="quote"><p>IMHO best compression scheme: imagination+time+math skills.</p><footer>Philippe Deschaseaux, winner of JS1k Spring '13 (<a href="ps://twitter.com/ehouais/status/313943128962908160" title="Tweet by @ehouais">tweet</a>)</footer></div>
+<div class="quote"><p>IMHO best compression scheme: imagination+time+math skills.</p><footer>― Philippe Deschaseaux<a class="refing" href="ps://twitter.com/ehouais/status/313943128962908160" title="Tweet by @ehouais">tweet</a>, winner of JS1k Spring '13</footer></div>
 
-<h3>References</h3>
+<h2>References</h2>
 <ol>
 	<li id="refed-1"><a class="refed" href="#refing-1">^</a> Wikipedia - Fractal Landscape - <a href="http://en.wikipedia.org/wiki/Fractal_landscape" title="Wikipedia - Fractal Landscape">en.wikipedia.org/wiki/Fractal_landscape</a></li>
 	<li id="refed-2"><a class="refed" href="#refing-2">^</a> New York University - Profile - Ken Perlin - <a href="http://mrl.nyu.edu/~perlin/" title="New York University - Profile - Ken Perlin">mrl.nyu.edu/~perlin</a></li>
 	<li id="refed-3"><a class="refed" href="#refing-3">^</a> Wikipedia - Diamond-Square algorithm - <a href="http://en.wikipedia.org/wiki/Diamond-square_algorithm" title="Wikipedia - Diamond-Square algorithm">en.wikipedia.org/wiki/Diamond-square_algorithm</a></li>
 	<li id="refed-4"><a class="refed" href="#refing-4">^</a> Paul Martz - Article - &laquo; Generating Random Fractal Terrain &raquo; - <a href="http://www.gameprogrammer.com/fractal.html" title="Paul Martz - Article on Gameprogrammer.com - &laquo; Generating Random Fractal Terrain &raquo;">gameprogrammer.com/fractal.html</a></li>
 	<li id="refed-5"><a class="refed" href="#refing-5">^</a> Román Cortés - Article - &laquo; 1k Rose &raquo; - <a href="http://www.romancortes.com/blog/1k-rose" title="Román Cortés - Article - &laquo; 1k Rose &raquo;">romancortes.com/blog/1k-rose</a></li>
-	<li id="refed-6"><a class="refed" href="#refing-6">^</a> Dianne Hansford - PDF - &laquo; Barycentric Coordinates &raquo; - <a href="http://www.farinhansford.com/dianne/teaching/cse470/materials/BarycentricCoords.pdf" title="Dianne Hansford - PDF - &laquo; Barycentric Coordinates &raquo;">farinhansford.com/dianne/teaching/cse470/materials/Baryc...</a></li>
+	<li id="refed-6"><a class="refed" href="#refing-6">^</a> Dianne Hansford - PDF - &laquo; Barycentric Coordinates &raquo; - <a href="http://www.farinhansford.com/dianne/teaching/cse470/materials/BarycentricCoords.pdf" title="Dianne Hansford - PDF - &laquo; Barycentric Coordinates &raquo;">farinhansford.com/dianne/teaching/...</a></li>
 	<li id="refed-7"><a class="refed" href="#refing-7">^</a> Joshua Koo - Online Presentation - &laquo; The js1k Experience &raquo; - <a href="http://slid.es/zz85/the-js1k-experience" title="Joshua Koo - Online Presentation - &laquo; The js1k Experience &raquo;">slid.es/zz85/the-js1k-experience</a></li>
 </ol>
 						<footer>
@@ -330,6 +407,24 @@ $$</div>
 		<script type="text/javascript" src="../js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
 		<script type="text/javascript" src="../js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
 		<script>
+		
+			$('iframe').each(function(){
+				var jIframe = $(this);
+				var num = jIframe.attr('num');
+				if (num) {
+					var displayingScript = $('script[num='+num+']');
+					if (displayingScript.length > 0) {
+						jIframe.ready(function(){
+							var script = '';
+							jIframe.contents().find('script').each(function(){
+								script += $(this).html();
+							});
+							displayingScript.html(script);
+						});
+					}
+				}
+			});
+			
 			// Syntax Highlighting:
 			SyntaxHighlighter.all()
 			
