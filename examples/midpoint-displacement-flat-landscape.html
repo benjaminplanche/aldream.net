@@ -24,8 +24,9 @@ var heightMap=[],			// Map
 	SNOW_LVL = .78,			// Snow level
 	h = ORIG_H,				// Alterations amplitude. As h is divided by 2 every iteration, so is this coefficient. The first iterations thus generates the "rough geography" of our landscape while the last ones, with a smaller amplitude, add the details.
 	nbMaxIterations = 8,	// Max number of procedural iterations
-	currentIteration = 0;	// Current iteration
-
+	currentIteration = 0,	// Current iteration
+	time = 0;
+	
 ///
 // Generate new intermediate points (and thus details) to the given heightmap, by using stochastic interpolation (pseudo Mid-Point Displacement algorithm).
 // Parameters:
@@ -84,63 +85,78 @@ function GenerateNewStartingMap() {
 // Display the tweened polyline
 ///
 function Paint () {
-	var dim = Math.sqrt(heightMap.length)+.5|0;
-	var canvasWidth, canvasHeight;
-	// Clearing the canvas:
-	canvasWidth = c.width = innerWidth-21;
-	canvasHeight = c.height = innerHeight-21;
-	a.fillStyle = '#fff';
-	a.fillRect(0, 0, canvasWidth, canvasHeight);
-	canvasHeight /= (dim - 2);
-	canvasWidth /= (dim - 2);
+	if (Render()) {
+		var dim = Math.sqrt(heightMap.length)+.5|0;
+		var canvasWidth, canvasHeight;
+		// Clearing the canvas:
+		canvasWidth = c.width = innerWidth-21;
+		canvasHeight = c.height = innerHeight-21;
+		a.fillStyle = '#fff';
+		a.fillRect(0, 0, canvasWidth, canvasHeight);
+		canvasHeight /= (dim - 2);
+		canvasWidth /= (dim - 2);
 
-	for (var i = dim-1; i--;) for (var j = dim-1; j--;) {
-		var ind = i*dim + j;
-		var height = heightMap[ind];
-		var pseudoGrad = (3+(.5-Math.random())/8)*heightMap[ind] - heightMap[ind+1]- heightMap[ind+1+dim] - heightMap[ind+dim];
-		var pseudoHeight = height+pseudoGrad;
-		a.fillStyle = a.strokeStyle = 'hsl('+[ // Using coercion for the ","
-			660*( // Hue
-				(SNOW_LVL<pseudoHeight)? .05			// Yellowish-greenish hue (snow-white with the good lightness, or muddy-alpine-green otherwise. Fine enough.)
-				: (BEACH_LVL<height)? .05/height		// Green to brown
-				: (WATER_LVL<height)? .1+pseudoHeight/20// Yellowish
-				: .3 									// Blue
-				),
-			100*( // Saturation	
-				(WATER_LVL<height)? .25/height	// Ground saturation: medium, depending on the incline/height, giving us different kinds of veget.
-				: .8							// Water saturation: high
-				)+'%',
-			50*( // Lightness
-				(SNOW_LVL<pseudoHeight)? (2-Math.random()/5)// Bright snow with random noise
-				: (BEACH_LVL<height)? .05/(.1+pseudoGrad)	// Normal vegetation
-				: (WATER_LVL<height)? 1.8					// Bright sand
-				: 1-Math.random()/9							// Water with random waves
-				)
-		]+'%)';
-		a.fillRect(i*canvasWidth, j*canvasHeight, canvasWidth, canvasHeight);
-		a.strokeRect(i*canvasWidth, j*canvasHeight, canvasWidth, canvasHeight);
+		for (var i = dim-1; i--;) for (var j = dim-1; j--;) {
+			var ind = i*dim + j;
+			var height = heightMap[ind];
+			var pseudoGrad = (3+(.5-Math.random())/8)*heightMap[ind] - heightMap[ind+1]- heightMap[ind+1+dim] - heightMap[ind+dim];
+			pseudoGrad *= currentIteration/nbMaxIterations;
+			var pseudoHeight = height+pseudoGrad;
+			a.fillStyle = a.strokeStyle = 'hsl('+[ // Using coercion for the ","
+				660*( // Hue
+					(SNOW_LVL<pseudoHeight)? .05			// Yellowish-greenish hue (snow-white with the good lightness, or muddy-alpine-green otherwise. Fine enough.)
+					: (BEACH_LVL<height)? .05/height		// Green to brown
+					: (WATER_LVL<height)? .1+pseudoHeight/20// Yellowish
+					: .3 									// Blue
+					),
+				100*( // Saturation	
+					(WATER_LVL<height)? .25/height	// Ground saturation: medium, depending on the incline/height, giving us different kinds of veget.
+					: .8							// Water saturation: high
+					)+'%',
+				50*( // Lightness
+					(SNOW_LVL<pseudoHeight)? (2-Math.random()/5)// Bright snow with random noise
+					: (BEACH_LVL<height)? .05/(.1+pseudoGrad)	// Normal vegetation
+					: (WATER_LVL<height)? 1.8					// Bright sand
+					: 1-Math.random()/9							// Water with random waves
+					)
+			]+'%)';
+			a.fillRect(i*canvasWidth, j*canvasHeight, canvasWidth, canvasHeight);
+			a.strokeRect(i*canvasWidth, j*canvasHeight, canvasWidth, canvasHeight);
+		}
 	}
+	time++;
 };
 
+///
+// Clear the scene
+///
+function Clear() {
+	heightMap = GenerateNewStartingMap();
+	h = ORIG_H;
+	currentIteration = 0;
+}
+
+///
+// Actualize the scene
+///
 function Render() {
 	if (currentIteration == nbMaxIterations) { // We restart the demo
-		setTimeout(Render, 2500);
-		heightMap = GenerateNewStartingMap();
-		h = ORIG_H;
-		currentIteration = 0;
+		if (!signal && time%150) {return false; }
+		Clear()
+		return false;
 	}
 	else { // We iterate
-		setTimeout(Render, 500);
+		if (!signal && time%60) {return false; }
 		heightMap = ComputeMidPointDisplacement(heightMap, h); // Generate the more-detailed map with displacements.
 		h /= 2; // Every iteration, we reduce the "error" amplitude, to generate more subtle alterations.
 		currentIteration++;
-		Paint();
+		return true;
 	}
 }
 
 heightMap = GenerateNewStartingMap();
-Render();
 
 		</script>
+		<script src="run-inline-example.js"></script>
 	</body>
 </html>

@@ -18,65 +18,79 @@
 
 // Demo Var:
 var colorMap=[];			// Map
-
 ///
 //	Generate a new random (dim x dim) hue map.
 ///
 function GenerateNewStartingMap(dim) {
 	// Dirty. :D
-	for (var newMap = [], it = dim*dim; it-- ; newMap[it] = Math.random()*359, newMap[it] -= newMap[it]%90); return newMap;
+	for (var newMap = [], it = dim*dim; it-- ; newMap[it] = Math.random()*359, newMap[it] -= newMap[it]%75); return newMap;
 }
 
 ///
 // Display the tweened polyline
 ///
 function Paint () {
+	if (signal) {
+		colorMap = GenerateNewStartingMap(2);
+		a.fillStyle = '#fff';
+		a.fillRect(0, 0, canvasWidth, canvasHeight);
+	}
+	
 	var dim = Math.sqrt(colorMap.length)+.5|0;
+	var deltaWidth = canvasWidth / (dim-1),
+		deltaHeight = canvasHeight / (dim-1),
+		minDim = (canvasWidth < canvasHeight) ? canvasWidth : canvasHeight;
 	// We do not clear the canvas each frame anymore, as we want to accumulate the points.
 	
-	var zBuffer = [];
-		for (k = 0; k < 1e4; k++) {
-			// Random float indices:
-			var i = Math.random() * (dim-1),
-				j = Math.random() * (dim-1),
-			// Integer part (troncated):
-				iTronc = i|0,
-				jTronc = j|0,
-				indTronc = iTronc*dim + jTronc,
-			// Decimal part:
-				iDec = i%1,
-				jDec = j%1,
-			// Now we want to intrapolate the value of the float point from the surrounding points of our map. So we want to find in which triangle is our point to evaluate the weighted average of the 3 corresponding points.
-			// We already know that our point is in the square defined by the map points (iTronc, jTronc), (iTronc+1, jTronc), (iTronc, jTronc+1), (iTronc+1, jTronc+1).
-			// If we split this square into two rectangle using the diagonale [(iTronc, jTronc), (iTronc+1, jTronc+1)], we can deduce in which triangle is our point with the following condition:
-				whichTriangle = iDec < jDec, // ie "are we above or under the line j = jTronc + distanceBetweenLandscapePoints - (i-iTronc)"
-				indThirdPointOfTriangle = indTronc +dim*whichTriangle +1-whichTriangle, // Top-right point of the square or bottm left, depending on which triangle we are in.
-			// Intrapolating the point's hue:
-				deltaHeight1 = (colorMap[indTronc] - colorMap[indThirdPointOfTriangle]),
-				deltaHeight2 = (colorMap[indTronc+dim+1] - colorMap[indThirdPointOfTriangle]),
-				hue = colorMap[indThirdPointOfTriangle] + deltaHeight1 * (1-(whichTriangle? jDec:iDec)) + deltaHeight2 * (!whichTriangle? jDec:iDec),
-				
-				posX = i*canvasWidth,
-				posY = j*canvasWidth;
+	for (var k = 0; k < 1e4; k++) {
+		// Random float indices:
+		var i = Math.random() * (dim-1),
+			j = Math.random() * (dim-1),
+		// Integer part (troncated):
+			iTronc = i|0,
+			jTronc = j|0,
+			indTronc = jTronc*dim + iTronc,
+		// Decimal part:
+			iDec = i%1,
+			jDec = j%1,
+		// Now we want to intrapolate the value of the float point from the surrounding points of our map. So we want to find in which triangle is our point to evaluate the weighted average of the 3 corresponding points.
+		// We already know that our point is in the square defined by the map points (iTronc, jTronc), (iTronc+1, jTronc), (iTronc, jTronc+1), (iTronc+1, jTronc+1).
+		// If we split this square into two rectangle using the diagonale [(iTronc, jTronc), (iTronc+1, jTronc+1)], we can deduce in which triangle is our point with the following condition:
+			whichTriangle = iDec < jDec, // ie "are we above or under the line j = jTronc + distanceBetweenLandscapePoints - (i-iTronc)"
+			indThirdPointOfTriangle = indTronc +dim*whichTriangle +1-whichTriangle, // Top-right point of the square or bottm left, depending on which triangle we are in.
+		// Intrapolating the point's hue:
+			deltaHeight1 = (colorMap[indTronc] - colorMap[indThirdPointOfTriangle]),
+			deltaHeight2 = (colorMap[indTronc+dim+1] - colorMap[indThirdPointOfTriangle]),
+			hue = colorMap[indThirdPointOfTriangle] + deltaHeight1 * (1-(whichTriangle? jDec:iDec)) + deltaHeight2 * (!whichTriangle? jDec:iDec),
 			
-			a.fillStyle = a.strokeStyle = 'hsl('+hue+', 60%, 50%)';
-			a.fillRect(posX, posY, 1, 1);
+			posX = i*canvasWidth,
+			posY = j*canvasWidth;
+		
+		a.fillStyle = a.strokeStyle = 'hsl('+hue+', 60%, 50%)';
+		a.fillRect(posX, posY, 1, 1);
+	}
+	
+	a.strokeStyle = '#000';
+	a.beginPath();
+	a.moveTo(0,0);
+	a.lineTo(canvasWidth, canvasHeight);
+	a.stroke();
+	for (var i = dim; i--;) {
+		for (var j = dim; j--;) {
+			a.fillStyle = 'hsl('+colorMap[i*dim+j]+', 60%, 50%)';
+			a.beginPath();
+			a.arc(j*deltaWidth, i*deltaHeight, minDim/25, 0, 2*Math.PI);
+			a.fill();
+			a.stroke();
 		}
+	}
 };
 
-// Shim layer with setTimeout fallback // Thank to Paul Irish (http://paulirish.com/2011/requestanimationframe-for-smart-animating)
-window.requestAnimFrame = (function(){
-  return window.requestAnimationFrame ||
-          window.webkitRequestAnimationFrame ||
-          window.mozRequestAnimationFrame ||
-          function( callback ){
-            window.setTimeout(callback, 1000 / 60);
-          };
-})();
-
-function Render() {
-	requestAnimFrame(Render);
-	Paint();
+///
+// Clear the scene
+///
+function Clear() {
+	// no need
 }
 
 colorMap = GenerateNewStartingMap(2);
@@ -85,7 +99,7 @@ var canvasWidth = c.width = innerWidth-21,
 a.fillStyle = '#fff';
 a.fillRect(0, 0, canvasWidth, canvasHeight);
 
-Render()
 		</script>
+		<script src="run-inline-example.js"></script>
 	</body>
 </html>

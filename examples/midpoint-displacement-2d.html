@@ -76,6 +76,8 @@ function Tween (A, B, coef) {
 // Display the tweened polyline
 ///
 function Paint () {
+	Render();
+	
 	var canvasWidth, canvasHeight, hDistanceBetweenPoints, hOffset, vOffset;
 	// Clearing the canvas:
 	canvasWidth = c.width = innerWidth-21;
@@ -128,25 +130,26 @@ function Paint () {
 	a.arc(hOffset, (heightValue - .5) * canvasHeight + vOffset, 2, 0, 2*Math.PI);
 	a.fill();
 	a.stroke();
+	
+	time++;
 };
 
+///
+// Clear the scene
+///
+function Clear() {
+	previousPolylineWithMidPoints = previousPolyline = nextPolyline = GenerateNewStartingPolyline();
+	h = originalH;
+	currentIteration = 0;
+}
 
-// Shim layer with setTimeout fallback // Thank to Paul Irish (http://paulirish.com/2011/requestanimationframe-for-smart-animating)
-window.requestAnimFrame = (function(){
-  return window.requestAnimationFrame ||
-          window.webkitRequestAnimationFrame ||
-          window.mozRequestAnimationFrame ||
-          function( callback ){
-            window.setTimeout(callback, 1000 / 60);
-          };
-})();
-
+///
+// Actualize the scene
+///
 function Render() {
 	if (time%100 == 0) {
 		if (currentIteration == nbMaxIterations) { // We restart the demo
-			previousPolylineWithMidPoints = previousPolyline = nextPolyline = GenerateNewStartingPolyline();
-			h = originalH;
-			currentIteration = 0;
+			Clear()
 		}
 		else { // We iterate
 			previousPolyline = nextPolyline;
@@ -156,14 +159,11 @@ function Render() {
 			currentIteration++;
 		}
 	}
-	requestAnimFrame(Render);
-	Paint();
-	time++;
 }
 
 previousPolylineWithMidPoints = previousPolyline = nextPolyline = GenerateNewStartingPolyline();
-Render();
 
 		</script>
+		<script src="run-inline-example.js"></script>
 	</body>
 </html>

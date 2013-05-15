@@ -21,7 +21,8 @@ var heightMap=[],					// Map
 	originalH = .8,					// Original alterations amplitude
 	h = originalH,					// Alterations amplitude. As h is divided by 2 every iteration, so is this coefficient. The first iterations thus generates the "rough geography" of our landscape while the last ones, with a smaller amplitude, add the details.
 	nbMaxIterations = 8,			// Max number of procedural iterations
-	currentIteration = 0;			// Current iteration
+	currentIteration = 0,			// Current iteration
+	time=0;
 
 ///
 // Generate new intermediate points (and thus details) to the given heightmap, by using stochastic interpolation (pseudo Mid-Point Displacement algorithm).
@@ -81,41 +82,58 @@ function GenerateNewStartingMap() {
 // Display the tweened polyline
 ///
 function Paint () {
-	var dim = Math.sqrt(heightMap.length)+.5|0;
-	var canvasWidth, canvasHeight;
-	// Clearing the canvas:
-	canvasWidth = c.width = innerWidth-21;
-	canvasHeight = c.height = innerHeight-21;
-	a.fillStyle = '#fff';
-	a.fillRect(0, 0, canvasWidth, canvasHeight);
-	canvasHeight /= (dim - 1);
-	canvasWidth /= (dim - 1);
+	if (Render()) {
+		var dim = Math.sqrt(heightMap.length)+.5|0;
+		var canvasWidth, canvasHeight;
+		// Clearing the canvas:
+		canvasWidth = c.width = innerWidth-21;
+		canvasHeight = c.height = innerHeight-21;
+		a.fillStyle = '#fff';
+		a.fillRect(0, 0, canvasWidth, canvasHeight);
+		canvasHeight /= (dim - 1);
+		canvasWidth /= (dim - 1);
 
-	for (var i = dim; i--;) for (var j = dim; j--;) {
-		a.fillStyle = a.strokeStyle = 'hsl(240, 60%, '+ (heightMap[i*dim + j]*100) + '%)';
-		a.fillRect(i*canvasWidth, j*canvasHeight, canvasWidth, canvasHeight);
-		a.strokeRect(i*canvasWidth, j*canvasHeight, canvasWidth, canvasHeight);
+		for (var i = dim; i--;) for (var j = dim; j--;) {
+			a.fillStyle = a.strokeStyle = 'hsl(240, 60%, '+ (heightMap[i*dim + j]*100) + '%)';
+			a.fillRect(i*canvasWidth, j*canvasHeight, canvasWidth, canvasHeight);
+			a.strokeRect(i*canvasWidth, j*canvasHeight, canvasWidth, canvasHeight);
+		}
 	}
+	
+	time++;
 };
 
+///
+// Clear the scene
+///
+function Clear() {
+	heightMap = GenerateNewStartingMap();
+	h = originalH;
+	currentIteration = 0;
+}
+
+///
+// Actualize the scene
+///
 function Render() {
-	setTimeout(Render, 1500);
+	if (!signal && time%45) {return false; }
+	
 	if (currentIteration == nbMaxIterations) { // We restart the demo
-		heightMap = GenerateNewStartingMap();
-		h = originalH;
-		currentIteration = 0;
+		Clear()
+		return false;
 	}
 	else { // We iterate
 		heightMap = ComputeMidPointDisplacement(heightMap, h); // Generate the more-detailed map with displacements.
 		h /= 2; // Every iteration, we reduce the "error" amplitude, to generate more subtle alterations.
 		currentIteration++;
-		Paint();
+		return true;
 	}
 }
 
 heightMap = GenerateNewStartingMap();
-Render();
-
+canvasWidth = c.width = innerWidth-21;
+canvasHeight = c.height = innerHeight-21;
 		</script>
+		<script src="run-inline-example.js"></script>
 	</body>
 </html>

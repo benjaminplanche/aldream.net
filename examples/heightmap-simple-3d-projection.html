@@ -28,7 +28,8 @@ var heightMap=[],			// Map
 	nbMaxIterations = 8,	// Max number of procedural iterations
 	currentIteration = 0,	// Current iteration
 	camDist = 20,			// Distance between the camera and the center of our map
-	angleYaw=anglePitch= 4;	// Angles defining the camera orientation
+	angleYaw=anglePitch= 4,	// Angles defining the camera orientation
+	time = 0;
 
 ///
 // Generate new intermediate points (and thus details) to the given heightmap, by using stochastic interpolation (pseudo Mid-Point Displacement algorithm).
@@ -86,92 +87,105 @@ function GenerateNewStartingMap() {
 // Display the tweened polyline
 ///
 function Paint () {
-	var dim = Math.sqrt(displayHeightMap.length)+.5|0;
-	var canvasWidth, canvasHeight;
-	// Clearing the canvas:
-	canvasWidth = c.width = innerWidth-21;
-	canvasHeight = c.height = innerHeight-21;
-	a.fillStyle = '#fff';
-	a.fillRect(0, 0, canvasWidth, canvasHeight);
-	var minDim = (canvasWidth < canvasHeight) ? canvasWidth : canvasHeight,
-		rectWidth = canvasWidth / (dim - 2),
-		rectHeight = canvasHeight / (dim - 2);
-	canvasHeight /= 2;
-	canvasWidth /= 2;
-	
-	var zBuffer = [];
-	var cosYaw = Math.cos(angleYaw),
-		sinYaw = Math.sin(angleYaw),
-		cosPitch = Math.cos(anglePitch),
-		sinPitch = Math.sin(anglePitch),
-		distanceBetweenLandscapePoints = SIZE / (dim - 2),
-		camPosX = camDist * cosPitch,
-		camPosY = camDist * sinPitch*cosYaw,
-		camPosZ = camDist * sinPitch*sinYaw;
-	for (var i = dim-1; i--;) for (var j = dim-1; j--;) {
-		var ind = i*dim + j,
-			height = displayHeightMap[ind],
-			posX = i*distanceBetweenLandscapePoints - SIZE/2,
-			posY = j*distanceBetweenLandscapePoints - SIZE/2,
-			posZ = height - WATER_LVL;
+	if (Render()) {
+		var dim = Math.sqrt(displayHeightMap.length)+.5|0;
+		var canvasWidth, canvasHeight;
+		// Clearing the canvas:
+		canvasWidth = c.width = innerWidth-21;
+		canvasHeight = c.height = innerHeight-21;
+		a.fillStyle = '#fff';
+		a.fillRect(0, 0, canvasWidth, canvasHeight);
+		var rectWidth = canvasWidth / dim,
+			rectHeight = canvasHeight / dim;
+		canvasHeight /= 2;
+		canvasWidth /= 2;
+		var minDim = (canvasWidth < canvasHeight) ? canvasWidth : canvasHeight;
 		
-		// 3D Projection:
-		var temp1 = cosYaw*(posY - camPosY) - sinYaw*(posX - camPosX),
-			temp2 = posZ - camPosZ,
-			dX = (sinYaw*(posY - camPosY) + cosYaw*(posX - camPosX)),
-			dY = sinPitch*temp2 + cosPitch*temp1,
-			dZ = cosPitch*temp2 - sinPitch*temp1,
-			pixelY = dY / dZ * minDim + canvasHeight,
-			pixelX = dX / dZ * minDim + canvasWidth,
-			canvasInd = pixelY * canvasWidth*2 + pixelX;
+		var zBuffer = [];
+		var cosYaw = Math.cos(angleYaw),
+			sinYaw = Math.sin(angleYaw),
+			cosPitch = Math.cos(anglePitch),
+			sinPitch = Math.sin(anglePitch),
+			distanceBetweenLandscapePoints = SIZE / (dim - 3),
+			camPosX = camDist * cosPitch,
+			camPosY = camDist * sinPitch*cosYaw,
+			camPosZ = camDist * sinPitch*sinYaw;
+		for (var i = dim-1; i--;) for (var j = dim-1; j--;) {
+			var ind = i*dim + j,
+				height = displayHeightMap[ind],
+				posX = i*distanceBetweenLandscapePoints - SIZE/2,
+				posY = j*distanceBetweenLandscapePoints - SIZE/2,
+				posZ = height - WATER_LVL;
 			
-		if (!zBuffer[canvasInd] || (dZ < zBuffer[canvasInd])) { // We check if what we want to draw will be visible or behind another element. If it will be visible (for now), we draw it and update the zBuffer:
-			zBuffer[canvasInd] = dZ;
+			// 3D Projection:
+			var temp1 = cosYaw*(posY - camPosY) - sinYaw*(posX - camPosX),
+				temp2 = posZ - camPosZ,
+				dX = (sinYaw*(posY - camPosY) + cosYaw*(posX - camPosX)),
+				dY = sinPitch*temp2 + cosPitch*temp1,
+				dZ = cosPitch*temp2 - sinPitch*temp1,
+				pixelY = dY / dZ * minDim + canvasHeight,
+				pixelX = dX / dZ * minDim + canvasWidth,
+				canvasInd = pixelY * canvasWidth*2 + pixelX;
+				
+			if (!zBuffer[canvasInd] || (dZ < zBuffer[canvasInd])) { // We check if what we want to draw will be visible or behind another element. If it will be visible (for now), we draw it and update the zBuffer:
+				zBuffer[canvasInd] = dZ;
 
-			// Color:
-			var pseudoGrad = 2+(2*displayHeightMap[ind+1]-displayHeightMap[ind+1+dim]-displayHeightMap[ind+dim])*26,
-				pseudoHeight = height-pseudoGrad;
-			a.fillStyle = a.strokeStyle = 'hsl('+[ // Using coercion for the ","
-				25*(	// Hue
-					(SNOW_LVL_DEC<height)? 25/height				// Green to brown
-					: 7 											// Blue
-					),
-				25*(	// Saturation	
-					(WATER_LVL<height)? pseudoGrad*14/height/height	// Ground saturation: medium, depending on the incline/height, giving us different kinds of veget.
-					: pseudoHeight									// Water saturation: high
-					)+'%',
-				(25*(	// Lightness
-					(SNOW_LVL_DEC<pseudoHeight)? pseudoGrad					// Bright snow with random noise
-					: (BEACH_LVL<height)? pseudoGrad/height*2				// Vegetation
-					: (WATER_LVL<height)? pseudoGrad						// Bright sand
-					: 1.8+Math.random()*.2									// Water with random waves
-					))-6*Math.cos(i/47*Math.cos(height/3+j/57)+pseudoHeight)// Some not-very-random-but-good-enough shadows/lights (casted by clouds for instance)
-			]+'%)';
-			a.fillRect(pixelX, pixelY, rectWidth, rectHeight);
+				// Color:
+				var pseudoGrad = 2+(2*displayHeightMap[ind+1]-displayHeightMap[ind+1+dim]-displayHeightMap[ind+dim])*26,
+					pseudoHeight = height-pseudoGrad;
+				a.fillStyle = a.strokeStyle = 'hsl('+[ // Using coercion for the ","
+					25*(	// Hue
+						(SNOW_LVL_DEC<height)? 25/height				// Green to brown
+						: 7 											// Blue
+						),
+					25*(	// Saturation	
+						(WATER_LVL<height)? pseudoGrad*14/height/height	// Ground saturation: medium, depending on the incline/height, giving us different kinds of veget.
+						: pseudoHeight									// Water saturation: high
+						)+'%',
+					(25*(	// Lightness
+						(SNOW_LVL_DEC<pseudoHeight)? pseudoGrad					// Bright snow with random noise
+						: (BEACH_LVL<height)? pseudoGrad/height*2				// Vegetation
+						: (WATER_LVL<height)? pseudoGrad						// Bright sand
+						: 1.8+Math.random()*.2									// Water with random waves
+						))-6*Math.cos(i/47*Math.cos(height/3+j/57)+pseudoHeight)// Some not-very-random-but-good-enough shadows/lights (casted by clouds for instance)
+				]+'%)';
+				a.fillRect(pixelX, pixelY, rectWidth, rectHeight);
+			}
 		}
 	}
+	time++;
 };
 
+///
+// Clear the scene
+///
+function Clear() {
+	heightMap = GenerateNewStartingMap();
+	h = ORIG_H;
+	currentIteration = 0;
+}
+
+///
+// Actualize the scene
+///
 function Render() {
 	if (currentIteration == nbMaxIterations) { // We restart the demo
-		setTimeout(Render, 2500);
-		heightMap = GenerateNewStartingMap();
-		h = ORIG_H;
-		currentIteration = 0;
+		if (!signal && time%150) {return false; }
+		Clear()
+		return false;
 	}
 	else { // We iterate
-		setTimeout(Render, 500);
+		if (!signal && time%60) {return false; }
 		heightMap = ComputeMidPointDisplacement(heightMap, h); // Generate the more-detailed map with displacements.
 		h /= 2; // Every iteration, we reduce the "error" amplitude, to generate more subtle alterations.
 		currentIteration++;
-		Paint();
+		return true;
 	}
 }
 
 camPosition = [5*Math.cos(angleYaw)*Math.sin(anglePitch), 5*Math.sin(angleYaw)*Math.sin(anglePitch), 5*Math.cos(anglePitch)];
 heightMap = GenerateNewStartingMap();
-Render();
-
 		</script>
+		<script src="run-inline-example.js"></script>
 	</body>
 </html>

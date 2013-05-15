@@ -29,8 +29,8 @@ var heightMap=[],			// Map
 	currentIteration = 0,	// Current iteration
 	camDist = 20,			// Distance between the camera and the center of our map
 	angleYaw=anglePitch= 4;	// Angles defining the camera orientation
-	
-	var zBuffer = [];
+var time = 0;	
+var zBuffer = [];
 ///
 // Generate new intermediate points (and thus details) to the given heightmap, by using stochastic interpolation (pseudo Mid-Point Displacement algorithm).
 // Parameters:
@@ -87,6 +87,13 @@ function GenerateNewStartingMap() {
 // Display the tweened polyline
 ///
 function Paint () {
+
+	if (signal) {
+		a.fillStyle = '#000';
+		a.fillRect(0, 0, canvasWidth*2, canvasHeight*2);
+		for (currentIteration = nbMaxIterations, heightMap = GenerateNewStartingMap(); currentIteration--; heightMap = ComputeMidPointDisplacement(heightMap, h), h /= 2);
+	}
+
 	// We do not clear the canvas each frame anymore, as we want to accumulate the points.
 
 	var cosYaw = Math.cos(angleYaw),
@@ -160,9 +167,13 @@ function Paint () {
 		}
 };
 
-function Render() {
-	setTimeout(Render, 500);
-	Paint();
+///
+// Clear the scene
+///
+function Clear() {
+	heightMap = null;
+	zBuffer = [];
+	h = ORIG_H;
 }
 
 camPosition = [5*Math.cos(angleYaw)*Math.sin(anglePitch), 5*Math.sin(angleYaw)*Math.sin(anglePitch), 5*Math.cos(anglePitch)];
@@ -174,14 +185,13 @@ var dim = Math.sqrt(displayHeightMap.length)+.5|0;
 	
 var canvasWidth = c.width = innerWidth-21,
 	canvasHeight = c.height = innerHeight-21,
-	minDim = (canvasWidth < canvasHeight) ? canvasWidth : canvasHeight,
 	drawnPointSize = canvasWidth / dim / 1.8;
 a.fillStyle = '#000';
 a.fillRect(0, 0, canvasWidth, canvasHeight);
 canvasHeight /= 2;
 canvasWidth /= 2;
-
-Render()
+var minDim = (canvasWidth < canvasHeight) ? canvasWidth : canvasHeight;
 		</script>
+		<script src="run-inline-example.js"></script>
 	</body>
 </html>
