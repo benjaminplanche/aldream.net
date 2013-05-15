@@ -14,11 +14,11 @@
         <meta name="viewport" content="width=device-width">
 
 		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="../css/normalize.css"/>
-        <link rel="stylesheet" href="../css/main.css"/>
-		<link href="../css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
-		<link href="../css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
-        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
+        <link rel="stylesheet" href="/css/normalize.css"/>
+        <link rel="stylesheet" href="/css/main.css"/>
+		<link href="/css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
+		<link href="/css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
+        <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body id="blog">
 			<!--[if lt IE 7]>
@@ -27,21 +27,21 @@
 
 			<!-- Add your site or application content here -->
 			<header id="main-header">
-				<h1><a href="../">Aldream</a></h1>
+				<h1><a href="/">Aldream</a></h1>
 				<nav id="menu-top">
 					<ul>
-						<a href="../blog"><li>Blog</li></a>
-						<a href="../demo"><li>Demo</li></a>
-						<a href="../projects"><li>Projects</li></a>
-						<a href="../about"><li>About</li></a>
+						<a href="/blog"><li>Blog</li></a>
+						<a href="/demo"><li>Demo</li></a>
+						<a href="/projects"><li>Projects</li></a>
+						<a href="/about"><li>About</li></a>
 					</ul>
 				</nav>
 				<nav id="menu-top-mini">
 					<ul>
-						<li><a href="../blog" title="Blog"><img width=22 alt="Blog" src="../img/glyphicons-color/book-blue.png"/></a></li>
-						<li><a href="../demo" title="Demo"><img width=25 alt="Demo" src="../img/glyphicons-color/eye-green.png"/></a></li>
-						<li><a href="../projects" title="Projects"><img width=25 alt="Projects" src="../img/glyphicons-color/star-yellow.png"/></a></li>
-						<li><a href="../about" title="About"><img width=25 alt="About" src="../img/glyphicons-color/user-red.png"/></a></li>
+						<li><a href="/blog" title="Blog"><img width=22 alt="Blog" src="/img/glyphicons-color/book-blue.png"/></a></li>
+						<li><a href="/demo" title="Demo"><img width=25 alt="Demo" src="/img/glyphicons-color/eye-green.png"/></a></li>
+						<li><a href="/projects" title="Projects"><img width=25 alt="Projects" src="/img/glyphicons-color/star-yellow.png"/></a></li>
+						<li><a href="/about" title="About"><img width=25 alt="About" src="/img/glyphicons-color/user-red.png"/></a></li>
 					</ul>
 				</nav>
 			</header>
@@ -51,10 +51,10 @@
 					<div>
 <h1>Pointillism, depicted</h1>
 
-<p>To conclude my series of articles describing the tricks I learned and used for the <a href="http://js1k.com/2013-spring/" title="JS1K 2013">JS1K Spring-2013 challenge</a>, I will now explain how &laquo; <strong>Pointillism</strong> &raquo; (<a href="http://js1k.com/2013-spring/demo/1507" title="Demo on JS1K">js1k</a> / <a href="../demo#js1k-2013-pointillism" title="&laquo; Pointillism &raquo; - Demo in my sandbox">local</a>) was done, since it received such nice reviews.</p>
+<p>To conclude my series of articles describing the tricks I learned and used for the <a href="http://js1k.com/2013-spring/" title="JS1K 2013">JS1K Spring-2013 challenge</a>, I will now explain how &laquo; <strong>Pointillism</strong> &raquo; (<a href="http://js1k.com/2013-spring/demo/1507" title="Demo on JS1K">js1k</a> / <a href="/demo#js1k-2013-pointillism" title="&laquo; Pointillism &raquo; - Demo in my sandbox">local</a>) was done, since it received such nice reviews.</p>
 <p>I will thus cover the <strong>lightweight procedural method</strong> used to generate the landscape, and the <strong><em>pointillist-like</em> rendering</strong>.</p>
 
-<p>I will assume you've already read my previous articles (<a href="../article/2013-04-23-mesh-breeding.html"title="Article - Mesh Breeding">Mesh Breeding</a> and especially <a href="../article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">Painter's Algorithm</a>), since they cover the basic notions of 3D generation and rendering.
+<p>I will assume you've already read my previous articles (<a href="/article/2013-04-23-mesh-breeding.html"title="Article - Mesh Breeding">Mesh Breeding</a> and especially <a href="/article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">Painter's Algorithm</a>), since they cover the basic notions of 3D generation and rendering.
 
 <div style="display:none;">$
 \newcommand{\hvectwo}[2]
@@ -196,30 +196,26 @@ for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap();
 		...
 ]]></script>
 
-<div class="syntaxhighlighter-compacted"><script num=1 type="syntaxhighlighter" class="brush: js"><![CDATA[
-]]></script></div>
+<div class="syntaxhighlighter-compacted"><script num=1 type="syntaxhighlighter" class="brush: js"></script></div>
 <div class="example small-example">
-<iframe num=1 width=320 height=230 class="demo" src="../examples/custom-midpoint-displacement-2d.html"></iframe>
+<iframe num=1 width=320 height=230 class="demo" src="/examples/custom-midpoint-displacement-2d.html"></iframe>
 <p>2D Midpoint Displacement (with tweening)</p>
 </div>
 
-<div class="syntaxhighlighter-compacted"><script num=2 type="syntaxhighlighter" class="brush: js"><![CDATA[
-]]></script></div>
+<div class="syntaxhighlighter-compacted"><script num=2 type="syntaxhighlighter" class="brush: js"></script></div>
 <div class="example small-example">
-<iframe num=2 width=320 height=230 class="demo" src="../examples/midpoint-displacement-2d.html"></iframe>
+<iframe num=2 width=320 height=230 class="demo" src="/examples/midpoint-displacement-2d.html"></iframe>
 <p>... Now using the custom displacement</p>
 </div>
 
-<div class="syntaxhighlighter-compacted"><script num=3 type="syntaxhighlighter" class="brush: js"><![CDATA[
-]]></script></div>
+<div class="syntaxhighlighter-compacted"><script num=3 type="syntaxhighlighter" class="brush: js"></script></div>
 <div class="example small-example">
-<iframe num=3 width=320 height=230 class="demo" src="../examples/custom-midpoint-displacement-3d.html"></iframe>
+<iframe num=3 width=320 height=230 class="demo" src="/examples/custom-midpoint-displacement-3d.html"></iframe>
 <p>3D Midpoint Displacement</p>
 </div>
-<div class="syntaxhighlighter-compacted"><script num=4 type="syntaxhighlighter" class="brush: js"><![CDATA[
-]]></script></div>
+<div class="syntaxhighlighter-compacted"><script num=4 type="syntaxhighlighter" class="brush: js"></script></div>
 <div class="example small-example">
-<iframe num=4 width=320 height=230 class="demo" src="../examples/midpoint-displacement-3d.html"></iframe>
+<iframe num=4 width=320 height=230 class="demo" src="/examples/midpoint-displacement-3d.html"></iframe>
 <p>... One more time, using the custom displacement</p>
 </div>
 
@@ -228,11 +224,10 @@ for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap();
 <p>Given the heightmap, it's quite easy to <em>assign color to every point depending on its elevation</em>: if the value equals the min. boundary, then paint it light blue to represent water; if it's above a given limit then make it white as snow; if it's somewhere between then make a gradient from vegetal-green to rocky-brown with a function using the height; ...</p>
 
 <div class="example">
-<iframe num=5 width=560 height=300 class="demo" src="../examples/midpoint-displacement-flat-landscape.html"></iframe>
+<iframe num=5 width=560 height=300 class="demo" src="/examples/midpoint-displacement-flat-landscape.html"></iframe>
 <p>Colored Heightmap</p>
 </div>
-<script num=5 type="syntaxhighlighter" class="brush: js; collapse: true"><![CDATA[
-]]></script>
+<script num=5 type="syntaxhighlighter" class="brush: js; collapse: true"></script>
 
 <p>But getting a realist-enough result needs much tweaking, and also more inputs. One of the keys to add depth and realism to a landscape is to take <strong>lighting</strong> into account. Computing shadows is out of order given our 1K limit, but <strong>simulating penumbra is easy using the incline</strong>.</p>
 
@@ -273,17 +268,16 @@ ctx.fillStyle = ctx.strokeStyle = 'hsl('+[ // Using coercion for the ","
 ]]></script>
 
 <div class="example">
-<iframe num=6 width=560 height=300 class="demo" src="../examples/midpoint-displacement-flat-lighted-landscape.html"></iframe>
+<iframe num=6 width=560 height=300 class="demo" src="/examples/midpoint-displacement-flat-lighted-landscape.html"></iframe>
 <p>Colored & lighted Heightmap</p>
 </div>
-<script num=6 type="syntaxhighlighter" class="brush: js; collapse: true"><![CDATA[
-]]></script>
+<script num=6 type="syntaxhighlighter" class="brush: js; collapse: true"></script>
 
 <p>&laquo; <i>It still looks ugly</i> &raquo; ... Right, but we are adding relief effects to a flat surface, how can it look but disturbing? Let's <em>put it into perspective</em>.</p>
 
 <h2>Give it relief</h2>
 	
-<p>The whole projection and rendering stuff has been covered in the previous articles<a class="refing" href="../article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">[hop]</a>. We just have to take each point $(i, j, height)$ of the heightmap and evaluate the position of the corresponding vertex $\hvecthree{x}{y}{z}$ with:</p>
+<p>The whole projection and rendering stuff has been covered in the previous articles<a class="refing" href="/article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">[hop]</a>. We just have to take each point $(i, j, height)$ of the heightmap and evaluate the position of the corresponding vertex $\hvecthree{x}{y}{z}$ with:</p>
 
 <div class="mathjax-formula">$$
 	x = i \cdot \frac{landscape.width}{heightMap.width} \\
@@ -292,7 +286,7 @@ ctx.fillStyle = ctx.strokeStyle = 'hsl('+[ // Using coercion for the ","
 $$</div>
 
 <p>... then project it into screen coordinates.</p>
-<p>To check if the point should be displayed or not, we could use again the Painter's algorithm and its properties. Check the demo <a href="../demo#js1k-2013-loom" title="&laquo; Loom &raquo; - Demo">&laquo; Loom &raquo;</a> to see how it looks.</p>
+<p>To check if the point should be displayed or not, we could use again the Painter's algorithm and its properties. Check the demo <a href="/demo#js1k-2013-loom" title="&laquo; Loom &raquo; - Demo">&laquo; Loom &raquo;</a> to see how it looks.</p>
 
 <p>The problem of this method is that it implies to sort an array containing all the elements (simple vertices or surfaces) waiting to be drawn. That is quite a <i>heavy</i> operation, given the level of details of our landscape. This is why I have to reduce the details when moving around in &laquo; Loom &raquo;, or else the browser wouldn't be able to ensure a correct framerate <small>(and would probably crash)</small>.</p>
 
@@ -315,11 +309,10 @@ $$</div>
 <p>However, we need some adaptations to use this method on our landscape. We don't have a <strong>continuous</strong> function to pick vertices out of our 2D <strong>discrete</strong> heightmap. We need a way to evaluate the height of the points <em>all over</em> our surface, and not only at the nodes.</p>
 
 <div class="example">
-<iframe num=9 width=560 height=450 class="demo" src="../examples/heightmap-simple-3d-projection.html"></iframe>
+<iframe num=9 width=560 height=450 class="demo" src="/examples/heightmap-simple-3d-projection.html"></iframe>
 <p>A bit hollow, if we draw only the nodes...</p>
 </div>
-<script num=9 type="syntaxhighlighter" class="brush: js; collapse: true"><![CDATA[
-]]></script>
+<script num=9 type="syntaxhighlighter" class="brush: js; collapse: true"></script>
 
 <p><strong>Triangulation + barycentric interpolation</strong> do the trick nicely. Here is how it works:</p>
 <ol>
@@ -333,22 +326,20 @@ $$</div>
 </ol>
 
 <div class="example">
-<iframe num=7 width=400 height=400 class="demo" src="../examples/barycentric-interpolation-color.html"></iframe>
+<iframe num=7 width=400 height=400 class="demo" src="/examples/barycentric-interpolation-color.html"></iframe>
 <p>Barycentric Interpolation of colors</p>
 </div>
-<script num=7 type="syntaxhighlighter" class="brush: js; collapse: true"><![CDATA[
-]]></script>
+<script num=7 type="syntaxhighlighter" class="brush: js; collapse: true"></script>
 
 <p>We are thus able to describe explicitly our surface. We can now wrap this whole process into a function $g: \hvectwo{x}{y} \in \mathbb{R}^2 \mapsto \hvecfour{x}{y}{height}{color}$ ($color$ being computed by a function similar to the one described previously) and plug it to the Monte-Carlo sampling by defining $f$ as $f\hvectwo{a}{b} = g\hvectwo{a \cdot heightMap.width}{b \cdot heightMap.height}$.</p>
 
 <p>Nothing else to do but to put everything together, and that's it:</p>
 
 <div class="example">
-<iframe num=8 width=560 height=450 class="demo" src="../examples/heightmap-interpolated-3d-projection.html"></iframe>
+<iframe num=8 width=560 height=450 class="demo" src="/examples/heightmap-interpolated-3d-projection.html"></iframe>
 <p>About 850B once crushed.</p>
 </div>
-<script num=8 type="syntaxhighlighter" class="brush: js; collapse: true"><![CDATA[
-]]></script>
+<script num=8 type="syntaxhighlighter" class="brush: js; collapse: true"></script>
 
 <p class="note">If you want to know more about how <i>not</i> to use the z-buffer or why the hilly parts of the landscape take longer to be correctly rendered, you should read the <a href="http://stackoverflow.com/questions/16441376/glitches-with-triangulation-linear-interpolation-3d-projection" title=" Stack Overflow - Glitches with Triangulation + Linear Interpolation + 3D projection">Stack Overflow thread</a> I made when I was trying to fix some glitches.</p>
 
@@ -393,10 +384,10 @@ $$</div>
 			<footer id="page-footer">&copy; Aldream / Benjamin (Bill) Planche 2013 - <a href="#blog-article" title="Up">Fly high</a></footer>
 
 
-        <script src="..//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
-        <script src="../js/plugins.js"></script>
-        <script src="../js/main.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+        <script src="/js/plugins.js"></script>
+        <script src="/js/main.js"></script>
 		<script type="text/x-mathjax-config">
 			MathJax.Hub.Config({
 				TeX: { extensions: ["autobold.js"] },
@@ -404,29 +395,34 @@ $$</div>
 			});
 		</script>
 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-		<script type="text/javascript" src="../js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
-		<script type="text/javascript" src="../js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
+		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
+		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
 		<script>
-		
+			var nbIframes = 0;
 			$('iframe').each(function(){
 				var jIframe = $(this);
 				var num = jIframe.attr('num');
 				if (num) {
 					var displayingScript = $('script[num='+num+']');
 					if (displayingScript.length > 0) {
+						nbIframes++;
 						jIframe.ready(function(){
-							var script = '';
+							var script = '<![CDATA[';
 							jIframe.contents().find('script').each(function(){
 								script += $(this).html();
 							});
+							script += ']]>';
 							displayingScript.html(script);
+							nbIframes--;
+							if (!nbIframes) {
+								// Syntax Highlighting:
+								SyntaxHighlighter.all();
+							}
 						});
+		
 					}
 				}
 			});
-			
-			// Syntax Highlighting:
-			SyntaxHighlighter.all()
 			
 			// Twitter buttons:
 			!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
