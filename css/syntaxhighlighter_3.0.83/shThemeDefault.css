@@ -49,12 +49,13 @@
   overflow: visible !important;
 }
 .syntaxhighlighter.collapsed .toolbar {
-  color: blue !important;
+  color: hsl(133, 74%, 39%) !important;
   background: white !important;
   border: 1px solid #6ce26c !important;
+  border-radius: 5px;
 }
 .syntaxhighlighter.collapsed .toolbar a {
-  color: blue !important;
+  color: hsl(133, 74%, 39%) !important;
 }
 .syntaxhighlighter.collapsed .toolbar a:hover {
   color: red !important;
