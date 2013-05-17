@@ -346,10 +346,10 @@ Basically, you can use any function you want, taking as parameters, among others
 	</li>	
 	<li><strong>Functions</strong>
 		<ul>
-			<li>Compute the <strong>cosine</strong> values of the smoothly-varying parameters to get some periodicity.</li>
-			<li>Use different <strong>prime numbers as coefficients</strong> (periods) to make the global periodicity less obvious.</li>
-			<li>Why restricting ourselves to the segment between our two original vertices? Go beyond (ie try to apply <strong>coefficients beyond [0, 1]</strong> to thstrong).</li>
-			<li><strong>Cubic pulsations</strong> is an interesting effect I abused to deal with the sudden inputs (clicks) (learn more about at the source of the idea, Iñigo Quílez's website <a class="refing" id="refing-2" href="#refed-2" title="Ref - Iñigo Quílez - Article - Useful Little Functions">[2]</a> <small>- this website is full of coding and maths gems</small>)</li>
+			<li>Compute the <strong>cosine</strong> values of the smoothly-varying parameters to get periodicity.</li>
+			<li>Use different <strong>prime numbers as coefficients</strong> to make the global periodicity less obvious / to increase the variations.</li>
+			<li>Why restricting ourselves to the segment between our two original vertices? Go beyond (ie try to apply <strong>coefficients beyond [0, 1]</strong> to make your object grow or shrink and behave strangely).</li>
+			<li><strong>Cubic pulsations</strong> is an interesting effect I abused, to deal with the sudden inputs (clicks) (learn more about at the source of the idea, Iñigo Quílez's website <a class="refing" id="refing-2" href="#refed-2" title="Ref - Iñigo Quílez - Article - Useful Little Functions">[2]</a> <small>- this website is full of coding and maths gems</small>)</li>
 		</ul>
 	</li>
 </ul>
@@ -373,9 +373,9 @@ function Tween (cubeCoord,sphereCoord, coef) {
 ///
 function Paint (facesCube, facesSphere) {
 	// PROJECTION:
-	/** ...
-	 *	Usual initialization here
-	 * 	... */
+	...
+	// Usual initialization here
+	...
 	
 	for (l in facesCube) {  // Not optimal, but shorter.
 		screenCoord[l] = [];
