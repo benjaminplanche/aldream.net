@@ -62,9 +62,14 @@ function Paint () {
 			deltaHeight1 = (colorMap[indTronc] - colorMap[indThirdPointOfTriangle]),
 			deltaHeight2 = (colorMap[indTronc+dim+1] - colorMap[indThirdPointOfTriangle]),
 			hue = colorMap[indThirdPointOfTriangle] + deltaHeight1 * (1-(whichTriangle? jDec:iDec)) + deltaHeight2 * (!whichTriangle? jDec:iDec),
-			
-			posX = i*canvasWidth,
-			posY = j*canvasWidth;
+			// Another method using the 4 nodes:
+			// indFourthPointOfTriangle = indTronc +dim*(1-whichTriangle) +whichTriangle,
+			// hue = colorMap[indTronc]*((1-iDec)*(1-jDec)
+			//		+ colorMap[indTronc+1]*(iDec*(1-jDec))
+			//		+ colorMap[indTronc+dim]*((1-iDec)*jDec)
+			//		+ colorMap[indTronc+dim+1]*(iDec*jDec);
+			posX = j*canvasWidth,
+			posY = i*canvasHeight;
 		
 		a.fillStyle = a.strokeStyle = 'hsl('+hue+', 60%, 50%)';
 		a.fillRect(posX, posY, 1, 1);
