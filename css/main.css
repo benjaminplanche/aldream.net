@@ -517,8 +517,9 @@ article p {
 article .example {
 	margin: 2em 0;
 }
-article .small-example {
-	display: inline-block;
+article .small-example:nth-child {
+    margin: 0 auto;
+    display: inline-block;
 }
 article .example p {
 	margin: 0 !important;

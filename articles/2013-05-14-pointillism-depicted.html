@@ -195,28 +195,26 @@ for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap();
 			// predictability but reduce a bit the visibility of the remaining artifacts.
 		...
 ]]></script>
+<div style="text-align:center;">
+	<div class="example small-example">
+		<iframe width=300 height=230 class="demo" src="/examples/custom-midpoint-displacement-2d.html"></iframe>
+		<p>Midpoint Displacement applied to the Y-coordinates (with tweening)</p>
+	</div>
 
-<div class="syntaxhighlighter-compacted"><script num=1 type="syntaxhighlighter" class="brush: js"></script></div>
-<div class="example small-example">
-<iframe num=1 width=320 height=230 class="demo" src="/examples/custom-midpoint-displacement-2d.html"></iframe>
-<p>2D Midpoint Displacement (with tweening)</p>
-</div>
+	<div class="example small-example">
+		<iframe width=300 height=230 class="demo" src="/examples/midpoint-displacement-2d.html"></iframe>
+		<p>... Now using the custom displacement</p>
+	</div>
 
-<div class="syntaxhighlighter-compacted"><script num=2 type="syntaxhighlighter" class="brush: js"></script></div>
-<div class="example small-example">
-<iframe num=2 width=320 height=230 class="demo" src="/examples/midpoint-displacement-2d.html"></iframe>
-<p>... Now using the custom displacement</p>
-</div>
+	<div class="example small-example">
+		<iframe width=300 height=230 class="demo" src="/examples/custom-midpoint-displacement-3d.html"></iframe>
+		<p>Midpoint Displacement applied to the <em>height</em> coordinates</p>
+	</div>
 
-<div class="syntaxhighlighter-compacted"><script num=3 type="syntaxhighlighter" class="brush: js"></script></div>
-<div class="example small-example">
-<iframe num=3 width=320 height=230 class="demo" src="/examples/custom-midpoint-displacement-3d.html"></iframe>
-<p>3D Midpoint Displacement</p>
-</div>
-<div class="syntaxhighlighter-compacted"><script num=4 type="syntaxhighlighter" class="brush: js"></script></div>
-<div class="example small-example">
-<iframe num=4 width=320 height=230 class="demo" src="/examples/midpoint-displacement-3d.html"></iframe>
-<p>... One more time, using the custom displacement</p>
+	<div class="example small-example">
+		<iframe width=300 height=230 class="demo" src="/examples/midpoint-displacement-3d.html"></iframe>
+		<p>... One more time, using the custom displacement</p>
+	</div>
 </div>
 
 <h2>Coloring</h2>
@@ -224,10 +222,9 @@ for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap();
 <p>Given the heightmap, it's quite easy to <em>assign color to every point depending on its elevation</em>: if the value equals the min. boundary, then paint it light blue to represent water; if it's above a given limit then make it white as snow; if it's somewhere between then make a gradient from vegetal-green to rocky-brown with a function using the height; ...</p>
 
 <div class="example">
-<iframe num=5 width=560 height=300 class="demo" src="/examples/midpoint-displacement-flat-landscape.html"></iframe>
-<p>Colored Heightmap</p>
+	<iframe width=560 height=300 class="demo" src="/examples/midpoint-displacement-flat-landscape.html"></iframe>
+	<p>Colored Heightmap</p>
 </div>
-<script num=5 type="syntaxhighlighter" class="brush: js; collapse: true"></script>
 
 <p>But getting a realist-enough result needs much tweaking, and also more inputs. One of the keys to add depth and realism to a landscape is to take <strong>lighting</strong> into account. Computing shadows is out of order given our 1K limit, but <strong>simulating penumbra is easy using the incline</strong>.</p>
 
@@ -268,10 +265,9 @@ ctx.fillStyle = ctx.strokeStyle = 'hsl('+[ // Using coercion for the ","
 ]]></script>
 
 <div class="example">
-<iframe num=6 width=560 height=300 class="demo" src="/examples/midpoint-displacement-flat-lighted-landscape.html"></iframe>
-<p>Colored & lighted Heightmap</p>
+	<iframe width=560 height=300 class="demo" src="/examples/midpoint-displacement-flat-lighted-landscape.html"></iframe>
+	<p>Colored & lighted Heightmap</p>
 </div>
-<script num=6 type="syntaxhighlighter" class="brush: js; collapse: true"></script>
 
 <p>&laquo; <i>It still looks ugly</i> &raquo; ... Right, but we are adding relief effects to a flat surface, how can it look but disturbing? Let's <em>put it into perspective</em>.</p>
 
@@ -309,10 +305,9 @@ $$</div>
 <p>However, we need some adaptations to use this method on our landscape. We don't have a <strong>continuous</strong> function to pick vertices out of our 2D <strong>discrete</strong> heightmap. We need a way to evaluate the height of the points <em>all over</em> our surface, and not only at the nodes.</p>
 
 <div class="example">
-<iframe num=9 width=560 height=450 class="demo" src="/examples/heightmap-simple-3d-projection.html"></iframe>
-<p>A bit hollow, if we draw only the nodes...</p>
+	<iframe width=560 height=450 class="demo" src="/examples/heightmap-simple-3d-projection.html"></iframe>
+	<p>A bit hollow, if we draw only the nodes...</p>
 </div>
-<script num=9 type="syntaxhighlighter" class="brush: js; collapse: true"></script>
 
 <p><strong>Triangulation + barycentric interpolation</strong> do the trick nicely. Here is how it works:</p>
 <ol>
@@ -326,20 +321,18 @@ $$</div>
 </ol>
 
 <div class="example">
-<iframe num=7 width=400 height=400 class="demo" src="/examples/barycentric-interpolation-color.html"></iframe>
-<p>Barycentric Interpolation of colors</p>
+	<iframe width=400 height=400 class="demo" src="/examples/barycentric-interpolation-color.html"></iframe>
+	<p>Barycentric Interpolation of colors</p>
 </div>
-<script num=7 type="syntaxhighlighter" class="brush: js; collapse: true"></script>
 
 <p>We are thus able to describe explicitly our surface. We can now wrap this whole process into a function $g: \hvectwo{x}{y} \in \mathbb{R}^2 \mapsto \hvecfour{x}{y}{height}{color}$ ($color$ being computed by a function similar to the one described previously) and plug it to the Monte-Carlo sampling by defining $f$ as $f\hvectwo{a}{b} = g\hvectwo{a \cdot heightMap.width}{b \cdot heightMap.height}$.</p>
 
 <p>Nothing else to do but to put everything together, and that's it:</p>
 
 <div class="example">
-<iframe num=8 width=560 height=450 class="demo" src="/examples/heightmap-interpolated-3d-projection.html"></iframe>
-<p>About 850B once crushed.</p>
+	<iframe width=560 height=450 class="demo" src="/examples/heightmap-interpolated-3d-projection.html"></iframe>
+	<p>About 850B once crushed.</p>
 </div>
-<script num=8 type="syntaxhighlighter" class="brush: js; collapse: true"></script>
 
 <p class="note">If you want to know more about how <i>not</i> to use the z-buffer or why the hilly parts of the landscape take longer to be correctly rendered, you should read the <a href="http://stackoverflow.com/questions/16441376/glitches-with-triangulation-linear-interpolation-3d-projection" title=" Stack Overflow - Glitches with Triangulation + Linear Interpolation + 3D projection">Stack Overflow thread</a> I made when I was trying to fix some glitches.</p>
 
@@ -398,32 +391,7 @@ $$</div>
 		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
 		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
 		<script>
-			var nbIframes = 0;
-			$('iframe').each(function(){
-				var jIframe = $(this);
-				var num = jIframe.attr('num');
-				if (num) {
-					var displayingScript = $('script[num='+num+']');
-					if (displayingScript.length > 0) {
-						nbIframes++;
-						jIframe.ready(function(){
-							var script = '<![CDATA[';
-							jIframe.contents().find('script').each(function(){
-								script += $(this).html();
-							});
-							script += ']]>';
-							displayingScript.html(script);
-							nbIframes--;
-							if (!nbIframes) {
-								// Syntax Highlighting:
-								SyntaxHighlighter.all();
-							}
-						});
-		
-					}
-				}
-			});
-			
+
 			// Twitter buttons:
 			!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
 			
