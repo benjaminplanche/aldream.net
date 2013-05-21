@@ -517,9 +517,8 @@ article p {
 article .example {
 	margin: 2em 0;
 }
-article .small-example:nth-child {
-    margin: 0 auto;
-    display: inline-block;
+article .small-example {
+	display: inline-block;
 }
 article .example p {
 	margin: 0 !important;
@@ -540,22 +539,26 @@ article .example p {
 #blog-article  .refed {
 	border: none;
 }
-.syntaxhighlighter-compacted {
+article pre.prettyprint {
+	margin: 0 4em 0 2.5em;
+	padding-left: 2em;
+}
+article pre ol.linenums {
+	padding: 1em !important;
+	line-height: 1.4em !important;
+}
+
+.source-small {
 	float:left;
 	margin: 1em 2em 0 0;
 	padding: 0;
 }
-.syntaxhighlighter-compacted  .syntaxhighlighter {
-	width: 35em !important;
-	margin: 1em 0 !important;
-	height: 17.5em;
+.source-small  .prettyprint {
+	width: 42em !important;
+	margin: 1em 0 1em 1em !important;
+	height: 22em;
 	overflow:auto;
-}
-.syntaxhighlighter  {
-	border-radius: 5px;
-}
-.syntaxhighlighter .expandSource {
-	color: hsl(133, 74%, 39%);
+	font-size: .8em;
 }
 	
 .quote {
@@ -1128,21 +1131,44 @@ article footer .twitter-share-button {
 	#blog-article p  {
 		padding: .1em 1em;
 	}
-	#blog-article ul  {
+	#blog-article ul, #blog-article ol  {
 		padding: .1em 1em 0 2.5em;
+	}
+	article pre.prettyprint {
+		margin: 0 -1em;
+		padding-left: 2em;
+		max-height: 30em;
+		overflow: auto;
+		font-size: .8em;
+	}
+	article pre ol.linenums {
+		width: 50em;
 	}
 	#blog-article  img {
 		border: none;
 		float: right;
-		margin: 0 2em 1em 2em;
+		margin: 0 2em 2em 2em;
 	}
-	.syntaxhighlighter-compacted  .syntaxhighlighter {
+	.source-small  .prettyprint {
 		width: 39em !important;
 		height: auto;
 		overflow:auto;
 	}
 	#blog-article article h1 {
 		font-size: 3em;
+	}
+	.quote {
+		margin: 0;
+		padding: .5em;
+	}
+	.quote p:before {
+		left: 0;
+	}
+	.quote footer {
+		margin-right: 1em;
+	}  
+	.quote footer:after {
+		right: 0;
 	}
 }
 
@@ -1192,10 +1218,20 @@ article footer .twitter-share-button {
 	#blog-article p  {
 		padding: .1em .5em;
 	}
-	.syntaxhighlighter-compacted  .syntaxhighlighter {
+	.source-small  .prettyprint {
 		width: 18em !important;
 		height: auto;
 		overflow:auto;
+	}
+	.note {
+		margin: 0 !important;
+	}
+	.note:before {
+		left: .5em;
+		margin-top: .3em;
+	}
+	#blog-article .demo {
+		margin-left: -1em;
 	}
 	#blog-article ul  {
 		padding: .5em 1em 0 1.5em;
