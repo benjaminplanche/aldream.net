@@ -16,8 +16,7 @@
 		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="/css/normalize.css"/>
         <link rel="stylesheet" href="/css/main.css"/>
-		<link href="/css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
-		<link href="/css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
+		<link href="/css/prettify.css" rel="stylesheet" type="text/css" />
         <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body id="blog">
@@ -72,7 +71,7 @@ I was trying to tesselate a planet, discovered <em>cube-mapping</em>, and the ne
 <p>As it is better not to walk blind, let's deal first with the rendering of our yet-to-be-created scene. For that, we can use the simple renderer described in my previous article, so please <a href="/article/2013-04-13-painter-s-algorithm" title="Painter's Algorithm">read it</a> if you need the explanations.</p>
 <p>Only minor modifications are required to adapt it to the specificity of our mesh structure. However, as we are limited in the number of bytes, we should also condense the whole, even if it means losing in clarity or generality <small>(the code below is still much <em>crush-able</em>, by condensing some operations for instance)</small>:</p>
 
-<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+<pre class="prettyprint linenums">
 /**
  * ===Render===
  * Projects and renders the scene. - To be called every frame.
@@ -143,8 +142,7 @@ function Render (sceneFaces, canvas, context, camPosition, camOrientation) {
 		context.stroke(),
 		context.fill();
 };
-
-]]></script>
+</pre>
 	
 	
 <h2>Mesh weaving</h2>
@@ -156,7 +154,7 @@ function Render (sceneFaces, canvas, context, camPosition, camOrientation) {
 <h3>Cube</h3>
 <p>The objective is to define a cube of size $D$, centered on the origin (to simplify the generation), and made of $6 \cdot N^2$ triangular faces ($N^2$ per side).
 We could just statically define its structure, like I did in an example for the rendering:</p>
-<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+<pre class="prettyprint linenums">
 // Definition of a simple 2x2x2 cube, made of quad faces
 // (building the mesh procedurally isn't complicated, but not the subject of this article):
 var cubeVertices = [[-1,  1,  1], [ 1,  1,  1], [ 1, -1,  1], [-1, -1,  1],
@@ -167,7 +165,7 @@ var cubesQuadriFaces = [[cubeVertices[0], cubeVertices[1], cubeVertices[2], cube
 						[cubeVertices[4], cubeVertices[0], cubeVertices[3], cubeVertices[7]],
 						[cubeVertices[4], cubeVertices[5], cubeVertices[1], cubeVertices[0]],
 						[cubeVertices[3], cubeVertices[2], cubeVertices[6], cubeVertices[7]]];
-]]></script>
+</pre>
 <p>But we want a more refined mesh, with more vertices to play with later, and writing down the coordinates of our $3 \cdot 6 \cdot N^2$ vertices would be as painful as long.
 So... how can we <strong>procedurally</strong> define our cube? Here is a first possibility:</p>
 <div class="mathjax-formula">
@@ -202,7 +200,7 @@ $$
 	<li>One loop of 2 iterations to divide each rectangle into the <strong>2 triangular faces</strong>.</li>
 </ul>
 <p>The final generation method is:</p>
-<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+<pre class="prettyprint linenums">
 /**
  * ===GenerateVertexForCube===
  * Given the subdivision indices, generates the corresponding vertex for the cube mesh
@@ -245,7 +243,7 @@ for (var n = 6; n--;)
 																// or the one on the next col). We use a modulo 2 on the face's id to select the good one.
 			// Byte saving trick:(faceId+1)%2 = k. And we don't mind which triangle we generate first, so k makes a cheaper way to distinguish them
 			trId++;
-]]></script>
+</pre>
 
 <div class="example">
 	<iframe width=320 height=230 class="demo" src="/examples/cube-tesselation.html"></iframe>
@@ -267,7 +265,7 @@ for (var n = 6; n--;)
 
 <p>Thus, by just adding these two operations to our previous tesselation function, we can return a sphere instead of a cube (or both):</p>
 
-<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+<pre class="prettyprint linenums">
 /**
  * ===GenerateVertexForCube===
  * Given the subdivision indices, generates the corresponding vertex for the cube mesh
@@ -314,7 +312,7 @@ for (var n = 6; n--;)
 			GenerateVertexForCube(i+1,j+1, n, facesCube[trId], facesSphere[trId]),		// 2nd vertex (bottom-right)
 			GenerateVertexForCube(i+k, j+1-k, n, facesCube[trId], facesSphere[trId]),	// 3rd vertex - the one varying
 			trId++;
-]]></script>
+</pre>
 
 
 
@@ -346,17 +344,17 @@ Basically, you can use any function you want, taking as parameters, among others
 	</li>	
 	<li><strong>Functions</strong>
 		<ul>
-			<li>Compute the <strong>cosine</strong> values of the smoothly-varying parameters to get periodicity.</li>
-			<li>Use different <strong>prime numbers as coefficients</strong> to make the global periodicity less obvious / to increase the variations.</li>
-			<li>Why restricting ourselves to the segment between our two original vertices? Go beyond (ie try to apply <strong>coefficients beyond [0, 1]</strong> to make your object grow or shrink and behave strangely).</li>
-			<li><strong>Cubic pulsations</strong> is an interesting effect I abused, to deal with the sudden inputs (clicks) (learn more about at the source of the idea, Iñigo Quílez's website <a class="refing" id="refing-2" href="#refed-2" title="Ref - Iñigo Quílez - Article - Useful Little Functions">[2]</a> <small>- this website is full of coding and maths gems</small>)</li>
+			<li>Compute the <strong>cosine</strong> values of the smoothly-varying parameters to get some periodicity.</li>
+			<li>Use different <strong>prime numbers as coefficients</strong> (periods) to make the global periodicity less obvious.</li>
+			<li>Why restricting ourselves to the segment between our two original vertices? Go beyond (ie try to apply <strong>coefficients beyond [0, 1]</strong> to thstrong).</li>
+			<li><strong>Cubic pulsations</strong> is an interesting effect I abused to deal with the sudden inputs (clicks) (learn more about at the source of the idea, Iñigo Quílez's website <a class="refing" id="refing-2" href="#refed-2" title="Ref - Iñigo Quílez - Article - Useful Little Functions">[2]</a> <small>- this website is full of coding and maths gems</small>)</li>
 		</ul>
 	</li>
 </ul>
 		
 <p>Once you got the wanted effect, just wrap it all in a function you'll call in your rendering method:</p>
 
-<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+<pre class="prettyprint linenums">
 ///
 // Linear tweening...
 // Parameters:
@@ -373,9 +371,9 @@ function Tween (cubeCoord,sphereCoord, coef) {
 ///
 function Paint (facesCube, facesSphere) {
 	// PROJECTION:
-	...
-	// Usual initialization here
-	...
+	/** ...
+	 *	Usual initialization here
+	 * 	... */
 	
 	for (l in facesCube) {  // Not optimal, but shorter.
 		screenCoord[l] = [];
@@ -397,7 +395,7 @@ function Paint (facesCube, facesSphere) {
 	 *	Usual rendering here
 	 * 	... */
 }
-]]></script>
+</pre>
 
 <p>Below a small application displaying the outcome of some effects:</p>
 
@@ -413,7 +411,7 @@ function Paint (facesCube, facesSphere) {
 <p>This effect is obtained by using the <em>index of the sorted faces</em> as coefficient for the luminosity (here, the further from the camera, the smaller its index, the smaller the coefficient for luminosity and thus the darker).</p>
 <p>By the way, I now only swear by the <strong>HSL color system</strong>. If it is not the case yet, I highly recommend you to consider it, at least when it comes to represent complex scenes.</p>
 
-<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+<pre class="prettyprint linenums">
 	// Method used in the demo to compute the colors - called in the painting loop.
 	a.fillStyle = a.strokeStyle='hsl('+[
 		500*timeCos/screenCoord[l][9],	// Hue - Function of the time and of the original distance
@@ -422,7 +420,7 @@ function Paint (facesCube, facesSphere) {
 		l/75*Math.cos(pulseCoef/7)		// Luminosity - Function of the periodic pulse + Cheap fog
 										//		effect by using the sorted index
 	]+'%)',
-]]></script>
+</pre>
 
 <p>As for the camera's movements, the shape-shifting function was already inducing <em>momentum</em>, inflating or deflating the mesh's dimensions.</p>
 <p>Indeed, one consequence of having a scene containing a single element is the <strong>absence of landmarks</strong>. Without looking at the source, it is left to the viewer's appreciation to conclude if it is the camera which is nearing or the object which is growing.</p>
@@ -446,7 +444,7 @@ function Paint (facesCube, facesSphere) {
 </ol>
 						<footer>
 							<time datetime="2013-04-13">2013-04-23</time>
-							<a href="https://twitter.com/share" class="twitter-share-button" data-text="The Painter'S Algorithm" data-via="b_aldream" data-lang="en">Tweet</a>
+							<a href="https://twitter.com/share" class="twitter-share-button" data-text="Mesh Breeding" data-via="b_aldream" data-lang="en">Tweet</a>
 						</footer>
 						<div id="disqus_thread"></div>
 						<script type="text/javascript">
@@ -480,11 +478,10 @@ function Paint (facesCube, facesSphere) {
 			});
 		</script>
 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
-		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
+		<script type="text/javascript" src="/js/vendor/prettify/prettify.js"></script>
 		<script>
 			// Syntax Highlighting:
-			SyntaxHighlighter.all()
+			prettyPrint();
 			
 			// Twitter buttons:
 			!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");

@@ -518,7 +518,7 @@ article .example {
 	margin: 2em 0;
 }
 article .small-example {
-	display: inline-block;
+	margin: 2em auto;
 }
 article .example p {
 	margin: 0 !important;
@@ -550,12 +550,12 @@ article pre ol.linenums {
 
 .source-small {
 	float:left;
-	margin: 1em 2em 0 0;
+	margin: 0 2em 0 0;
 	padding: 0;
 }
 .source-small  .prettyprint {
 	width: 42em !important;
-	margin: 1em 0 1em 1em !important;
+	margin: 0 0 1em 1em !important;
 	height: 22em;
 	overflow:auto;
 	font-size: .8em;
@@ -1148,6 +1148,9 @@ article footer .twitter-share-button {
 		border: none;
 		float: right;
 		margin: 0 2em 2em 2em;
+	}
+	.source-small {
+		float:none;
 	}
 	.source-small  .prettyprint {
 		width: 39em !important;

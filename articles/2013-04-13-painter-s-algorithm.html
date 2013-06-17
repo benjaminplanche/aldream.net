@@ -16,8 +16,7 @@
 		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="/css/normalize.css"/>
         <link rel="stylesheet" href="/css/main.css"/>
-		<link href="/css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
-		<link href="/css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
+		<link href="/css/prettify.css" rel="stylesheet" type="text/css" />
         <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body id="blog">
@@ -52,10 +51,10 @@
 <h1>The Painter's Algorithm</h1>
 
 <p>This article is the first of a series aimed to describe and formalize the different methods and tricks used in my demos for the <a href="http://js1k.com/2013-spring/" title="JS1K 2013">JS1K Spring-2013 challenge</a>. I had much fun participating, and learnt a lot, so I will try to spread my enthousiasm.<br/>
-The main topics will therefore be <strong>3D procedural generation</strong>, <strong>rendering</strong>, and <strong>how to get all this fit in 1024 bytes</strong>.</p>
+The main topics will therefore be 3D procedural generation, rendering, and how to get all this fit in 1024 bytes.</p>
 
 <p>Today, we will deal with &laquo; <em>how to easily render a 3D scene in a 2D canvas</em> &raquo;, presenting one of the simplest method for that: the <strong>Painter's Algorithm</strong>.</p>
-<p>Through a mix of maths and code, we shall end with a simple example.</p>
+<p>Through a mix of maths and code, we should end with a simple example.</p>
 
 <h2>Rendering Process</h2>
 
@@ -157,7 +156,7 @@ Through the multiplication of $d_z$ and $d_y$ by $min(H,W)$, we apply the chosen
 Finally, the addition of half the screen's dimensions centers the elements.</p>
 
 <p>So here is our <strong>final projection function</strong>, to be applied to every vertex of our scene:</p>
-<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+<pre class="prettyprint linenums">
 /**
  * ===Project===
  * Computes the perspective projection for each vertex of an array of 3D faces.
@@ -202,7 +201,7 @@ function Project(sceneFaces, camPosition, camOrientation, canvasWidth, canvasHei
 	
 	return projectedFaces;
 }
-]]></script>
+</pre>
 
 <p>There is one important thing I haven't addressed yet : the <strong>clipping</strong> step. When you look at something with your own eyes or a camera, you don't see the <i>whole scene</i>, e.g. you can't see behind you. Your field of view, your <em>frustum</em>, is limited to a specific cone or pyramid <small>(truncated, if you take into account the near plane and the far plane. Some cameras can't see objects too close or too far: the planes represent those limits)</small>.</p>
 
@@ -225,8 +224,7 @@ So we don't want to draw our elements higgledy-piggledy, displaying faces which 
 By drawing them in this order, the front elements will naturally cover/overlay the ones behind. Like most painters would do.</p>
 
 <p>Luckily for us, we've already computed the depth of the vertices, $d_z$, making the implementation of the rendering function really straightforward:</p>
-<script type="syntaxhighlighter" class="brush: js"><![CDATA[
-
+<pre class="prettyprint linenums">
 //	ComputeBarycentersDepths() is supposed to be called right after the projection step and
 //	before Paint(), to set the Z-bar values of each vertex. I make the supposition that these
 //	values can be used in other part of your rendering method (for instance to set the colors),
@@ -255,7 +253,7 @@ function ComputeBarycentersDepths(faces) {
  * ===Paint===
  * Computes the Z value of the given faces, pushing it into the array defining each face.
  * Parameter:
- *	- projectedFaces	(Array<Object>):	Array of faces, defined by their vertices, their
+ *	- projectedFaces	(Array&lt;Object&gt;):	Array of faces, defined by their vertices, their
  *											average Z-value and their color ( face = [ 
  *											[X1, Y1, Z1], ..., [X2, Y2, Z2], Z_bar, color ] )
  *	- context			(CanvasContext):	Context of the output canvas
@@ -281,9 +279,9 @@ function Paint(projectedFaces, context) {
 		context.fill(); context.stroke();
 	}
 }
-]]></script>
+</pre>
 <p> Now you only need to wrap everything in a <i>Render()</i> method such as the one below, and you're done.</p>
-<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+<pre class="prettyprint linenums">
 /**
  * ===Render===
  * Example - Render a 3D scene in a canvas using the Painter's Algorithm.
@@ -320,12 +318,12 @@ function Render(sceneFaces,
 	// Applying the Painter's Algo & Drawing:
 	Paint(projectedFaces, context);	
 }
-]]></script>
+</pre>
 
 <h2>Conclusion</h2>
 <p>That's all. We just implemented <strong>a really simple 3D renderer</strong>. You can find below a direct example using the exact functions described above:</p>
 
-<div class="syntaxhighlighter-compacted"><script type="syntaxhighlighter" class="brush: js"><![CDATA[
+<div class="source-small"><pre class="prettyprint linenums">
 /**
  * The rendering functions should be added here.
  */
@@ -392,10 +390,10 @@ var timer = 0;
 	
 	timer++;
 })();
-]]></script></div>
+</pre></div>
 
 <div class="example small-example">
-<iframe width=320 height=230 class="demo" src="../examples/painters-algo-demo.html"></iframe>
+<iframe width=320 height=230 class="demo" src="/examples/painters-algo-demo.html"></iframe>
 <p>Example - Cube</p>
 </div>
 
@@ -450,11 +448,10 @@ var timer = 0;
 			});
 		</script>
 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
-		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
+		<script type="text/javascript" src="/js/vendor/prettify/prettify.js"></script>
 		<script>
 			// Syntax Highlighting:
-			SyntaxHighlighter.all()
+			prettyPrint()
 			
 			// Twitter buttons:
 			!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");

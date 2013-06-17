@@ -45,6 +45,21 @@
 		</header>
 		<section id="blog-masonry">
 			<h1>Articles</h1>
+			<article id="pointillism-depicted" class="span2">
+				<div>
+					<h1><a href="article/2013-05-22-pointillism-depicted" title="See the whole article">Pointillism, depicted</a></h1>
+					<iframe class="demo wideDemo" width=280 height=180 src="examples/heightmap-interpolated-3d-projection.html"></iframe>
+					<div class="cols2">
+						<p>To conclude my series of articles describing the tricks I learned and used for the <a href="http://js1k.com/2013-spring/" title="JS1K 2013">JS1K Spring-2013 challenge</a>, I will now explain how &laquo; <strong>Pointillism</strong> &raquo; (<a href="http://js1k.com/2013-spring/demo/1507" title="Demo on JS1K">js1k</a> / <a href="../demo#js1k-2013-pointillism" title="&laquo; Pointillism &raquo; - Demo in my sandbox">local</a>) was done, since it received such nice reviews.</p>
+						<p>I will thus cover the <strong>lightweight procedural method</strong> used to generate the landscape, and the <strong><em>pointillist-like</em> rendering</strong>.</p>
+						<p>I will assume you've already read my previous articles (<a href="../article/2013-04-23-mesh-breeding.html"title="Article - Mesh Breeding">Mesh Breeding</a> and especially <a href="../article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">Painter's Algorithm</a>), since they already deal with the basic notions of 3D generation and rendering.
+						<p><a href="article/2013-05-22-pointillism-depicted" title="See the whole article">See the whole article.</a></p>
+					</div>
+					<footer>
+						<time datetime="2013-05-22">2013-05-22</time>
+					</footer>
+				</div>
+			</article>
 			<article id="mesh-breeding" class="span2">
 				<div>
 					<h1><a href="/article/2013-04-23-mesh-breeding" title="See the whole article">Mesh Breeding</a></h1>
@@ -175,7 +190,7 @@
 			
 			function AdaptContentToScreenSize() {
 				if (innerWidth > 690) {
-					if (!this.alreadyWide) {
+					if (!AdaptContentToScreenSize.alreadyWide) {
 						$('.wideImg').each(function(){
 							var src = $(this).attr('src');
 							var srcArray = src.split('.');
@@ -185,35 +200,36 @@
 							$(this).attr('width', 620);
 						});
 						$('.wideDemo').each(function(){
+							$(this).width(620);
+							$(this).height($(this).attr('height')/280*620);
 							$(this).attr('width', 620);
 							var src = $(this).attr('src');
 							$(this).attr('src', '');
 							$(this).attr('src', src);
 						});
-						this.alreadyWide = true;
+						AdaptContentToScreenSize.alreadyWide = true;
 					}
 				}
 				else {
-					if (this.alreadyWide) {
+					if (AdaptContentToScreenSize.alreadyWide) {
 						$('.wideImg').each(function(){
 							var src = $(this).attr('src').split('-wide').join('');
 							$(this).attr('src', src);
 							$(this).attr('width', 280);
 						});
 						$('.wideDemo').each(function(){
-							$(this).attr('width', 280);
+							$(this).width(280);
+							$(this).height($(this).attr('height'));
 							var src = $(this).attr('src');
 							$(this).attr('src', '');
 							$(this).attr('src', src);
 						});
-						this.alreadyWide = false;
+						AdaptContentToScreenSize.alreadyWide = false;
 					}
 				}
 			}
-			AdaptContentToScreenSize.alreadyWide = innerWidth > 690;
-			if (AdaptContentToScreenSize.alreadyWide) {
-				AdaptContentToScreenSize();
-			}
+			AdaptContentToScreenSize.alreadyWide = false;
+			AdaptContentToScreenSize();
 			$(window).resize(AdaptContentToScreenSize);
 		</script>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

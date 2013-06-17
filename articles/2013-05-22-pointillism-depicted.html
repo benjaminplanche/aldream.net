@@ -16,8 +16,7 @@
 		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="/css/normalize.css"/>
         <link rel="stylesheet" href="/css/main.css"/>
-		<link href="/css/syntaxhighlighter_3.0.83/shCore.css" rel="stylesheet" type="text/css" />
-		<link href="/css/syntaxhighlighter_3.0.83/shThemeDefault.css" rel="stylesheet" type="text/css" />
+		<link href="/css/prettify.css" rel="stylesheet" type="text/css" />
         <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body id="blog">
@@ -54,7 +53,7 @@
 <p>To conclude my series of articles describing the tricks I learned and used for the <a href="http://js1k.com/2013-spring/" title="JS1K 2013">JS1K Spring-2013 challenge</a>, I will now explain how &laquo; <strong>Pointillism</strong> &raquo; (<a href="http://js1k.com/2013-spring/demo/1507" title="Demo on JS1K">js1k</a> / <a href="/demo#js1k-2013-pointillism" title="&laquo; Pointillism &raquo; - Demo in my sandbox">local</a>) was done, since it received such nice reviews.</p>
 <p>I will thus cover the <strong>lightweight procedural method</strong> used to generate the landscape, and the <strong><em>pointillist-like</em> rendering</strong>.</p>
 
-<p>I will assume you've already read my previous articles (<a href="/article/2013-04-23-mesh-breeding.html"title="Article - Mesh Breeding">Mesh Breeding</a> and especially <a href="/article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">Painter's Algorithm</a>), since they cover the basic notions of 3D generation and rendering.
+<p>I will assume you've already read my previous articles (<a href="/article/2013-04-23-mesh-breeding.html"title="Article - Mesh Breeding">Mesh Breeding</a> and especially <a href="/article/2013-04-13-painter-s-algorithm/" title="Article - Painter's Algorithm">Painter's Algorithm</a>), since they already deal with the basic notions of 3D generation and rendering.
 
 <div style="display:none;">$
 \newcommand{\hvectwo}[2]
@@ -90,7 +89,7 @@ $</div>
 <p>The new values are computed by using the mean of the surrounding points and by adding a small error to generate new features. The amplitude of the error must be inversely proportional to the iteration / to the distance between the points, to give the <i>fractal-like</i>f result (the addition of important errors in the first iterations gives the landscape its global shape while the following iterations add smaller and smaller details to the surface).</p>
 
 <p>Here is a simple implementation of this algorithm for a 2D map, using modulos to evaluate the position of each points in the current square:</p>
-<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+<pre class="prettyprint linenums">
 ///
 // Generate new intermediate points (and thus details) to the given heightmap, by using stochastic
 // interpolation (Midpoint-Displacement algorithm).
@@ -158,11 +157,11 @@ var nbMaxIterations = 8,	// Max number of procedural iterations
 for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap();
 	i--;
 	heightMap = ComputeMidPointDisplacement(heightMap, h /= 2));
-]]></script>
+</pre>
 
 <p>One problem this algorithm has is the squared artifacts it generates. A variant has been developed, the <strong>Diamond-Square algorithm</strong><a class="refing" id="refing-3" href="#refed-3" title="Ref - Wikipedia - Diamond-Square algorithm">[3]</a><a class="refing" id="refing-4" href="#refed-4" title="Ref - Paul Martz - Article on Gameprogrammer.com - &laquo; Generating Random Fractal Terrain &raquo;">[4]</a> to prevent them, but this requires another step per square, lengthening the function. To <i>reduce</i> those artifacts without exceeding the size limit, I made a mix of both methods, mixing points from the previous map and the already-generated ones from the new map to evaluate the value of the mid points:</p>
 
-<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+<pre class="prettyprint linenums">
 		...
 		newMap[iMap] =
 			(i%2?
@@ -194,27 +193,33 @@ for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap();
 			// By adding errors to every point (even thepreviously fixed one), we lose in
 			// predictability but reduce a bit the visibility of the remaining artifacts.
 		...
-]]></script>
-<div style="text-align:center;">
-	<div class="example small-example">
-		<iframe width=300 height=230 class="demo" src="/examples/custom-midpoint-displacement-2d.html"></iframe>
-		<p>Midpoint Displacement applied to the Y-coordinates (with tweening)</p>
-	</div>
+</pre>
+<p></p>
+<div class="source-small"><pre num=1 class="linenums"></pre></div>
+<div class="example small-example">
+	<iframe wide-width=320 num=1 width=320 height=230 class="demo" src="/examples/midpoint-displacement-2d.html"></iframe>
+	<p>Midpoint Disp. applied to the Y-coord. <small>(with tweening)</small><br/>
+		<a num=1 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a></p>
+</div>
 
-	<div class="example small-example">
-		<iframe width=300 height=230 class="demo" src="/examples/midpoint-displacement-2d.html"></iframe>
-		<p>... Now using the custom displacement</p>
-	</div>
+<div class="source-small"><pre num=2 class="linenums"></pre></div>
+<div class="example small-example">
+	<iframe wide-width=320 num=2 width=320 height=230 class="demo" src="/examples/custom-midpoint-displacement-2d.html"></iframe>
+	<p>... Now using the custom displacement<br/>
+		<a num=2 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a></p>
+</div>
 
-	<div class="example small-example">
-		<iframe width=300 height=230 class="demo" src="/examples/custom-midpoint-displacement-3d.html"></iframe>
-		<p>Midpoint Displacement applied to the <em>height</em> coordinates</p>
-	</div>
-
-	<div class="example small-example">
-		<iframe width=300 height=230 class="demo" src="/examples/midpoint-displacement-3d.html"></iframe>
-		<p>... One more time, using the custom displacement</p>
-	</div>
+<div class="source-small"><pre num=3 class="linenums"></pre></div>
+<div class="example small-example">
+	<iframe wide-width=320 num=3 width=320 height=230 class="demo" src="/examples/midpoint-displacement-3d.html"></iframe>
+	<p>Midpoint Disp. applied to the <em>height</em> coord.<br/>
+		<a num=3 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a></p>
+</div>
+<div class="source-small"><pre num=4 class="linenums"></pre></div>
+<div class="example small-example">
+	<iframe wide-width=320 num=4 width=320 height=230 class="demo" src="/examples/custom-midpoint-displacement-3d.html"></iframe>
+	<p>... One more time, using the custom displacement<br/>
+		<a num=4 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a></p>
 </div>
 
 <h2>Coloring</h2>
@@ -222,9 +227,12 @@ for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap();
 <p>Given the heightmap, it's quite easy to <em>assign color to every point depending on its elevation</em>: if the value equals the min. boundary, then paint it light blue to represent water; if it's above a given limit then make it white as snow; if it's somewhere between then make a gradient from vegetal-green to rocky-brown with a function using the height; ...</p>
 
 <div class="example">
-	<iframe width=560 height=300 class="demo" src="/examples/midpoint-displacement-flat-landscape.html"></iframe>
-	<p>Colored Heightmap</p>
+	<iframe wide-width=560 num=5 width=560 height=300 class="demo" src="/examples/midpoint-displacement-flat-landscape.html"></iframe>
+	<p>Colored Heightmap<br/>
+		<a num=5 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a>
+	</p>
 </div>
+<pre num=5 class="linenums"></pre>
 
 <p>But getting a realist-enough result needs much tweaking, and also more inputs. One of the keys to add depth and realism to a landscape is to take <strong>lighting</strong> into account. Computing shadows is out of order given our 1K limit, but <strong>simulating penumbra is easy using the incline</strong>.</p>
 
@@ -240,34 +248,37 @@ for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap();
 
 <p>For each point $(i,j, height)$ to display, I thus evaluate its color with the <i>highy-personal-and-not-so-reusable</i> following code (just so you can see the structure):</p>
 
-<script type="syntaxhighlighter" class="brush: js"><![CDATA[
+<pre class="prettyprint linenums">
 var pseudoGrad = 2+(2*heightMap[i*dim+j+dim+1]-heightMap[i*dim+j+dim]-heightMap[i*dim+j+1])*26,
 	pseudoHeight = height-pseudoGrad;
 ctx.fillStyle = ctx.strokeStyle = 'hsl('+[ // Using coercion for the ","
 	25*(	// Hue
-		(WATER_LVL<height)? 25/height					// Green to brown
+		(WATER_LVL&lt;height)? 25/height					// Green to brown
 		: 7 											// Blue
 	), // can be approximated by: hue = 13.7*height*height-244*height+1143
 	25*(	// Saturation	
-		(WATER_LVL<height)? pseudoGrad*14/height/height	// Ground saturation: medium, depending on
+		(WATER_LVL&lt;height)? pseudoGrad*14/height/height	// Ground saturation: medium, depending on
 														// the incline/height, giving us different
 														// kinds of veget.
 		: pseudoHeight									// Water saturation: high
 	)+'%',
 	(25*(	// Lightness
-		(SNOW_LVL_DEC<pseudoHeight)? pseudoGrad			// Bright snow with random noise
-		: (BEACH_LVL<height)? pseudoGrad/height*2		// Vegetation
-		: (WATER_LVL<height)? pseudoGrad				// Bright sand
+		(SNOW_LVL_DEC&lt;pseudoHeight)? pseudoGrad			// Bright snow with random noise
+		: (BEACH_LVL&lt;height)? pseudoGrad/height*2		// Vegetation
+		: (WATER_LVL&lt;height)? pseudoGrad				// Bright sand
 		: 1.8+Math.random()*.2							// Water with random waves
 	// Some not-very-random-but-good-enough shadows/lights (casted by clouds for instance)
 	))-6*Math.cos(i/47*Math.cos(height/3+j/57)+pseudoHeight)
 ]+'%)';
-]]></script>
+</pre>
 
 <div class="example">
-	<iframe width=560 height=300 class="demo" src="/examples/midpoint-displacement-flat-lighted-landscape.html"></iframe>
-	<p>Colored & lighted Heightmap</p>
+	<iframe wide-width=560 num=6 width=560 height=300 class="demo" src="/examples/midpoint-displacement-flat-lighted-landscape.html"></iframe>
+	<p>Colored & lighted Heightmap<br/>
+		<a num=6 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a>
+	</p>
 </div>
+<pre num=6 class="linenums"></pre>
 
 <p>&laquo; <i>It still looks ugly</i> &raquo; ... Right, but we are adding relief effects to a flat surface, how can it look but disturbing? Let's <em>put it into perspective</em>.</p>
 
@@ -292,7 +303,7 @@ $$</div>
 
 <p>The idea behind this method is the following:</p>
 <ul>
-	<li>We define our whole scene by a function $f:\hvectwo{a}{b} \mapsto \hvecfour{x}{y}{z}{color}$, ie a <em>surjective</em> function $f$ which maps every $\hvectwo{a}{b} \in \arraytwo{0.0}{1.0} \times \arraytwo{0.0}{1.0}$ to a vertex $\hvecfour{x}{y}{z}{color}$ of the scene (our landform's surface in our case). It implies to find a way to express each element as an explicit-surface with its own unique domain.</li>
+	<li>We define our whole scene by a function $f:\hvectwo{a}{b} \mapsto \hvecfour{x}{y}{z}{color}$, ie a <em>surjective</em> function $f$ which maps every $\hvectwo{a}{b}$ $\in$ $\arraytwo{0.0}{1.0} \times \arraytwo{0.0}{1.0}$ to a vertex $\hvecfour{x}{y}{z}{color}$ of the scene (our landform's surface in our case). It implies to find a way to express each element as an explicit-surface with its own unique domain.</li>
 	<li>We keep two buffers of the same length $canvas.width \times canvas.height$ : one to display the $color$ values of the projected elements (the <em>canvas</em>), and one kept hidden, for their $depth$ values (the <em>z-buffer</em>).</li>
 	<li>Each frame, we sample randomly a high number of points $\hvectwo{a}{b}$, evaluate the corresponding vertices using $f$, and project them into $\hvecfour{p_x}{p_y}{depth}{color}$. If the pixel $\hvectwo{p_x}{p_y}$ as already been drawn, we check the z-buffer:
 		<ul>
@@ -305,34 +316,48 @@ $$</div>
 <p>However, we need some adaptations to use this method on our landscape. We don't have a <strong>continuous</strong> function to pick vertices out of our 2D <strong>discrete</strong> heightmap. We need a way to evaluate the height of the points <em>all over</em> our surface, and not only at the nodes.</p>
 
 <div class="example">
-	<iframe width=560 height=450 class="demo" src="/examples/heightmap-simple-3d-projection.html"></iframe>
-	<p>A bit hollow, if we draw only the nodes...</p>
+	<iframe wide-width=560 num=7 width=560 height=450 class="demo" src="/examples/heightmap-simple-3d-projection.html"></iframe>
+	<p>A bit hollow, if we draw only the nodes...<br/>
+		<a num=7 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a>
+	</p>
 </div>
+<pre num=7 class="linenums"></pre>
 
 <p><strong>Triangulation + barycentric interpolation</strong> do the trick nicely. Here is how it works:</p>
 <ol>
 	<li>Given a point $P = \hvectwo{x}{y} \in \mathbb{R}^2$, find in which square $ABCD$ (unit square in the heightmap) it is, with $A = \hvectwo{X}{Y}$, $B = \hvectwo{X+1}{Y}$, $C = \hvectwo{X}{Y+1}$ and $D = \hvectwo{X+1}{Y+1}$, $X$ and $Y$ being the truncated value of $x$, $y$, ie $\hvectwo{X}{Y} \in \mathbb{N}^2$.</li>
     <li>Estimate in which triangle - $ABD$ or $ACD$ - $P$ is, using the condition: $d_x > d_y \to P \in ABD$ with $d_x$, $d_y$ the decimal part of $x$, $y$.</li>
     <li>Evaluate the height of the point using linear interpolation with the implicit barycentric coordinates as weights<a class="refing" id="refing-6" href="#refed-6" title="Ref - Dianne Hansford - PDF - &laquo; Barycentric Coordinates &raquo;">[6]</a>:
-		<ul>
-			<li>if $P \in ABD$, $height = h(B) + [h(A) - h(B)] \cdot (1-d_x) + [h(D) - h(B)] \cdot d_y$.</li>
-			<li>if $P \in ACD$, $height = h(C) + [h(A) - h(C)] \cdot (1-d_y) + [h(D) - h(C)] \cdot d_x$, with $h(K=\hvectwo{X}{Y}) = heightMap\arraytwo{X}{Y}$.</li>
-		</ul></li>
+		<div class="mathjax-formula">$$
+			P \in ABD \Rightarrow height = h(B) + [h(A) - h(B)] \cdot (1-d_x) + [h(D) - h(B)] \cdot d_y \\
+			P \in ACD \Rightarrow height = h(C) + [h(A) - h(C)] \cdot (1-d_y) + [h(D) - h(C)] \cdot d_x \\
+			(h(K=\hvectwo{X}{Y}) = heightMap\arraytwo{X}{Y})
+		$$</div>
+		</li>
 </ol>
 
 <div class="example">
-	<iframe width=400 height=400 class="demo" src="/examples/barycentric-interpolation-color.html"></iframe>
-	<p>Barycentric Interpolation of colors</p>
+	<iframe wide-width=400 num=8 width=400 height=400 class="demo" src="/examples/barycentric-interpolation-color.html"></iframe>
+	<p>Barycentric Interpolation of colors<br/>
+		<a num=8 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a>
+	</p>
 </div>
+<pre num=8 class="linenums"></pre>
 
-<p>We are thus able to describe explicitly our surface. We can now wrap this whole process into a function $g: \hvectwo{x}{y} \in \mathbb{R}^2 \mapsto \hvecfour{x}{y}{height}{color}$ ($color$ being computed by a function similar to the one described previously) and plug it to the Monte-Carlo sampling by defining $f$ as $f\hvectwo{a}{b} = g\hvectwo{a \cdot heightMap.width}{b \cdot heightMap.height}$.</p>
+<p>We are thus able to describe explicitly our surface. We can now wrap this whole process into a function...</p>
+<div class="mathjax-formula">$$g: \hvectwo{x}{y} \in \mathbb{R}^2 \mapsto \hvecfour{x}{y}{height}{color}$$</div>
+<p>...($color$ being computed by a function similar to the one described previously) and plug it to the Monte-Carlo sampling by defining $f$ as...</p>
+<div class="mathjax-formula">$$f\hvectwo{a}{b} = g\hvectwo{a \cdot heightMap.width}{b \cdot heightMap.height}$$</div>
 
 <p>Nothing else to do but to put everything together, and that's it:</p>
 
 <div class="example">
-	<iframe width=560 height=450 class="demo" src="/examples/heightmap-interpolated-3d-projection.html"></iframe>
-	<p>About 850B once crushed.</p>
+	<iframe wide-width=560 num=9 width=560 height=450 class="demo" src="/examples/heightmap-interpolated-3d-projection.html"></iframe>
+	<p>About 850B once crushed<br/>
+		<a num=9 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a>
+	</p>
 </div>
+<pre num=9 class="linenums"></pre>
 
 <p class="note">If you want to know more about how <i>not</i> to use the z-buffer or why the hilly parts of the landscape take longer to be correctly rendered, you should read the <a href="http://stackoverflow.com/questions/16441376/glitches-with-triangulation-linear-interpolation-3d-projection" title=" Stack Overflow - Glitches with Triangulation + Linear Interpolation + 3D projection">Stack Overflow thread</a> I made when I was trying to fix some glitches.</p>
 
@@ -355,8 +380,8 @@ $$</div>
 	<li id="refed-7"><a class="refed" href="#refing-7">^</a> Joshua Koo - Online Presentation - &laquo; The js1k Experience &raquo; - <a href="http://slid.es/zz85/the-js1k-experience" title="Joshua Koo - Online Presentation - &laquo; The js1k Experience &raquo;">slid.es/zz85/the-js1k-experience</a></li>
 </ol>
 						<footer>
-							<time datetime="2013-04-13">2013-05-16</time>
-							<a href="https://twitter.com/share" class="twitter-share-button" data-text="The Painter'S Algorithm" data-via="b_aldream" data-lang="en">Tweet</a>
+							<time datetime="2013-04-13">2013-05-22</time>
+							<a href="https://twitter.com/share" class="twitter-share-button" data-text="Pointillism, depicted" data-via="b_aldream" data-lang="en">Tweet</a>
 						</footer>
 						<div id="disqus_thread"></div>
 						<script type="text/javascript">
@@ -388,43 +413,97 @@ $$</div>
 			});
 		</script>
 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shCore.js"></script>
-		<script type="text/javascript" src="/js/vendor/syntaxhighlighter_3.0.83/shBrushJScript.js"></script>
+		<script type="text/javascript" src="/js/vendor/prettify/prettify.js"></script>
 		<script>
-
+		
+		$(document).ready(function(){
+			$('.code-displayer').click(function(){
+				var jThisA = $(this);
+				var num = jThisA.attr('num');
+				var jIframe = $('iframe[num='+num+']');
+				var jPre = $('pre[num='+num+']');
+				if (jIframe.length > 0 && jPre.length > 0) {
+					jThisA.text('Loading...');
+					if (jPre.hasClass('prettyprint')) {
+						jPre.html('');
+						jPre.removeClass('prettyprint');
+						jThisA.text('Display Source');
+					}
+					else {
+						jIframe.ready(function(){
+							var script = '';
+							jIframe.contents().find('html').each(function(){
+								script += $(this).html();
+							});
+							jPre.addClass('prettyprint');
+							jPre.html('&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n' + 
+								script.replace(/[<>]/g, function(m) { return {'<':'&lt;','>':'&gt;'}[m]})
+									.replace(/(href|src)="(((ftp|http|https):\/\/)?(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)"/gi,'$1="<a href="$2">$2</a>"') + 
+							'\n&lt;/html&gt;');
+							prettyPrintContentOf(jPre[0]);
+							jThisA.text('Hide Source');
+						});
+					}
+				}
+				return false;
+			});
+			
+			$('.prettyprint').each(function(){
+				var jThisPre = $(this);
+				var num = $(this).attr('num');
+				if (!num) return;
+				var jIframe = $('iframe[num='+num+']');
+				if (jIframe.length > 0) {
+					jIframe.load(function(){
+						var script = '';
+						jIframe.contents().find('html').each(function(){
+							script += $(this).html();
+						});
+						jThisPre.html('&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n' + 
+							script.replace(/[<>]/g, function(m) { return {'<':'&lt;','>':'&gt;'}[m]})
+								.replace(/(href|src)="(((ftp|http|https):\/\/)?(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)"/gi,'$1="<a href="$2">$2</a>"') + 
+						'\n&lt;/html&gt;');
+						prettyPrintContentOf(jThisPre[0]);
+					});
+				}
+			});
+			
+			// Syntax Highlighting:
+			prettyPrint();
+			
 			// Twitter buttons:
 			!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
 			
-			function AdaptImageToScreenSize() {
+			function AdaptContentToScreenSize() {
 				if (innerWidth > 690) {
-					if (!this.alreadyWide) {
-						$('.wideImg').each(function(){
+					if (!AdaptContentToScreenSize.alreadyWide) {
+						$('.demo').each(function(){
+							$(this).width($(this).attr('wide-width'));
+							$(this).height($(this).attr('height'));
 							var src = $(this).attr('src');
-							var srcArray = src.split('.');
-							src = srcArray.pop();
-							src = srcArray.join('.') + '-wide.' + src;
+							$(this).attr('src', '');
 							$(this).attr('src', src);
-							$(this).attr('width', 620);
 						});
-						this.alreadyWide = true;
+						AdaptContentToScreenSize.alreadyWide = true;
 					}
 				}
 				else {
-					if (this.alreadyWide) {
-						$('.wideImg').each(function(){
-							var src = $(this).attr('src').split('-wide').join('');
+					if (AdaptContentToScreenSize.alreadyWide) {
+						$('.demo').each(function(){
+							$(this).width(280);
+							$(this).height($(this).attr('height')*280/$(this).attr('wide-width'));
+							var src = $(this).attr('src');
+							$(this).attr('src', '');
 							$(this).attr('src', src);
-							$(this).attr('width', 280);
 						});
-						this.alreadyWide = false;
+						AdaptContentToScreenSize.alreadyWide = false;
 					}
 				}
 			}
-			AdaptImageToScreenSize.alreadyWide = innerWidth > 690;
-			if (AdaptImageToScreenSize.alreadyWide) {
-				AdaptImageToScreenSize();
-			}
-			$(window).resize(AdaptImageToScreenSize);
+			AdaptContentToScreenSize.alreadyWide = true;
+			AdaptContentToScreenSize();
+			$(window).resize(AdaptContentToScreenSize);
+		});
 		</script>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <!--<script>
