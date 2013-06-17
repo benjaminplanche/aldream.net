@@ -1,4 +1,4 @@
-﻿/*
+/*
  * HTML5 Boilerplate
  *
  * What follows is the result of much research on cross-browser styling.
@@ -699,7 +699,11 @@ p > .MathJax {
 	text-align:center;
 	font-style:italic;
 	color: #000;
-	height: 10em;
+	height: 12em;
+	margin: .5em;
+}
+#projects h1+a {
+	padding: 0;
 }
 article footer {
 	font-size: 0.7em;
@@ -724,7 +728,7 @@ article footer .twitter-share-button {
 	font-size: .8em;
 	padding: 10px;
 	color: #444;
-	margin: 0 0 0 0;
+	margin: 0;
 }
 .type {
 	text-align: center;
