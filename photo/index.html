@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+		<meta content="Benjamin Bill Planche" name="author">
+		<meta content="Portfolio of Benjamin (Bill) Planche, aka Aldream. Photographer & Traveler" name="description">
+		<meta content="aldream, benjamin, planche, bill, photography, travel, urbex, photo, portefolio" name="keywords">
+		<meta content="index,follow" name="robots">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Aldream</title>
+        <meta name="viewport" content="width=device-width">
+
+		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="css/normalize.css"/>
+        <link rel="stylesheet" href="css/main.css"/>
+		
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body id="main">
+		<!--[if lt IE 7]>
+			<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+		<![endif]-->
+
+		<!-- Add your site or application content here -->
+		<header>
+			<div><img alt="Aldream.net" src="img/logo-arrow.svg" /></div>
+			<nav>
+				<ul>
+					<li><a href="http://500px.com/aldream" target="_blank">PORTFOLIO</a></li>
+					<li><a rel="author" href="/about">ABOUT</a></li>
+					<li><a href="/contact">CONTACT</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<section>
+			<div id="kenburns">
+			</div>
+
+		</section>
+<!--		<footer id="page-footer">&copy; Aldream / Benjamin (Bill) Planche 2014</footer>
+-->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+		<script>
+
+
+$(document).ready(function() {
+
+	var width = window.innerWidth, height = window.innerHeight;
+	$('body').height(height);
+	var slideshow = $("#kenburns");
+	window.onfocus = function() {
+		$('header').addClass('pulse');
+	};
+	
+	window.onblur = function() {
+		$('header').removeClass('pulse');
+	};
+	
+	$('header').hover(
+		function(){
+			slideshow.css('opacity', .2);
+		},
+		function(){
+			slideshow.css('opacity', 1);
+		}
+	);
+    
+	$.slideshowify({
+		imgs		: [{
+		id:0,
+		src:"img/lq/1.jpg",
+		w:1060,
+		h:1600},
+		{
+		id:1,src:"img/lq/2.jpg",w:1600,h:1060},{id:2,src:"img/lq/3.jpg",w:1600,h:1059},{id:3,src:"img/lq/4.jpg",w:1600,h:900}],
+		parentEl	: "#kenburns",
+		randomize   : true,
+		aniSpeedMin : 6000,
+		aniSpeedMax : 10000,
+		afterFadeIn : function(curImage){
+			// do something
+		},
+		beforeFadeOut : function(curImage){
+			// do something else
+		}
+	});
+});
+		</script>
+    </body>
+</html>
