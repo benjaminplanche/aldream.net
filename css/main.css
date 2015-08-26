@@ -1,0 +1,40 @@
+#main header {
+	position: fixed;
+	top: 46%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 100%;
+	min-width: 10em;
+}
+
+header div {
+    margin-right: auto;
+    margin-left: auto;
+	text-align: center;
+}
+header img {
+	width: 20%;
+	opacity: .5;
+}
+header ul {
+	display: table;   /* Allow the centering to work */
+	margin: 0 auto;
+	padding: 0;
+	
+}
+header li {
+	display: inline;
+	margin: 1em;
+	pointer-events: auto;
+	font-size: 14vw;
+}
+a{
+	color: #000;
+}
+footer{
+	position: fixed;
+	width: 100%;
+	bottom: 0%;
+	text-align: center;
+	font-size: .9em;
+}
