@@ -14,10 +14,10 @@
         <meta name="viewport" content="width=device-width">
 
 		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="/css/normalize.css"/>
-        <link rel="stylesheet" href="/css/main.css"/>
-		<link href="/css/prettify.css" rel="stylesheet" type="text/css" />
-        <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
+        <link rel="stylesheet" href="../css/normalize.css"/>
+        <link rel="stylesheet" href="../css/main.css"/>
+		<link href="../css/prettify.css" rel="stylesheet" type="text/css" />
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body id="blog">
 			<!--[if lt IE 7]>
@@ -37,10 +37,10 @@
 				</nav>
 				<nav id="menu-top-mini">
 					<ul>
-						<li><a href="/blog" title="Blog"><img width=22 alt="Blog" src="/img/glyphicons-color/book-blue.png"/></a></li>
-						<li><a href="/demo" title="Demo"><img width=25 alt="Demo" src="/img/glyphicons-color/eye-green.png"/></a></li>
-						<li><a href="/projects" title="Projects"><img width=25 alt="Projects" src="/img/glyphicons-color/star-yellow.png"/></a></li>
-						<li><a rel="author" href="/about" title="About"><img width=25 alt="About" src="/img/glyphicons-color/user-red.png"/></a></li>
+						<li><a href="/blog" title="Blog"><img width=22 alt="Blog" src="../img/glyphicons-color/book-blue.png"/></a></li>
+						<li><a href="/demo" title="Demo"><img width=25 alt="Demo" src="../img/glyphicons-color/eye-green.png"/></a></li>
+						<li><a href="/projects" title="Projects"><img width=25 alt="Projects" src="../img/glyphicons-color/star-yellow.png"/></a></li>
+						<li><a rel="author" href="/about" title="About"><img width=25 alt="About" src="../img/glyphicons-color/user-red.png"/></a></li>
 					</ul>
 				</nav>
 			</header>
@@ -197,27 +197,27 @@ for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap();
 <p></p>
 <div class="source-small"><pre num=1 class="linenums"></pre></div>
 <div class="example small-example">
-	<iframe wide-width=320 num=1 width=320 height=230 class="demo" src="/examples/midpoint-displacement-2d.html"></iframe>
+	<iframe wide-width=320 num=1 width=320 height=230 class="demo" src="../examples/midpoint-displacement-2d.html"></iframe>
 	<p>Midpoint Disp. applied to the Y-coord. <small>(with tweening)</small><br/>
 		<a num=1 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a></p>
 </div>
 
 <div class="source-small"><pre num=2 class="linenums"></pre></div>
 <div class="example small-example">
-	<iframe wide-width=320 num=2 width=320 height=230 class="demo" src="/examples/custom-midpoint-displacement-2d.html"></iframe>
+	<iframe wide-width=320 num=2 width=320 height=230 class="demo" src="../examples/custom-midpoint-displacement-2d.html"></iframe>
 	<p>... Now using the custom displacement<br/>
 		<a num=2 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a></p>
 </div>
 
 <div class="source-small"><pre num=3 class="linenums"></pre></div>
 <div class="example small-example">
-	<iframe wide-width=320 num=3 width=320 height=230 class="demo" src="/examples/midpoint-displacement-3d.html"></iframe>
+	<iframe wide-width=320 num=3 width=320 height=230 class="demo" src="../examples/midpoint-displacement-3d.html"></iframe>
 	<p>Midpoint Disp. applied to the <em>height</em> coord.<br/>
 		<a num=3 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a></p>
 </div>
 <div class="source-small"><pre num=4 class="linenums"></pre></div>
 <div class="example small-example">
-	<iframe wide-width=320 num=4 width=320 height=230 class="demo" src="/examples/custom-midpoint-displacement-3d.html"></iframe>
+	<iframe wide-width=320 num=4 width=320 height=230 class="demo" src="../examples/custom-midpoint-displacement-3d.html"></iframe>
 	<p>... One more time, using the custom displacement<br/>
 		<a num=4 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a></p>
 </div>
@@ -227,7 +227,7 @@ for (var i = nbMaxIterations, heightMap = GenerateNewStartingMap();
 <p>Given the heightmap, it's quite easy to <em>assign color to every point depending on its elevation</em>: if the value equals the min. boundary, then paint it light blue to represent water; if it's above a given limit then make it white as snow; if it's somewhere between then make a gradient from vegetal-green to rocky-brown with a function using the height; ...</p>
 
 <div class="example">
-	<iframe wide-width=560 num=5 width=560 height=300 class="demo" src="/examples/midpoint-displacement-flat-landscape.html"></iframe>
+	<iframe wide-width=560 num=5 width=560 height=300 class="demo" src="../examples/midpoint-displacement-flat-landscape.html"></iframe>
 	<p>Colored Heightmap<br/>
 		<a num=5 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a>
 	</p>
@@ -273,7 +273,7 @@ ctx.fillStyle = ctx.strokeStyle = 'hsl('+[ // Using coercion for the ","
 </pre>
 
 <div class="example">
-	<iframe wide-width=560 num=6 width=560 height=300 class="demo" src="/examples/midpoint-displacement-flat-lighted-landscape.html"></iframe>
+	<iframe wide-width=560 num=6 width=560 height=300 class="demo" src="../examples/midpoint-displacement-flat-lighted-landscape.html"></iframe>
 	<p>Colored & lighted Heightmap<br/>
 		<a num=6 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a>
 	</p>
@@ -316,7 +316,7 @@ $$</div>
 <p>However, we need some adaptations to use this method on our landscape. We don't have a <strong>continuous</strong> function to pick vertices out of our 2D <strong>discrete</strong> heightmap. We need a way to evaluate the height of the points <em>all over</em> our surface, and not only at the nodes.</p>
 
 <div class="example">
-	<iframe wide-width=560 num=7 width=560 height=450 class="demo" src="/examples/heightmap-simple-3d-projection.html"></iframe>
+	<iframe wide-width=560 num=7 width=560 height=450 class="demo" src="../examples/heightmap-simple-3d-projection.html"></iframe>
 	<p>A bit hollow, if we draw only the nodes...<br/>
 		<a num=7 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a>
 	</p>
@@ -337,7 +337,7 @@ $$</div>
 </ol>
 
 <div class="example">
-	<iframe wide-width=400 num=8 width=400 height=400 class="demo" src="/examples/barycentric-interpolation-color.html"></iframe>
+	<iframe wide-width=400 num=8 width=400 height=400 class="demo" src="../examples/barycentric-interpolation-color.html"></iframe>
 	<p>Barycentric Interpolation of colors<br/>
 		<a num=8 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a>
 	</p>
@@ -352,7 +352,7 @@ $$</div>
 <p>Nothing else to do but to put everything together, and that's it:</p>
 
 <div class="example">
-	<iframe wide-width=560 num=9 width=560 height=450 class="demo" src="/examples/heightmap-interpolated-3d-projection.html"></iframe>
+	<iframe wide-width=560 num=9 width=560 height=450 class="demo" src="../examples/heightmap-interpolated-3d-projection.html"></iframe>
 	<p>About 850B once crushed<br/>
 		<a num=9 href="#" title="Display/Hide Source" class="code-displayer">Display Source</a>
 	</p>
@@ -403,9 +403,9 @@ $$</div>
 
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
-        <script src="/js/plugins.js"></script>
-        <script src="/js/main.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
 		<script type="text/x-mathjax-config">
 			MathJax.Hub.Config({
 				TeX: { extensions: ["autobold.js"] },
@@ -413,7 +413,7 @@ $$</div>
 			});
 		</script>
 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-		<script type="text/javascript" src="/js/vendor/prettify/prettify.js"></script>
+		<script type="text/javascript" src="../js/vendor/prettify/prettify.js"></script>
 		<script>
 		
 		$(document).ready(function(){

@@ -14,10 +14,10 @@
         <meta name="viewport" content="width=device-width">
 
 		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="/css/normalize.css"/>
-        <link rel="stylesheet" href="/css/main.css"/>
-		<link href="/css/prettify.css" rel="stylesheet" type="text/css" />
-        <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
+        <link rel="stylesheet" href="../css/normalize.css"/>
+        <link rel="stylesheet" href="../css/main.css"/>
+		<link href="../css/prettify.css" rel="stylesheet" type="text/css" />
+        <script src="../js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body id="blog">
 			<!--[if lt IE 7]>
@@ -26,21 +26,21 @@
 
 			<!-- Add your site or application content here -->
 			<header id="main-header">
-				<h1><a href="/">Aldream</a></h1>
+				<h1><a href="../">Aldream</a></h1>
 				<nav id="menu-top">
 					<ul>
 						<a href="/blog"><li>Blog</li></a>
 						<a href="/demo"><li>Demo</li></a>
 						<a href="/projects"><li>Projects</li></a>
-						<a rel="author" href="/about"><li>About</li></a>
+						<a rel="author" href="../about"><li>About</li></a>
 					</ul>
 				</nav>
 				<nav id="menu-top-mini">
 					<ul>
-						<li><a href="/blog" title="Blog"><img width=22 alt="Blog" src="/img/glyphicons-color/book-blue.png"/></a></li>
-						<li><a href="/demo" title="Demo"><img width=25 alt="Demo" src="/img/glyphicons-color/eye-green.png"/></a></li>
-						<li><a href="/projects" title="Projects"><img width=25 alt="Projects" src="/img/glyphicons-color/star-yellow.png"/></a></li>
-						<li><a rel="author" href="/about" title="About"><img width=25 alt="About" src="/img/glyphicons-color/user-red.png"/></a></li>
+						<li><a href="/blog" title="Blog"><img width=22 alt="Blog" src="../img/glyphicons-color/book-blue.png"/></a></li>
+						<li><a href="/demo" title="Demo"><img width=25 alt="Demo" src="../img/glyphicons-color/eye-green.png"/></a></li>
+						<li><a href="/projects" title="Projects"><img width=25 alt="Projects" src="../img/glyphicons-color/star-yellow.png"/></a></li>
+						<li><a rel="author" href="/about" title="About"><img width=25 alt="About" src="../img/glyphicons-color/user-red.png"/></a></li>
 					</ul>
 				</nav>
 			</header>
@@ -50,7 +50,7 @@
 					<div>
 <h1>Mesh Breeding</h1>
 
-<p><a href="/demo#js1k-2013-morphose" title="&laquo; Morphose &raquo;, playing around with Tesselation">Morphose</a> was the first demo I posted for the <a href="http://js1k.com/2013-spring/" title="JS1K 2013">JS1K Spring-2013 challenge</a>. The idea came when I was trying to apply my <a href="/article/2013-04-13-painter-s-algorithm" href="Painter's Algorithm - Your own simple 3D renderer">simple 3D renderer</a> to different kind of scenes, while my head was buzzing with a resurgent interest in the demoscene. Morphose just <em>sprouted</em> out of this context, almost by accident.<br/>
+<p><a href="../demo#js1k-2013-morphose" title="&laquo; Morphose &raquo;, playing around with Tesselation">Morphose</a> was the first demo I posted for the <a href="http://js1k.com/2013-spring/" title="JS1K 2013">JS1K Spring-2013 challenge</a>. The idea came when I was trying to apply my <a href="../article/2013-04-13-painter-s-algorithm" href="Painter's Algorithm - Your own simple 3D renderer">simple 3D renderer</a> to different kind of scenes, while my head was buzzing with a resurgent interest in the demoscene. Morphose just <em>sprouted</em> out of this context, almost by accident.<br/>
 I was trying to tesselate a planet, discovered <em>cube-mapping</em>, and the next moment I was observing the strange offspring a cube and a sphere can generate when mixed. Some tweakings later, I had a new demo for js1k...</p>
 
 <p>Now in this article, I will try to formalize the whole process, covering the <strong>meshes generation</strong>, the <strong>tweening</strong>, the <strong>tweaking</strong>, etc. This demo is quite simple, but I found some results interesting, and I hope you will.</p>
@@ -68,7 +68,7 @@ I was trying to tesselate a planet, discovered <em>cube-mapping</em>, and the ne
 
 <h2>Rendering</h2>
 
-<p>As it is better not to walk blind, let's deal first with the rendering of our yet-to-be-created scene. For that, we can use the simple renderer described in my previous article, so please <a href="/article/2013-04-13-painter-s-algorithm" title="Painter's Algorithm">read it</a> if you need the explanations.</p>
+<p>As it is better not to walk blind, let's deal first with the rendering of our yet-to-be-created scene. For that, we can use the simple renderer described in my previous article, so please <a href="../article/2013-04-13-painter-s-algorithm" title="Painter's Algorithm">read it</a> if you need the explanations.</p>
 <p>Only minor modifications are required to adapt it to the specificity of our mesh structure. However, as we are limited in the number of bytes, we should also condense the whole, even if it means losing in clarity or generality <small>(the code below is still much <em>crush-able</em>, by condensing some operations for instance)</small>:</p>
 
 <pre class="prettyprint linenums">
@@ -246,7 +246,7 @@ for (var n = 6; n--;)
 </pre>
 
 <div class="example">
-	<iframe width=320 height=230 class="demo" src="/examples/cube-tesselation.html"></iframe>
+	<iframe width=320 height=230 class="demo" src="../examples/cube-tesselation.html"></iframe>
 	<p>Resulting cube</p>
 </div>
 
@@ -259,7 +259,7 @@ for (var n = 6; n--;)
 <p>In other words, for every vertex, we compute their distance to the center, divide their coordinates by the obtained value, and multiplie them back with the radius value.</p>
 
 <div class="example">
-	<iframe width=320 height=230 class="demo" src="/examples/cube-sphere-linear-tweening-2D.html"></iframe>
+	<iframe width=320 height=230 class="demo" src="../examples/cube-sphere-linear-tweening-2D.html"></iframe>
 	<p>2D example - Gradual normalization of the vectors length</p>
 </div>
 
@@ -317,7 +317,7 @@ for (var n = 6; n--;)
 
 
 <div class="example">
-	<iframe width=320 height=230 class="demo" src="/examples/sphere-tesselation.html"></iframe>
+	<iframe width=320 height=230 class="demo" src="../examples/sphere-tesselation.html"></iframe>
 	<p>Resulting sphere</p>
 </div>
 	
@@ -326,7 +326,7 @@ for (var n = 6; n--;)
 <p>The next step is the <strong>dynamic generation of our <em>metis</em> shape</strong>. For every couple of vertices from the cube and sphere, we simply want to calculate an intermediate one.</p>
 
 <div class="example">
-	<iframe width=320 height=230 class="demo" src="/examples/cube-sphere-linear-tweening-3D.html"></iframe>
+	<iframe width=320 height=230 class="demo" src="../examples/cube-sphere-linear-tweening-3D.html"></iframe>
 	<p>3D example - Linear tweening between the 2 meshes</p>
 </div>
 
@@ -400,7 +400,7 @@ function Paint (facesCube, facesSphere) {
 <p>Below a small application displaying the outcome of some effects:</p>
 
 <div class="example">
-	<iframe width=600 height=300 class="demo" src="/examples/cube-sphere-various-tweenings.html"></iframe>
+	<iframe width=600 height=300 class="demo" src="../examples/cube-sphere-various-tweenings.html"></iframe>
 	<p>Various examples of mingling</p>
 </div>
 
@@ -468,9 +468,9 @@ function Paint (facesCube, facesSphere) {
 
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
-        <script src="/js/plugins.js"></script>
-        <script src="/js/main.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+        <script src="../js/plugins.js"></script>
+        <script src="../js/main.js"></script>
 		<script type="text/x-mathjax-config">
 			MathJax.Hub.Config({
 				TeX: { extensions: ["autobold.js"] },
@@ -478,7 +478,7 @@ function Paint (facesCube, facesSphere) {
 			});
 		</script>
 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-		<script type="text/javascript" src="/js/vendor/prettify/prettify.js"></script>
+		<script type="text/javascript" src="../js/vendor/prettify/prettify.js"></script>
 		<script>
 			// Syntax Highlighting:
 			prettyPrint();
