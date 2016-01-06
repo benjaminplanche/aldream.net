@@ -10,12 +10,13 @@
 		<meta content="aldream, benjamin, planche, bill, photography, travel, urbex, photo, portefolio" name="keywords">
 		<meta content="index,follow" name="robots">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Aldream</title>
+        <title>Aldream - Contact</title>
         <meta name="viewport" content="width=device-width">
 
 		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/normalize.css"/>
         <link rel="stylesheet" href="css/main.css"/>
+		<link rel="stylesheet" href="../css/font-awesome.min.css">
 		
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
@@ -37,121 +38,34 @@
 		</header>
 
 		<section>
-			<div id="after_submit"></div>
-			<form id="contact_form" action="#" method="POST" enctype="multipart/form-data">
-				<div class="row">
-					<label class="required" for="name">Your name: </label><br />
-					<input id="name" class="input" name="name" type="text" value="" size="50"/><br />
-					<span id="name_validation" class="error_message"></span>
-				</div>
-				<div class="row">
-					<label class="required" for="email">Your email: </label><br />
-					<input id="email" class="input" name="email" type="text" value="" size="50"/><br />
-					<span id="email_validation" class="error_message"></span>
-				</div>
-				<div class="row">
-					<label class="required" for="email">Subject: </label><br />
-					<input id="email" class="input" name="subject" type="text" value="" size="50"/><br />
-					<span id="email_validation" class="error_message"></span>
-				</div>
-				<div class="row">
-					<label class="required" for="message">Message: </label><br />
-					<textarea id="message" class="input" name="message" rows="7" cols="30" placeholder="You're interested by one of my pics? You got an event to cover? You've got a fieldtrip idea? Whatever the reason, feel welcome to drop a message!"></textarea><br />
-					<span id="message_validation" class="error_message"></span>
-				</div>
-				<input id="submit_button" type="submit" value="Send email" /> or you can also find me there:
-			</form>
+			<div id="about"><br/>
+				<img src="img/photos/aldream-18.jpg" alt="Daruma Guardians"/><br/>
+				<p>You're interested in one of my pictures? You got an event to cover? You've got a field-trip idea?<br/><br/>
+				Whatever the reason, just drop me an email or contact me through one of my social media websites. I'd be a pleasure to hear from you!</p>
+				<p><a href="#" e-name="photo" class="e-noBot" e-domain="aldream.net"><i class="fa fa-code"></i> email</a></p>
+				<p><a href="http://500px.com/aldream" title="500px"><i class="fa fa-500px"></i></a> <a href="http://www.flickr.com/photos/billleroux" title="Flickr"><i class="fa fa-flickr"></i></a> <a href="http://www.instagram.com/b_aldream" title="Instagram"><i class="fa fa-instagram"></i></a></p>
+			</div>
 		</section>
-<!--		<footer id="page-footer">&copy; Aldream / Benjamin (Bill) Planche 2014</footer>
--->
+		<i class="fa fa-code"></i>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
 		<script>
-$(document).ready(function(){
-	var errors = false;
-    $('.required').parent().find('.input').on('blur', function() {
-        var error_div = $(this).parent().find('.error_message');
-        var field_container = $(this).parent();
-        if (!$.empty_field_validation($(this).val())) {
-            error_div.html('This field is required.');
-            error_div.css('display', 'block');
-            field_container.addClass('error');
-			errors = true;
-        } else {
-            error_div.html('');
-            error_div.css('display', 'none');
-            field_container.removeClass('error');
-			errors = false;
-        }
-    });
-    $('#email').on('blur', function(){
-        var error_div = $(this).parent().find('.error_message');
-        var field_container = $(this).parent();
-        if (!$.email_validation($(this).val())) {
-            error_div.html('Expected Input: email');
-            error_div.css('display', 'block');
-            field_container.addClass('error');
-			errors = true;
-        } else {
-            error_div.html('');
-            error_div.css('display', 'none');
-            field_container.removeClass('error');
-			errors = false;
-        }
-    });
-	$('#contact_form').submit(function(event) {
-		event.preventDefault();
-		 $('.required').parent().find('.input').trigger('blur');
-        if (!errors)
-            $.ajax({
-                url: '/echo/json/',
-                data: {
-                    json: JSON.stringify($(this).serializeObject())
-                },
-                type: 'post',
-                success: function(data) {
-                    var message = 'Hi '+data.name+'. Your message was sent and received.';
-                    $('#after_submit').html(message);
-                    $('#after_submit').css('display', 'block');
-                },
-                error: function() {
-                    var message = 'Hi '+data.name+'. Your message could not be sent or received. Please try again later';
-                    $('#after_submit').html(message);
-                    $('#after_submit').css('display', 'block'); 
-                }
-            });
-		else
-			alert("You didn't completed the form correctly. Check it out and try again!");
+// E-NoBot - Fonction expérimentale de protection des emails contre les bots spammeurs :
+$(document).ready(function() {
+	var e1 = "to", e2 = "il", e3 = "ma";
+	$('.e-noBot').click( function() {
+		$('.e-noBot').each( function(index) {
+			var em = $(this).attr('e-name')+String.fromCharCode(64)+$(this).attr('e-domain');
+			$(this).attr('href', e3+e2+e1+':'+em);
+			$(this).html(em);
+		});
+		$('.e-noBot').removeClass('btn-mini btn btn-info');
+		$('.e-noBot').unbind('click');
+		return false;
 	});
 });
-
-$.empty_field_validation = function(field_value) {
-    if (field_value.trim() == '') return false;
-    return true;
-}
-    
-$.email_validation = function(email) {
-    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-    return regex.test(email);
-}
-$.fn.serializeObject = function()
-{
-   var o = {};
-   var a = this.serializeArray();
-   $.each(a, function() {
-       if (o[this.name]) {
-           if (!o[this.name].push) {
-               o[this.name] = [o[this.name]];
-           }
-           o[this.name].push(this.value || '');
-       } else {
-           o[this.name] = this.value || '';
-       }
-   });
-   return o;
-};
 		</script>
     </body>
 </html>
