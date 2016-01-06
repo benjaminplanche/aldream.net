@@ -117,7 +117,7 @@ textarea {
 }
  
 body{
-	background: url(../img/lq/1.jpg);
+	background: url(../img/photos/aldream-1.jpg);
 	background-size: 5000px;
 }
 
@@ -211,7 +211,11 @@ header ul {
 	padding: 0;
 	
 }
-
+section{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
 #kenburns {
     position: relative;
     width: 100%;
