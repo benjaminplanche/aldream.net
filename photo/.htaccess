@@ -339,7 +339,9 @@ FileETag None
  RewriteBase /
 </IfModule>
 
-
+<IfModule mod_rewrite.c>
+  RewriteRule ^([A-Za-z0-9-]+)/?([A-Za-z0-9-]+)?/?$ $1.html [NC,L] 
+</IfModule>
 
 # ----------------------------------------------------------------------
 # Suppress or force the "www." at the beginning of URLs
