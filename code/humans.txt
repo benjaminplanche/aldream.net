@@ -1,0 +1,15 @@
+﻿# aldream.net/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Benjamin (Bill) Planche, aka Aldream -- Webmaster -- twitter.com/b_aldream
+
+# THANKS
+
+    Everyone
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3, JS
+    Normalize.css, jQuery, Modernizr
